@@ -80,6 +80,23 @@ textarea{min-height:340px;line-height:1.55;font-family:var(--serif);font-size:16
 .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:10px}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
 @keyframes sp{to{transform:rotate(360deg)}}
+  /* --- Admin Dashboard Enhancements --- */
+.admin-student-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; background: #fafbfd; }
+.admin-student-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--line); padding-bottom: 12px; margin-bottom: 16px; }
+.admin-student-name { font-size: 18px; font-weight: 700; color: var(--navy); text-transform: capitalize; }
+.admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.stat-box { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+.stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; margin-bottom: 4px; }
+.stat-val { font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1; }
+.admin-section-title { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; margin-top: 24px; }
+.admin-list { display: flex; flex-direction: column; gap: 10px; }
+.admin-item { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 14px; font-size: 14px; }
+.admin-item-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.admin-item-title { font-weight: 700; color: var(--ink); font-size: 15px; }
+.admin-item-meta { color: var(--muted); font-size: 13px; }
+.admin-writing-body { background: #f6f8fb; padding: 14px; border-radius: 8px; font-family: var(--serif); font-size: 15px; line-height: 1.6; margin-top: 10px; white-space: pre-wrap; display: none; border-left: 4px solid var(--navy); color: #23272d; }
+.toggle-btn { background: none; border: none; color: var(--blue); cursor: pointer; font-size: 13.5px; font-weight: 600; padding: 0; margin-top: 8px; }
+.toggle-btn:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -348,16 +365,111 @@ $("adminLoadBtn").onclick=async()=>{
 };
 function renderAdmin(data){
   const wrap=$("adminData");
-  wrap.innerHTML=section("Reading results",data.reading)+section("Writing submissions",data.writing);
+  wrap.innerHTML="";
+
+  // 1. Convert raw spreadsheet rows into readable objects based on the header row
+  const reading = sheetToObjects(data.reading);
+  const writing = sheetToObjects(data.writing);
+
+  // 2. Group all data by student key
+  const students = {};
+  const initStudent = (key) => { if(!students[key]) students[key] = { reading: [], writing: [] }; };
+  
+  reading.forEach(r => { initStudent(r.name_key); students[r.name_key].reading.push(r); });
+  writing.forEach(w => { initStudent(w.name_key); students[w.name_key].writing.push(w); });
+
+  if(Object.keys(students).length === 0){
+    wrap.innerHTML="<p class='sub'>No student data has been submitted yet.</p>";
+    return;
+  }
+
+  // 3. Build a beautiful profile card for each student
+  Object.keys(students).forEach(nameKey => {
+    const stu = students[nameKey];
+    const totalRead = stu.reading.length;
+    const totalWrite = stu.writing.length;
+    const avgScore = totalRead > 0 ? Math.round(stu.reading.reduce((sum, r) => sum + Number(r.score), 0) / totalRead) : 0;
+
+    let html = `
+      <div class="admin-student-card">
+        <div class="admin-student-header">
+          <div class="admin-student-name">${nameKey}</div>
+          <div class="pill">${totalRead + totalWrite} Total Activities</div>
+        </div>
+        
+        <div class="admin-stats">
+          <div class="stat-box"><div class="stat-label">Reading Tests</div><div class="stat-val">${totalRead}</div></div>
+          <div class="stat-box"><div class="stat-label">Average Score</div><div class="stat-val">${avgScore} <small style="font-size:14px;color:var(--muted)">/ 30</small></div></div>
+          <div class="stat-box"><div class="stat-label">Writing Drafts</div><div class="stat-val">${totalWrite}</div></div>
+        </div>
+    `;
+
+    // Render Reading History (Newest first)
+    if(totalRead > 0){
+      html += `<div class="admin-section-title">Reading History</div><div class="admin-list">`;
+      stu.reading.slice().reverse().forEach(r => {
+        const date = new Date(r.timestamp).toLocaleDateString();
+        const scorePct = Math.round((Number(r.score) / Number(r.out_of)) * 100);
+        const col = scorePct >= 80 ? "var(--ok)" : scorePct >= 50 ? "var(--flag)" : "var(--err)";
+        
+        html += `
+          <div class="admin-item">
+            <div class="admin-item-header">
+              <span class="admin-item-title">${r.paper_id}</span>
+              <span class="admin-item-meta">${date}</span>
+            </div>
+            <div>
+              <strong style="color:${col}; font-size:16px;">${r.score}/${r.out_of}</strong> <span style="color:var(--muted); font-size:13px;">(${scorePct}%)</span>
+              <span style="color:var(--muted); margin-left: 12px; font-size: 13px;">⏱️ ${Math.floor(r.time_used_sec/60)}m ${r.time_used_sec%60}s</span>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+
+    // Render Writing History with expandable text (Newest first)
+    if(totalWrite > 0){
+      html += `<div class="admin-section-title">Writing History</div><div class="admin-list">`;
+      stu.writing.slice().reverse().forEach((w, idx) => {
+        const date = new Date(w.timestamp).toLocaleDateString();
+        const bodyId = `draft-${nameKey}-${idx}`; // Unique ID to toggle the draft view
+        
+        html += `
+          <div class="admin-item">
+            <div class="admin-item-header">
+              <span class="admin-item-title">${w.prompt_title}</span>
+              <span class="admin-item-meta">${date}</span>
+            </div>
+            <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">
+              ${w.word_count} words &middot; ⏱️ ${Math.floor(w.time_used_sec/60)}m ${w.time_used_sec%60}s
+            </div>
+            <button class="toggle-btn" onclick="document.getElementById('${bodyId}').style.display = document.getElementById('${bodyId}').style.display === 'block' ? 'none' : 'block'">Read / Hide Draft</button>
+            <div id="${bodyId}" class="admin-writing-body">${esc(w.response_text)}</div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+
+    html += `</div>`; // Close student card
+    wrap.insertAdjacentHTML('beforeend', html);
+  });
 }
-function section(title,rows){
-  if(!rows||rows.length<=1) return "<h2 style='margin-top:18px'>"+title+"</h2><p class='sub'>No rows yet.</p>";
-  const head=rows[0], body=rows.slice(1);
-  let html="<h2 style='margin-top:18px'>"+title+" ("+body.length+")</h2><table class='tbl'><tr>";
-  head.forEach(h=>html+="<th>"+esc(h)+"</th>"); html+="</tr>";
-  body.forEach(r=>{ html+="<tr>"; r.forEach((c,i)=>{ const long=String(c).length>60; html+="<td"+(long?" class='wraptxt'":"")+">"+esc(String(c))+"</td>"; }); html+="</tr>"; });
-  html+="</table>"; return html;
+
+// Utility: Turns a raw 2D spreadsheet array into an array of objects
+function sheetToObjects(sheetData) {
+  if (!sheetData || sheetData.length < 2) return [];
+  const keys = sheetData[0];
+  return sheetData.slice(1).map(row => {
+    let obj = {};
+    keys.forEach((k, i) => obj[k] = row[i]);
+    return obj;
+  });
 }
+
+// Utility: Escapes dangerous characters to prevent HTML injection
+function esc(s){ return s? s.toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") : ""; }
 function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 </script>
 </body>
