@@ -261,6 +261,7 @@ function openDash(){
   $("dashName").textContent="Hi, "+student.displayName;
   $("dashYear").textContent="Year "+student.yearLevel;
   const te=student.testsEnabled.map(x=>x.toLowerCase());
+  $("openReading").href = "Selective_Reading_Mock_Test.html?student=" + student.nameKey;
   toggleTile("tileReading","reading",te);
   toggleTile("tileWriting","writing",te);
   clearMsg($("dashMsg"));
