@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selective High School Placement Test (Practice): Reading</title>
+<style>
+:root{
+  --navy:#002664; --navy2:#06376b; --blue:#1a73c0; --blue-soft:#e8f1fb;
+  --bg:#eceff3; --panel:#ffffff; --border:#d3d9e1; --line:#e6eaef;
+  --ink:#1b1e23; --muted:#5c6672; --correct:#1d7a3a; --correct-bg:#e7f4ec;
+  --wrong:#c0392b; --wrong-bg:#fbeceb; --flag:#d9822b; --flag-bg:#fcefe0;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45}
+button{font-family:inherit}
+.hidden{display:none!important}
+
+/* ---------- header ---------- */
+header{height:54px;background:var(--navy);color:#fff;display:flex;align-items:center;
+  justify-content:space-between;padding:0 16px;position:fixed;top:0;left:0;right:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand .mark{width:24px;height:24px;flex:0 0 auto;color:#fff;opacity:.95}
+.brand .mark svg{width:24px;height:24px;display:block}
+.brand .ttl{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand .pill{background:rgba(255,255,255,.16);padding:2px 9px;border-radius:999px;font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;flex:0 0 auto}
+.hright{display:flex;align-items:center;gap:12px}
+.timer{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);padding:6px 12px;
+  border-radius:8px;font-variant-numeric:tabular-nums;font-weight:600;font-size:15px}
+.timer.warn{background:#7a1f1a;color:#ffd9d4}
+.timer svg{width:15px;height:15px}
+.btn{border:0;border-radius:8px;padding:9px 16px;font-weight:600;font-size:14px;cursor:pointer}
+.btn-finish{background:#fff;color:var(--navy)}
+.btn-finish:hover{background:#eaf0f8}
+.progbar{position:fixed;top:54px;left:0;right:0;height:3px;background:var(--line);z-index:19}
+.progbar>i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+
+/* ---------- layout ---------- */
+main{position:fixed;top:57px;bottom:64px;left:0;right:0;display:flex}
+.pane{height:100%;overflow:auto;background:var(--panel)}
+.stim{flex:1 1 56%;border-right:1px solid var(--border);padding:26px 30px}
+.qpane{flex:1 1 44%;padding:22px 28px}
+.divhint{display:none}
+
+/* stimulus typography */
+.stim h2{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 14px}
+.stim .extract-head{font-family:var(--serif);font-style:italic;font-weight:700;font-size:16px;
+  margin:20px 0 8px}
+.stim .work-title{font-family:var(--serif);font-weight:700;font-size:20px;margin:2px 0 12px}
+.stim p,.stim .stanza{font-family:var(--serif);font-size:16px;line-height:1.62;margin:0 0 13px;color:#23272d}
+.stanza{white-space:pre-line}
+.gap{display:inline-block;min-width:34px;text-align:center;border-bottom:2px solid #b9c2cd;
+  color:var(--muted);font-family:var(--sans);font-size:13px;font-weight:700;padding:0 4px;border-radius:3px}
+.gap.active{background:#fff3cf;border-bottom-color:var(--flag);color:#7a4d12}
+.ex-block{margin:0 0 18px;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.ex-block .lbl{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--blue);margin:0 0 4px}
+
+/* question pane */
+.qtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.qnum{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.flagbtn{display:flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;
+  color:var(--muted);border-radius:7px;padding:6px 11px;font-size:13px;font-weight:600;cursor:pointer}
+.flagbtn svg{width:13px;height:13px}
+.flagbtn.on{background:var(--flag-bg);border-color:var(--flag);color:#9a5713}
+.qstem{font-size:16.5px;font-weight:600;line-height:1.5;margin:10px 0 16px}
+.qstem .qq{font-style:italic;font-weight:600}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;
+  border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;margin:0 0 10px;cursor:pointer;
+  font-size:15px;line-height:1.45;color:var(--ink);transition:border-color .12s,background .12s}
+.opt:hover{border-color:#9db8d6;background:#fafcff}
+.opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid #b6c0cc;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .badge{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt:focus-visible{outline:3px solid #9bc2ec;outline-offset:2px}
+.opt .otext{padding-top:2px}
+
+/* footer / navigator */
+footer{height:64px;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;padding:0 16px;z-index:20}
+.nav-side{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.navwrap{flex:1 1 auto;overflow-x:auto;display:flex;gap:6px;padding:4px 2px;justify-content:center}
+.navbtn{position:relative;flex:0 0 auto;width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);
+  background:#fff;color:var(--ink);font-size:13px;font-weight:600;cursor:pointer}
+.navbtn.answered{background:var(--navy);border-color:var(--navy);color:#fff}
+.navbtn.current{outline:3px solid #9bc2ec;outline-offset:1px;border-color:var(--blue)}
+.navbtn.flagged::after{content:"";position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;
+  background:var(--flag);border:1.5px solid #fff}
+.btn-nav{border:1px solid var(--border);background:#fff;border-radius:8px;padding:9px 15px;font-weight:600;
+  font-size:14px;cursor:pointer;color:var(--ink)}
+.btn-nav:hover:not(:disabled){background:#f1f4f8}
+.btn-nav:disabled{opacity:.4;cursor:default}
+.btn-nav.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn-nav.primary:hover{background:var(--navy2)}
+
+/* ---------- overlays ---------- */
+.overlay{position:fixed;inset:0;background:rgba(12,20,33,.55);z-index:40;display:flex;
+  align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:14px;max-width:680px;width:100%;max-height:90vh;overflow:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.card .cap{background:var(--navy);color:#fff;padding:22px 28px}
+.card .cap h1{margin:0 0 4px;font-size:21px}
+.card .cap p{margin:0;opacity:.85;font-size:14px}
+.card .body{padding:24px 28px}
+.card .body h3{margin:18px 0 8px;font-size:14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.card ul{margin:0 0 4px;padding-left:20px}
+.card li{margin:0 0 7px;font-size:14.5px}
+.field{display:flex;gap:10px;align-items:center;margin:16px 0 4px}
+.field input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;font-family:inherit}
+.start-actions{display:flex;justify-content:flex-end;gap:10px;padding:18px 28px 24px}
+.btn-primary{background:var(--navy);color:#fff;border:0;border-radius:9px;padding:12px 22px;font-weight:700;font-size:15px;cursor:pointer}
+.btn-primary:hover{background:var(--navy2)}
+.btn-ghost{background:#fff;border:1px solid var(--border);border-radius:9px;padding:12px 20px;font-weight:600;font-size:15px;cursor:pointer}
+
+/* results */
+.scorerow{display:flex;gap:18px;align-items:center;margin:4px 0 18px}
+.scorebig{font-size:46px;font-weight:800;color:var(--navy);line-height:1}
+.scorebig small{font-size:20px;color:var(--muted);font-weight:600}
+.scorepct{font-size:15px;color:var(--muted)}
+.brk{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-size:14.5px;margin:0 0 8px}
+.brk .b-lbl{color:var(--muted)}
+.brk .b-val{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.review-q{border:1px solid var(--line);border-radius:10px;padding:13px 15px;margin:0 0 11px}
+.review-q.ok{border-left:4px solid var(--correct)}
+.review-q.no{border-left:4px solid var(--wrong)}
+.review-q .rh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.review-q .rn{font-weight:700;font-size:13.5px}
+.review-q .tag{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px}
+.tag.ok{background:var(--correct-bg);color:var(--correct)}
+.tag.no{background:var(--wrong-bg);color:var(--wrong)}
+.review-q .rstem{font-size:14.5px;font-weight:600;margin-bottom:7px}
+.ans-line{display:flex;gap:12px;align-items:baseline;font-size:13.8px;margin:4px 0}
+.ans-line .k{flex:0 0 102px;color:var(--muted)}
+.ans-line .v{flex:1 1 auto;min-width:0}
+.ans-line .v.no{color:var(--wrong);font-weight:600}
+.ans-line .v.ok{color:var(--correct);font-weight:600}
+.ans-line .v.corr{color:var(--correct);font-weight:600}
+.exp{font-size:13.5px;color:#36404b;background:#f6f8fb;border-radius:8px;padding:9px 11px;margin-top:8px}
+.results-actions{display:flex;gap:10px;justify-content:flex-end;padding:6px 28px 24px}
+
+/* skill bars */
+.skillrow{display:grid;grid-template-columns:170px 1fr 58px;gap:10px;align-items:center;margin:0 0 9px}
+.skillrow .sl{font-size:13.5px;color:#2b323b}
+.skilltrack{height:11px;background:#eef1f5;border-radius:6px;overflow:hidden}
+.skillfill{height:100%;border-radius:6px;transition:width .4s}
+.skillrow .sv{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.skillrow .sv b{color:#2b323b}
+
+/* autopsy donut */
+.autopsy{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.donut-wrap{position:relative;width:150px;height:150px;flex:0 0 auto}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-center .dn{font-size:26px;font-weight:800;color:var(--navy);line-height:1}
+.donut-center .dl{font-size:11px;color:var(--muted);letter-spacing:.03em}
+.legend{flex:1 1 200px;min-width:200px}
+.legend .lg{display:flex;align-items:center;gap:9px;margin:0 0 7px;font-size:13.5px}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto}
+.legend .lc{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;color:#2b323b}
+.no-errors{background:var(--correct-bg);color:var(--correct);border-radius:10px;padding:14px 16px;font-weight:600;font-size:14.5px}
+
+/* focus list */
+.focus{display:flex;flex-direction:column;gap:9px}
+.focus .fitem{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:9px;padding:11px 13px;background:#fbfcfe}
+.focus .fitem.warn{border-left-color:var(--flag)}
+.focus .fitem.good{border-left-color:var(--correct);background:var(--correct-bg)}
+.focus .ft{font-weight:700;font-size:14px;margin-bottom:2px}
+.focus .fb{font-size:13.5px;color:#3a434e}
+
+/* review chips */
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 8px}
+.chip{font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.01em}
+.chip.skill{background:#eef2f7;color:#41506a}
+.chip.err{background:var(--wrong-bg);color:var(--wrong)}
+
+/* wrong-question summary */
+.rev-nums{font-size:13.5px;color:#2b323b;background:#f3f6fa;border-radius:8px;padding:9px 12px;margin:0 0 12px}
+.rev-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--line);
+  border-left:4px solid var(--wrong);border-radius:9px;padding:9px 12px;margin:0 0 8px}
+.rev-row .rev-n{font-weight:800;color:var(--navy);font-size:14px;min-width:34px}
+.rev-row .rev-ans{margin-left:auto;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rev-row .rev-ans b.no{color:var(--wrong)}
+.rev-row .rev-ans b.ok{color:var(--correct)}
+
+@media (max-width:880px){
+  main{flex-direction:column;bottom:96px}
+  .stim{flex:0 0 auto;max-height:42vh;border-right:0;border-bottom:1px solid var(--border)}
+  .qpane{flex:1 1 auto}
+  footer{height:auto;flex-wrap:wrap;padding:8px 10px;gap:8px}
+  .navwrap{order:3;width:100%;justify-content:flex-start}
+  .brand .ttl{max-width:44vw}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Start overlay ===== -->
+<div class="overlay" id="startOverlay">
+  <div class="card">
+    <div class="cap">
+      <h1>Selective High School Placement Test</h1>
+      <p>Reading &middot; Practice paper &middot; 40 minutes &middot; 30 questions</p>
+    </div>
+    <div class="body">
+      <p>This paper has four parts: two short fiction extracts, a poem, a sentence-gap text, and four extracts on a single theme. For each question, choose the one answer you think is best.</p>
+      <h3>How it works</h3>
+      <ul>
+        <li>Read the text on the left and answer the question on the right.</li>
+        <li>Use <b>Next</b> and <b>Previous</b>, or the number buttons at the bottom, to move around.</li>
+        <li><b>Flag</b> a question to come back to it. You can change any answer before you finish.</li>
+        <li>The timer runs for 40 minutes. The paper submits itself when time runs out.</li>
+        <li>You will not lose marks for a wrong answer, so attempt all 30.</li>
+      </ul>
+      <div class="field">
+        <input id="nameInput" type="text" placeholder="Name (optional)" autocomplete="off">
+      </div>
+    </div>
+    <div class="start-actions">
+      <button class="btn-primary" id="beginBtn">Begin test</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Confirm finish ===== -->
+<div class="overlay hidden" id="confirmOverlay">
+  <div class="card" style="max-width:460px">
+    <div class="cap"><h1>Finish the test?</h1><p id="confirmSub">You have answered all questions.</p></div>
+    <div class="start-actions">
+      <button class="btn-ghost" id="keepGoingBtn">Keep working</button>
+      <button class="btn-primary" id="confirmFinishBtn">Finish and mark</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Results overlay ===== -->
+<div class="overlay hidden" id="resultsOverlay">
+  <div class="card">
+    <div class="cap"><h1>Your results</h1><p id="resultsWho">Reading practice paper</p></div>
+    <div class="body">
+      <div class="scorerow">
+        <div class="scorebig" id="scoreBig">0<small>/30</small></div>
+        <div>
+          <div class="scorepct" id="scorePct"></div>
+          <div class="scorepct" id="scoreTime"></div>
+        </div>
+      </div>
+      <h3>By section</h3>
+      <div class="brk" id="brkBox"></div>
+      <h3>Skill mastery</h3>
+      <div id="skillBox"></div>
+      <h3>Error autopsy</h3>
+      <div id="autopsyBox"></div>
+      <h3>What to work on next</h3>
+      <div id="focusBox"></div>
+      <h3>Questions to review</h3>
+      <div id="reviewBox"></div>
+    </div>
+    <div class="results-actions">
+      <button class="btn-ghost" id="restartBtn">Restart test</button>
+      <button class="btn-primary" id="closeResultsBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Test UI ===== -->
+<header>
+  <div class="brand">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.6 5.2 8.4 4.5 5.5 4.5C4.7 4.5 4 5.2 4 6v11.5c0 .6.5 1 1.1 1c2.7-.2 4.8.5 6.9 2c2.1-1.5 4.2-2.2 6.9-2c.6 0 1.1-.4 1.1-1V6c0-.8-.7-1.5-1.5-1.5c-2.9 0-5.1.7-6.5 2z"/><path d="M12 6.5v12"/></svg></span>
+    <div class="ttl">Selective High School Placement Test</div>
+    <div class="pill">Reading</div>
+  </div>
+  <div class="hright">
+    <div class="timer" id="timer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg>
+      <span id="timeText">40:00</span>
+    </div>
+    <button class="btn btn-finish" id="finishBtn">Finish</button>
+  </div>
+</header>
+<div class="progbar"><i id="progFill"></i></div>
+
+<main>
+  <section class="pane stim" id="stim"></section>
+  <section class="pane qpane" id="qpane">
+    <div class="qtop">
+      <div class="qnum" id="qnum">Question 1 of 30</div>
+      <button class="flagbtn" id="flagBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg>
+        <span>Flag</span>
+      </button>
+    </div>
+    <div class="qstem" id="qstem"></div>
+    <div id="opts"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="nav-side"><button class="btn-nav" id="prevBtn">Previous</button></div>
+  <div class="navwrap" id="navwrap"></div>
+  <div class="nav-side"><button class="btn-nav primary" id="nextBtn">Next</button></div>
+</footer>
+
+<script>
+/* ---------------- stimulus content ---------------- */
+const STIM = {
+fiction:`<h2>Read the two extracts, then answer questions 1 to 8</h2>
+<div class="extract-head">Extract A: from The Foundling House</div>
+<p>Every July, on the one fixed holiday of their year, the children of the Foundling House were taken to the sea. The journey was made in a hired motor bus so old that it shuddered at every change of gear, and Miss Pell, who travelled with her back very straight and her gloves buttoned to the wrist, would not permit a window to be lowered until they had cleared the last of the town. The children sat in pairs, the youngest at the front, and were told to keep their voices low and their boots off the seats. They obeyed, as they obeyed in all things, though a kind of pressure built in them, a held breath, that had nothing to do with the heat.</p>
+<p>For the first half hour the road was the ordinary road, the one they could see from the upper windows of the House, past the brickworks and the long grey wall of the gasworks and the allotments where men in shirtsleeves did not look up. Then the houses thinned. Hedges began. A horse stood in a field and watched them pass with the mild contempt of a creature that has nowhere it needs to be. Someone whispered that he had smelled it, the sea, though everyone knew you could not smell the sea from so far, and Miss Pell said, without turning her head, that the next child to speak would spend the afternoon in the bus.</p>
+<p>So they were silent on the long climb, and silent at the top, and it was only as the bus tipped over the crest of the down that the whole grey shining plate of it opened below them at once, flat to the edge of the sky. The smallest girl, forgetting herself entirely, stood up in her seat and had to be pulled down by the hand. Miss Pell did not scold her. She was looking out of the window herself, at the thing she had seen every July for thirty years, with an expression that none of the children, busy with their own joy, troubled to read.</p>
+<div class="extract-head">Extract B: from The Coffin Seat</div>
+<p>My family had no business going to the beach, and went anyway, every summer, with the grim regularity of people paying off a debt. We were not beach people. My mother burned in minutes and spent the drive applying zinc to a face already the colour of corned beef. My father, who believed any problem could be solved by leaving earlier, woke us at an hour that technically belonged to the previous night, so that we arrived at the coast in darkness and sat in the car park watching the sky decide whether to bother.</p>
+<p>There were six of us and a vehicle designed, optimistically, for five. I spent those drives folded into the boot among the eskies and the folding chairs, a position my brothers called the coffin and I called, with no evidence, the best seat. We did not talk so much as negotiate: whose elbow was where, whose turn it was to hold the dog, whether the smell was the prawns or one of us. By the time we reached the last hill before the water, three of us were asleep and one was being quietly unwell into a plastic bag.</p>
+<p>And yet. There was a particular moment, every year, when the road crested that final rise and the sea appeared all at once, enormous and indifferent and ours, and my father would say nothing at all, which from him was a kind of singing. I have met people since who summered in proper houses, who can describe the sea as restful. I have never known how to tell them what it was to arrive at it the way we did, broken and carsick and triumphant, having earned, by sheer suffering, a thing that was free.</p>`,
+
+poem:`<h2>Read the poem, then answer questions 9 to 14</h2>
+<div class="work-title">Kerbside</div>
+<div class="stanza">Once a year the street confesses.
+Out on the verge, in the grey morning,
+the families set down what they can no longer keep:
+a cot, a ladder missing its third rung,
+a television that watched a marriage end,
+the exercise bike that was going to fix everything.</div>
+<div class="stanza">By noon the slow cars come.
+Men I have never seen lift my neighbour's life
+into their boots and drive it somewhere else,
+and this, the council calls collection,
+and this, my mother calls a shame,
+and the man taking the broken ladder calls a find.</div>
+<div class="stanza">I put out the chair my grandfather died in.
+I had meant to keep it. I kept it four years,
+in the room we do not use, under a sheet,
+and a girl no older than me takes it now,
+testing the seat with her hand, the way you would
+choose any chair, for any ordinary room,</div>
+<div class="stanza">and is happy, and does not know,
+and that, I think, is the kindest thing:
+that the chair will be a chair again,
+and hold a stranger gently, and tell her nothing,
+and the street, swept clean by evening,
+will keep our secrets for another year.</div>`,
+
+cloze:`<h2>Read the text, then answer questions 15 to 20. Choose the sentence (A to G) that fits each gap. One sentence is not needed.</h2>
+<div class="work-title">Mauve</div>
+<p>In 1856 a London teenager named William Perkin was trying to make a medicine. Malaria was killing thousands across the British Empire, and the only treatment, quinine, came from the bark of a South American tree and was always in short supply. <span class="gap" data-g="15">15</span> Working in a makeshift laboratory at the top of his parents' house during the Easter holidays, Perkin set out to build quinine from coal tar, a black sludge left over from making gas for street lamps.</p>
+<p>His experiment failed. Instead of the medicine he wanted, the flask filled with a dark, useless looking mess. <span class="gap" data-g="16">16</span> When he tried to clean the equipment with alcohol, the sludge dissolved into a brilliant purple liquid that stained everything it touched. Most chemists would have washed it away and moved on.</p>
+<p>Perkin did not. He had noticed that the purple clung to silk and refused to fade in sunlight or in the wash, and he understood at once what that stubbornness was worth. <span class="gap" data-g="17">17</span> At the time, purple cloth was coloured using a dye squeezed from sea snails, a process so costly that the colour had been reserved for emperors for over a thousand years. A cheap purple, made from industrial waste, would be a fortune.</p>
+<p>Against the advice of nearly everyone, the eighteen year old left college, borrowed money from his father, and built a factory. <span class="gap" data-g="18">18</span> Within a few years the streets of London and Paris were full of women in shades of purple that had once been impossible for ordinary people to wear. The colour was named mauve, and for a short, dazzling period it was everywhere.</p>
+<p>The true importance of Perkin's accident, though, was not the colour itself. <span class="gap" data-g="19">19</span> Chemists across Europe realised that coal tar, the filthy by product everyone had been throwing away, could be turned into dyes, medicines, perfumes and explosives. A whole industry grew out of that one failed experiment.</p>
+<p>Perkin sold his company while still a young man and returned, happily, to pure research. <span class="gap" data-g="20">20</span> He had set out to cure a disease, and had ended up changing the colour of the world instead.</p>`,
+
+matching:`<h2>Read the four extracts on the theme of boredom, then answer questions 21 to 30</h2>
+<div class="ex-block"><div class="lbl">Extract A</div><p>The most creative people I know were bored a lot as kids. Give a child an empty afternoon, with no screen and no plan, and after the first round of complaining, something usually starts up on its own. With nothing handed to it, the mind makes its own fun. A cardboard box turns into a submarine. The backyard turns into a country with its own laws. So much creativity begins in boredom that I think we step in too fast to end it. Reach for the tablet the moment a child gets restless, and you answer a question the child was about to answer better alone. Yes, being bored is uncomfortable. So is a blank canvas for a painter, and nobody calls that a fault.</p></div>
+<div class="ex-block"><div class="lbl">Extract B</div><p>To a neuroscientist, a bored brain is busy. With no task in front of us, the brain shifts into what researchers call the default mode network, the activity tied to daydreaming, memory and thinking ahead. The mind does not switch off. It turns inward and wanders, pulling together old experiences and running through things that have not happened yet. In one study, people who were first made to copy numbers out of a phone book came up with more original ideas afterwards than people who started the creative task straight away. Boredom, on this view, is a signal rather than a state. It is the brain flagging that wherever your attention sits now, it is no longer worth the effort.</p></div>
+<div class="ex-block"><div class="lbl">Extract C</div><p>A generation ago, a kid waiting at a bus stop, or in a doctor's waiting room, or in the back of the car, simply had to wait, and learned, in that waiting, to sit with their own thoughts. Now the gap gets filled the second it opens, by a screen in every pocket. So childhood has no empty stretches left in it. Being able to put up with boredom, to sit with a quiet mind and not panic, might be one of the more useful things a person ever learns, and it is the very thing this generation never gets to practise. Making everything comfortable can do real damage.</p></div>
+<div class="ex-block"><div class="lbl">Extract D</div><p>It helps to say what boredom is not. It is not loneliness, which wants company. It is not the easy solitude you might pick on a slow Sunday. Boredom is more restless than either, the feeling that time is moving and nothing in it is worth your attention. I learned this from a summer job watching a car park, eight hours a day. The first week nearly finished me. Then, sometime in the second week, the boredom turned, the way milk turns, into something else. I started noticing things: the regulars, the small dramas of cars arriving and leaving, the exact grey of the afternoon. The car park did not get more interesting. I got more interested, which is not the same thing, and is the better one.</p></div>`
+};
+
+/* ---------------- cloze options (shared A-G) ---------------- */
+const CLOZE_OPTS = [
+ {l:"A",t:`A dye that held its colour was rare, and a purple one was rarer still.`},
+ {l:"B",t:`By the end of his life he had been knighted, and the once worthless coal tar had made him both rich and famous.`},
+ {l:"C",t:`Purple remains one of the least common colours found in nature.`},
+ {l:"D",t:`Chemists had begun to wonder whether the precious drug might instead be built from cheaper materials in a laboratory.`},
+ {l:"E",t:`When the new dye reached the dressmakers, fashion seized on it instantly.`},
+ {l:"F",t:`It was only as he began to throw the failure away that something strange happened.`},
+ {l:"G",t:`It was the proof that useful substances could be manufactured from waste.`}
+];
+const MATCH_OPTS = [
+ {l:"A",t:`Extract A`},{l:"B",t:`Extract B`},{l:"C",t:`Extract C`},{l:"D",t:`Extract D`}
+];
+function ab(a,b,c,d){return [{l:"A",t:a},{l:"B",t:b},{l:"C",t:c},{l:"D",t:d}];}
+
+/* ---------------- questions ---------------- */
+const Q = [
+{n:1,sec:"Part 1: Fiction",stim:"fiction",stem:`Both extracts describe the moment when:`,
+ opts:ab(`a strict adult finally allows the children to relax.`,`the travellers first complain about the heat.`,`the sea comes into view suddenly from a hilltop.`,`the youngest child does something forbidden.`),ans:"C",
+ exp:`Both reveal the sea suddenly from the top of the final hill. A and D are true of one extract only; the heat is in Extract A only.`},
+{n:2,sec:"Part 1: Fiction",stim:"fiction",stem:`In Extract A, the final sentence suggests that Miss Pell:`,
+ opts:ab(`shared a feeling the children were too absorbed to notice.`,`was simply tired after thirty years of the same journey.`,`was quietly angry that the smallest girl had stood up.`,`felt nothing in particular about the familiar grey view.`),ans:"A",
+ exp:`Her unread expression, while the children are absorbed in joy, implies a private feeling. She does not scold (not angry), and the careful framing rules out feeling nothing.`},
+{n:3,sec:"Part 1: Fiction",stim:"fiction",stem:`The description of the horse that watches with "the mild contempt of a creature that has nowhere it needs to be" mainly serves to:`,
+ opts:ab(`show that the countryside is full of unfriendly animals.`,`contrast the horse's freedom with the children's confinement.`,`explain why the children were told to keep quiet.`,`underline how indifferent the surrounding countryside was to them.`),ans:"B",
+ exp:`"Nowhere it needs to be" sets the free, idle horse against the regimented children. D (indifference) is half right but misses that contrast.`},
+{n:4,sec:"Part 1: Fiction",stim:"fiction",stem:`The phrase "a held breath, that had nothing to do with the heat" mainly conveys that the children:`,
+ opts:ab(`were growing uncomfortable in the hot, shuddering bus.`,`were frightened of Miss Pell and her strict rules.`,`were finding it hard to breathe in the crowded bus.`,`were holding in a joy they were forbidden to show.`),ans:"D",
+ exp:`"Nothing to do with the heat" rules out the physical options. The held breath is suppressed excitement, not fear of Miss Pell.`},
+{n:5,sec:"Part 1: Fiction",stim:"fiction",stem:`When the narrator of Extract B says the father's silence "was a kind of singing," they mean the father:`,
+ opts:ab(`was too overcome by the view to speak at all.`,`would usually show happiness by humming or singing.`,`felt a deep contentment he showed by saying nothing.`,`was simply relieved the long drive was over at last.`),ans:"C",
+ exp:`For a terse, practical man, saying nothing is how he shows deep contentment. There is no literal singing, and the point is the sea, not relief.`},
+{n:6,sec:"Part 1: Fiction",stim:"fiction",stem:`The closing sentence of Extract B suggests the narrator believes the family's trips were:`,
+ opts:ab(`made precious by the very hardship of getting there.`,`a foolish waste of money the family could not afford.`,`far less enjoyable than the holidays of wealthier people.`,`something the narrator now quietly wishes they had avoided.`),ans:"A",
+ exp:`A free thing made precious by the suffering of reaching it. The tone is fond and triumphant, not regretful, and money is not the theme.`},
+{n:7,sec:"Part 1: Fiction",stim:"fiction",stem:`The two extracts differ most clearly in that:`,
+ opts:ab(`only Extract A treats the journey as a yearly ritual to the sea.`,`Extract A keeps the adult's feelings hidden, while Extract B states them.`,`Extract B unfolds in the distant past, while Extract A is set today.`,`only Extract B allows its travellers any moment of real discomfort.`),ans:"B",
+ exp:`Extract A withholds Miss Pell's feeling; Extract B's narrator states the family's openly. A, C and D are false on a cross-read.`},
+{n:8,sec:"Part 1: Fiction",stim:"fiction",stem:`Which statement best captures a difference in tone between the two extracts?`,
+ opts:ab(`Both extracts are bitter about the adults who organise the trips.`,`Both extracts treat the journey as something only to be endured.`,`Extract A is openly comic while Extract B is solemn throughout.`,`Extract A is restrained while Extract B is wry and self-mocking.`),ans:"D",
+ exp:`Extract A is restrained and observed; Extract B is wry and self-mocking. Both find joy at arrival, and neither is bitter.`},
+
+{n:9,sec:"Part 2: Poem",stim:"poem",stem:`The poem is mainly concerned with:`,
+ opts:ab(`the waste created when people throw away things still usable.`,`the private sadness of a grandfather's recent death in the family.`,`how discarded objects lose their private histories with new owners.`,`the unfairness of strangers taking other people's old belongings.`),ans:"C",
+ exp:`The poem is about objects losing their private histories as they pass to strangers. The grandfather is one instance, not the whole.`},
+{n:10,sec:"Part 2: Poem",stim:"poem",stem:`The repetition of "and this... and this... and the man... calls a find" mainly works to show that:`,
+ opts:ab(`different people give the same event completely different meanings.`,`the council, the mother and the scavenger are all equally wrong.`,`the narrator cannot decide what to call the collection day.`,`the objects on the verge are worth more than people think.`),ans:"A",
+ exp:`The same act is collection, shame, or a find depending on who names it. The poem does not call them wrong, nor is the narrator undecided.`},
+{n:11,sec:"Part 2: Poem",stim:"poem",stem:`The phrase "a television that watched a marriage end" suggests that:`,
+ opts:ab(`the couple argued most often while sitting watching television.`,`television programmes can drive couples apart and cause divorce.`,`the television itself was broken during a bitter family argument.`,`ordinary objects quietly soak up the lives around them.`),ans:"D",
+ exp:`Ordinary objects quietly absorb the lives around them. The literal readings miss the figurative point.`},
+{n:12,sec:"Part 2: Poem",stim:"poem",stem:`The lines "and is happy, and does not know" mark a turn in the poem because they:`,
+ opts:ab(`quietly reveal that the girl has done something wrong.`,`shift the poem from loss to an unexpected comfort.`,`show the narrator growing angry at the cheerful girl.`,`bring a happy ending that cancels out the earlier sadness.`),ans:"B",
+ exp:`The turn reframes the girl's ignorance as an unexpected comfort. It does not cancel the sadness; the tone stays bittersweet.`},
+{n:13,sec:"Part 2: Poem",stim:"poem",stem:`That the narrator kept the chair "four years, in the room we do not use, under a sheet" suggests that the narrator:`,
+ opts:ab(`had honestly forgotten the chair was even there at all.`,`was keeping the chair clean for some special future occasion.`,`could not use the chair, nor quite let it go.`,`disliked the chair but had nowhere else to store it.`),ans:"C",
+ exp:`Kept but covered and unused for years: he could neither use the chair nor let it go. He had not forgotten it, and he valued it.`},
+{n:14,sec:"Part 2: Poem",stim:"poem",stem:`The poem ends by saying the swept street "will keep our secrets for another year." This mainly suggests that:`,
+ opts:ab(`letting go is a quiet act, repeated every single year.`,`the neighbourhood is full of shameful and hidden crimes.`,`the council's street cleaners do an excellent job each year.`,`the families now deeply regret putting their belongings outside.`),ans:"A",
+ exp:`"For another year" signals an annual cycle of quiet letting go. The secrets are private griefs, not crimes.`},
+
+{n:15,sec:"Part 3: Sentence gap",stim:"cloze",gap:15,stem:`Choose the sentence that best fits Gap 15.`,opts:CLOZE_OPTS,ans:"D",
+ exp:`Bridges quinine's short supply to Perkin building it from coal tar: chemists wondered about a cheaper, lab-made version.`},
+{n:16,sec:"Part 3: Sentence gap",stim:"cloze",gap:16,stem:`Choose the sentence that best fits Gap 16.`,opts:CLOZE_OPTS,ans:"F",
+ exp:`Between the useless mess and the purple liquid: as he began to throw the failure away, something strange happened.`},
+{n:17,sec:"Part 3: Sentence gap",stim:"cloze",gap:17,stem:`Choose the sentence that best fits Gap 17.`,opts:CLOZE_OPTS,ans:"A",
+ exp:`Explains why a colourfast purple mattered, which the sea-snail and emperor detail then proves.`},
+{n:18,sec:"Part 3: Sentence gap",stim:"cloze",gap:18,stem:`Choose the sentence that best fits Gap 18.`,opts:CLOZE_OPTS,ans:"E",
+ exp:`Between building the factory and the streets full of purple: when the dye reached dressmakers, fashion seized it.`},
+{n:19,sec:"Part 3: Sentence gap",stim:"cloze",gap:19,stem:`Choose the sentence that best fits Gap 19.`,opts:CLOZE_OPTS,ans:"G",
+ exp:`The real lesson, not the colour itself: the proof that useful substances could be made from waste.`},
+{n:20,sec:"Part 3: Sentence gap",stim:"cloze",gap:20,stem:`Choose the sentence that best fits Gap 20.`,opts:CLOZE_OPTS,ans:"B",
+ exp:`The legacy before the closing irony: knighted, and made rich and famous by once worthless coal tar.`},
+
+{n:21,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract distinguishes boredom from similar feelings such as loneliness?`,opts:MATCH_OPTS,ans:"D",
+ exp:`Only Extract D separates boredom from loneliness and chosen solitude.`},
+{n:22,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract presents a study comparing people made bored beforehand with others?`,opts:MATCH_OPTS,ans:"B",
+ exp:`Only Extract B reports a study, the phone-book task, comparing bored and unbored people.`},
+{n:23,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract argues that adults are too quick to rescue children from boredom?`,opts:MATCH_OPTS,ans:"A",
+ exp:`Extract A says we step in too fast and reach for the tablet. Extract C is about a lost skill, not rescuing.`},
+{n:24,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract claims that tolerating boredom is a skill that must be practised?`,opts:MATCH_OPTS,ans:"C",
+ exp:`Extract C calls putting up with boredom a useful thing this generation never gets to practise.`},
+{n:25,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract describes boredom slowly turning into sharper attention?`,opts:MATCH_OPTS,ans:"D",
+ exp:`Extract D, the car-park job, where boredom turned into noticing things.`},
+{n:26,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract likens boredom to the uncomfortable fresh start before creative work?`,opts:MATCH_OPTS,ans:"A",
+ exp:`Extract A likens being bored to the discomfort of a painter facing a blank canvas.`},
+{n:27,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract explains what the brain does when it is given no task?`,opts:MATCH_OPTS,ans:"B",
+ exp:`Extract B explains the default mode network, what the brain does with no task.`},
+{n:28,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract warns that making life too comfortable may be harmful?`,opts:MATCH_OPTS,ans:"C",
+ exp:`Extract C warns that making everything comfortable can do real damage. Extract A only says boredom is uncomfortable.`},
+{n:29,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract implies that the change was in the observer, not the situation?`,opts:MATCH_OPTS,ans:"D",
+ exp:`Extract D: the car park did not change, the observer did ("I got more interested").`},
+{n:30,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract suggests that boredom is a message rather than a fixed condition?`,opts:MATCH_OPTS,ans:"B",
+ exp:`Extract B calls boredom a signal rather than a state.`}
+];
+
+/* ---------------- diagnostic tagging ---------------- */
+/* Skill each question explicitly tests (aligned to the Selective Reading skills) */
+const SKILL_OF={
+ 1:"Synthesis across texts", 2:"Inference", 3:"Effect of language", 4:"Inference",
+ 5:"Inference", 6:"Main idea & theme", 7:"Text structure", 8:"Tone & attitude",
+ 9:"Main idea & theme", 10:"Effect of language", 11:"Effect of language",
+ 12:"Text structure", 13:"Inference", 14:"Purpose & viewpoint",
+ 15:"Cohesion & sentence logic",16:"Cohesion & sentence logic",17:"Cohesion & sentence logic",
+ 18:"Cohesion & sentence logic",19:"Cohesion & sentence logic",20:"Cohesion & sentence logic",
+ 21:"Synthesis across texts",22:"Synthesis across texts",23:"Synthesis across texts",
+ 24:"Synthesis across texts",25:"Synthesis across texts",26:"Synthesis across texts",
+ 27:"Synthesis across texts",28:"Synthesis across texts",29:"Synthesis across texts",
+ 30:"Synthesis across texts"
+};
+/* Trap type of each wrong option (Parts 1-2). Parts 3-4 use a fixed category. */
+const TRAP_OF={
+ 1:{A:"Half-right",B:"Literal trap",D:"Half-right"},
+ 2:{B:"Half-right",C:"Reversal",D:"Reversal"},
+ 3:{A:"Literal trap",C:"Half-right",D:"Half-right"},
+ 4:{A:"Literal trap",B:"Half-right",C:"Literal trap"},
+ 5:{A:"Half-right",B:"Literal trap",D:"Half-right"},
+ 6:{B:"Half-right",C:"Reversal",D:"Reversal"},
+ 7:{A:"Reversal",C:"Reversal",D:"Reversal"},
+ 8:{A:"Overstatement",B:"Half-right",C:"Reversal"},
+ 9:{A:"Half-right",B:"Half-right",D:"Reversal"},
+ 10:{B:"Overstatement",C:"Half-right",D:"Half-right"},
+ 11:{A:"Literal trap",B:"Reversal",C:"Literal trap"},
+ 12:{A:"Reversal",C:"Reversal",D:"Overstatement"},
+ 13:{A:"Reversal",B:"Literal trap",D:"Reversal"},
+ 14:{B:"Overstatement",C:"Literal trap",D:"Reversal"}
+};
+function errorCategory(q,picked){
+  if(picked==null || picked===q.ans) return null;
+  if(TRAP_OF[q.n]) return TRAP_OF[q.n][picked] || "Logic / locating";
+  return "Logic / locating"; // cloze + four-extract errors
+}
+/* error categories: colour + coaching tip */
+const ERRORS={
+ "Half-right":{c:"#2f7ec4",tip:"You picked a true detail that did not answer the exact question. Re-read the stem and ask what is actually being asked before choosing."},
+ "Literal trap":{c:"#7a5bb5",tip:"You answered the surface meaning and missed what the line implies. Ask what it suggests, not just what it says."},
+ "Overstatement":{c:"#b5562b",tip:"You chose an option pushed too far. Watch for always, never, all, cruel; the text rarely commits that hard."},
+ "Reversal":{c:"#c0392b",tip:"You picked the opposite of the text, worded to sound familiar. Check the option actually agrees with the passage."},
+ "Popular misreading":{c:"#d98324",tip:"You picked the obvious, poster-style reading. In English that is often the trap; look for the complication."},
+ "Logic / locating":{c:"#2a9d6f",tip:"On gap and four-extract questions you matched the topic, not the precise link or idea. Prove the connection from the sentences around it."}
+};
+/* skill coaching drills */
+const SKILL_TIP={
+ "Main idea & theme":"Ask what the whole text is really about, not one striking detail.",
+ "Purpose & viewpoint":"Ask why the writer wrote this and what they think of the subject.",
+ "Tone & attitude":"Name the feeling with one word you can point to in the text.",
+ "Inference":"Answer only from what the text supports; never add outside knowledge.",
+ "Effect of language":"Ask what a phrase or image does, not just what it literally says.",
+ "Text structure":"Track how the text changes from start to finish, and find the turn.",
+ "Cohesion & sentence logic":"For each gap, read the sentence before and after, and match the link, not the keyword.",
+ "Synthesis across texts":"Match the exact idea asked for, not the shared topic, and check every extract."
+};
+
+/* ---------------- state ---------------- */
+let cur=0;
+const answers={};            // n -> letter
+const flags=new Set();       // n
+let secondsLeft=40*60;
+let timerId=null, started=false, currentStim=null, finished=false;
+
+const $=id=>document.getElementById(id);
+
+/* ---------------- rendering ---------------- */
+function renderStim(q){
+  if(currentStim!==q.stim){
+    $("stim").innerHTML=STIM[q.stim];
+    $("stim").scrollTop=0;
+    currentStim=q.stim;
+  }
+  if(q.stim==="cloze"){
+    document.querySelectorAll("#stim .gap").forEach(g=>{
+      g.classList.toggle("active", Number(g.dataset.g)===q.gap);
+    });
+  }
+}
+function stemHTML(s){
+  // italicise quoted phrases lightly for readability
+  return s.replace(/"([^"]+)"/g, '<span class="qq">&ldquo;$1&rdquo;</span>');
+}
+function renderQuestion(){
+  const q=Q[cur];
+  renderStim(q);
+  $("qnum").textContent="Question "+q.n+" of 30";
+  $("qstem").innerHTML=stemHTML(q.stem);
+  const wrap=$("opts"); wrap.innerHTML="";
+  q.opts.forEach(o=>{
+    const b=document.createElement("button");
+    b.className="opt"+(answers[q.n]===o.l?" sel":"");
+    b.setAttribute("role","radio");
+    b.setAttribute("aria-checked",answers[q.n]===o.l?"true":"false");
+    b.innerHTML='<span class="badge">'+o.l+'</span><span class="otext">'+o.t+'</span>';
+    b.onclick=()=>{ if(finished) return; answers[q.n]=o.l; renderQuestion(); renderNav(); updateProgress(); };
+    wrap.appendChild(b);
+  });
+  $("flagBtn").classList.toggle("on",flags.has(q.n));
+  $("prevBtn").disabled = cur===0;
+  $("nextBtn").textContent = cur===Q.length-1 ? "Review" : "Next";
+  renderNav();
+}
+function renderNav(){
+  const w=$("navwrap"); w.innerHTML="";
+  Q.forEach((q,i)=>{
+    const b=document.createElement("button");
+    b.className="navbtn"+(answers[q.n]?" answered":"")+(i===cur?" current":"")+(flags.has(q.n)?" flagged":"");
+    b.textContent=q.n;
+    b.title="Question "+q.n+(answers[q.n]?" (answered)":"")+(flags.has(q.n)?" (flagged)":"");
+    b.onclick=()=>{ cur=i; renderQuestion(); };
+    w.appendChild(b);
+  });
+}
+function updateProgress(){
+  const done=Object.keys(answers).length;
+  $("progFill").style.width=(done/Q.length*100)+"%";
+}
+
+/* ---------------- navigation ---------------- */
+$("prevBtn").onclick=()=>{ if(cur>0){cur--;renderQuestion();} };
+$("nextBtn").onclick=()=>{ if(cur<Q.length-1){cur++;renderQuestion();} else openConfirm(); };
+$("flagBtn").onclick=()=>{ const n=Q[cur].n; flags.has(n)?flags.delete(n):flags.add(n); renderQuestion(); };
+
+/* ---------------- timer ---------------- */
+function fmt(s){const m=Math.floor(s/60),x=s%60;return m+":"+String(x).padStart(2,"0");}
+function tick(){
+  secondsLeft--;
+  $("timeText").textContent=fmt(Math.max(secondsLeft,0));
+  if(secondsLeft<=300) $("timer").classList.add("warn");
+  if(secondsLeft<=0){ clearInterval(timerId); finish(); }
+}
+
+/* ---------------- start / finish ---------------- */
+$("beginBtn").onclick=()=>{
+  $("startOverlay").classList.add("hidden");
+  started=true;
+  renderQuestion(); updateProgress();
+  timerId=setInterval(tick,1000);
+};
+function openConfirm(){
+  const unanswered=Q.length-Object.keys(answers).length;
+  $("confirmSub").textContent = unanswered===0
+    ? "You have answered all 30 questions."
+    : "You still have "+unanswered+" question"+(unanswered>1?"s":"")+" unanswered.";
+  $("confirmOverlay").classList.remove("hidden");
+}
+function showResults(){
+  $("resultsOverlay").classList.remove("hidden");
+  $("resultsOverlay").querySelector(".card").scrollTop=0;
+}
+$("finishBtn").onclick=()=>{ finished ? showResults() : openConfirm(); };
+$("keepGoingBtn").onclick=()=>$("confirmOverlay").classList.add("hidden");
+$("confirmFinishBtn").onclick=()=>{ $("confirmOverlay").classList.add("hidden"); finish(); };
+
+function finish(){
+  if(timerId) clearInterval(timerId);
+  let score=0; const bySec={};
+  const skillStat={};                 // skill -> {c,t}
+  const errCount={};                  // error category -> count
+  Q.forEach(q=>{
+    bySec[q.sec]=bySec[q.sec]||{c:0,t:0};
+    bySec[q.sec].t++;
+    const sk=SKILL_OF[q.n];
+    skillStat[sk]=skillStat[sk]||{c:0,t:0}; skillStat[sk].t++;
+    const ok=answers[q.n]===q.ans;
+    if(ok){ score++; bySec[q.sec].c++; skillStat[sk].c++; }
+    else { const cat=errorCategory(q,answers[q.n]); errCount[cat]=(errCount[cat]||0)+1; }
+  });
+  const totalWrong=30-score;
+  const name=($("nameInput").value||"").trim();
+  $("resultsWho").textContent = (name?name+": ":"")+"Reading practice paper";
+  $("scoreBig").innerHTML=score+'<small>/30</small>';
+  $("scorePct").textContent=Math.round(score/30*100)+"% correct";
+  const used=40*60-secondsLeft;
+  $("scoreTime").textContent="Time used: "+fmt(Math.max(used,0));
+
+  // ----- by section -----
+  const bb=$("brkBox"); bb.innerHTML="";
+  Object.keys(bySec).forEach(s=>{
+    bb.insertAdjacentHTML("beforeend",
+      '<div class="b-lbl">'+s+'</div><div class="b-val">'+bySec[s].c+" / "+bySec[s].t+'</div>');
+  });
+
+  // ----- skill mastery bars (weakest first) -----
+  const skBox=$("skillBox"); skBox.innerHTML="";
+  const skills=Object.keys(skillStat).map(s=>({s, ...skillStat[s], pct:skillStat[s].c/skillStat[s].t}))
+                     .sort((a,b)=>a.pct-b.pct || b.t-a.t);
+  skills.forEach(x=>{
+    const col = x.pct>=0.8?"var(--correct)" : x.pct>=0.5?"#c9871f" : "var(--wrong)";
+    skBox.insertAdjacentHTML("beforeend",
+      '<div class="skillrow"><div class="sl">'+x.s+'</div>'+
+      '<div class="skilltrack"><div class="skillfill" style="width:'+Math.round(x.pct*100)+'%;background:'+col+'"></div></div>'+
+      '<div class="sv"><b>'+x.c+'/'+x.t+'</b> &middot; '+Math.round(x.pct*100)+'%</div></div>');
+  });
+
+  // ----- error autopsy donut -----
+  const apBox=$("autopsyBox"); apBox.innerHTML="";
+  if(totalWrong===0){
+    apBox.innerHTML='<div class="no-errors">No errors to autopsy. Clean sweep.</div>';
+  } else {
+    const slices=Object.keys(errCount)
+      .map(k=>({label:k,value:errCount[k],color:(ERRORS[k]||{}).c||"#888"}))
+      .sort((a,b)=>b.value-a.value);
+    const r=58, w=20, C=2*Math.PI*r, cx=75, cy=75;
+    let off=0, circles="";
+    slices.forEach(s=>{
+      const len=s.value/totalWrong*C;
+      circles+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+s.color+'" '+
+               'stroke-width="'+w+'" stroke-dasharray="'+len+' '+(C-len)+'" '+
+               'stroke-dashoffset="'+(-off)+'" transform="rotate(-90 '+cx+' '+cy+')"></circle>';
+      off+=len;
+    });
+    let legend="";
+    slices.forEach(s=>{
+      legend+='<div class="lg"><span class="sw" style="background:'+s.color+'"></span>'+
+              s.label+'<span class="lc">'+s.value+'</span></div>';
+    });
+    apBox.innerHTML=
+      '<div class="autopsy"><div class="donut-wrap">'+
+      '<svg viewBox="0 0 150 150" width="150" height="150">'+circles+'</svg>'+
+      '<div class="donut-center"><span class="dn">'+totalWrong+'</span>'+
+      '<span class="dl">'+(totalWrong===1?"error":"errors")+'</span></div></div>'+
+      '<div class="legend">'+legend+'</div></div>';
+  }
+
+  // ----- what to work on -----
+  const fBox=$("focusBox"); fBox.innerHTML="";
+  const items=[];
+  if(score>=29){
+    items.push({cls:"good",t:"Excellent control",b:"Almost nothing to fix on this paper. To keep stretching, redo it under a tighter clock or move to a harder set."});
+  }
+  // biggest error category
+  const topErr=Object.keys(errCount).sort((a,b)=>errCount[b]-errCount[a])[0];
+  if(topErr){
+    items.push({cls:"",t:"Biggest leak: "+topErr+" ("+errCount[topErr]+" of "+totalWrong+" "+(totalWrong===1?"error":"errors")+")",
+                b:(ERRORS[topErr]||{}).tip||""});
+  }
+  // weakest skills with meaningful sample
+  const weak=skills.filter(x=>x.t>=2 && x.pct<0.75).slice(0,2);
+  weak.forEach(x=>{
+    items.push({cls:"warn",t:"Focus skill: "+x.s+" ("+x.c+"/"+x.t+")",b:SKILL_TIP[x.s]||""});
+  });
+  if(items.length===0){
+    items.push({cls:"good",t:"Solid all round",b:"No single weak area stands out. Keep practising mixed papers to hold the standard."});
+  }
+  items.forEach(it=>{
+    fBox.insertAdjacentHTML("beforeend",
+      '<div class="fitem '+it.cls+'"><div class="ft">'+it.t+'</div><div class="fb">'+it.b+'</div></div>');
+  });
+
+  // ----- compact summary of wrong questions (no explanations) -----
+  const rb=$("reviewBox"); rb.innerHTML="";
+  const wrong=Q.filter(q=>answers[q.n]!==q.ans);
+  if(wrong.length===0){
+    rb.innerHTML='<div class="no-errors">Every question correct. Nothing to review.</div>';
+  } else {
+    rb.insertAdjacentHTML("beforeend",
+      '<div class="rev-nums">Review: '+wrong.map(q=>q.n).join(", ")+'</div>');
+    wrong.forEach(q=>{
+      const yours=answers[q.n]||null;
+      const cat=errorCategory(q,yours);
+      rb.insertAdjacentHTML("beforeend",
+        '<div class="rev-row"><span class="rev-n">Q'+q.n+'</span>'+
+        '<span class="chip skill">'+SKILL_OF[q.n]+'</span>'+
+        (cat?'<span class="chip err">'+cat+'</span>':'')+
+        '<span class="rev-ans">You: <b class="no">'+(yours||"none")+'</b> &nbsp;Correct: <b class="ok">'+q.ans+'</b></span></div>');
+    });
+  }
+
+  // lock the test so it cannot be resumed after marking
+  finished=true;
+  $("finishBtn").textContent="Results";
+  showResults();
+}
+function textFor(q,letter){
+  const o=q.opts.find(o=>o.l===letter);
+  return o?o.t:"";
+}
+$("closeResultsBtn").onclick=()=>$("resultsOverlay").classList.add("hidden");
+$("restartBtn").onclick=()=>location.reload();
+
+/* keyboard: arrows to move, A-D / A-G to answer */
+document.addEventListener("keydown",e=>{
+  if(!started) return;
+  if(!$("resultsOverlay").classList.contains("hidden")) return;
+  if(!$("confirmOverlay").classList.contains("hidden")) return;
+  if(e.key==="ArrowRight"){ if(cur<Q.length-1){cur++;renderQuestion();} }
+  else if(e.key==="ArrowLeft"){ if(cur>0){cur--;renderQuestion();} }
+  else {
+    if(finished) return;
+    const k=e.key.toUpperCase();
+    const q=Q[cur];
+    if(q.opts.some(o=>o.l===k)){ answers[q.n]=k; renderQuestion(); renderNav(); updateProgress(); }
+  }
+});
+</script>
+</body>
+</html>
