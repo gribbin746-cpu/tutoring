@@ -735,11 +735,7 @@ function finish(){
     });
   }
 
-  // lock the test so it cannot be resumed after marking
-  finished=true;
-  $("finishBtn").textContent="Results";
-  showResults();
-  // lock the test so it cannot be resumed after marking
+// lock the test so it cannot be resumed after marking
   finished=true;
   $("finishBtn").textContent="Results";
   showResults();
@@ -763,8 +759,8 @@ function finish(){
   }).catch(err => {
     console.error("Could not save to database: ", err);
   });
-} // <--- This is the end of the finish() function
-}
+} 
+
 function textFor(q,letter){
   const o=q.opts.find(o=>o.l===letter);
   return o?o.t:"";
