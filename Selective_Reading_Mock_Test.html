@@ -305,6 +305,15 @@ footer{height:64px;position:fixed;bottom:0;left:0;right:0;background:#fff;border
 </footer>
 
 <script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
+
+async function callBackend(action, payload={}){
+  const reqBody=JSON.stringify({action, payload});
+  const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:reqBody,redirect:"follow"});
+  const parsed=await res.json();
+  if(!parsed.success) throw new Error(parsed.error);
+  return parsed.data;
+}
 /* ---------------- stimulus content ---------------- */
 const STIM = {
 fiction:`<h2>Read the two extracts, then answer questions 1 to 8</h2>
@@ -730,6 +739,31 @@ function finish(){
   finished=true;
   $("finishBtn").textContent="Results";
   showResults();
+  // lock the test so it cannot be resumed after marking
+  finished=true;
+  $("finishBtn").textContent="Results";
+  showResults();
+
+  /* ===== NEW: Send results to Google Sheets ===== */
+  // Look at the URL to see who is taking the test
+  const urlParams = new URLSearchParams(window.location.search);
+  const studentKey = urlParams.get('student') || $("nameInput").value.trim() || "unknown";
+
+  // Send the data
+  callBackend("submitReading", {
+    nameKey: studentKey,
+    paperId: "reading-mock-1",
+    score: score,
+    outOf: 30,
+    timeUsedSec: Math.max(used, 0),
+    perSkillJson: skillStat,
+    answersJson: answers
+  }).then(() => {
+    console.log("Successfully saved to database!");
+  }).catch(err => {
+    console.error("Could not save to database: ", err);
+  });
+} // <--- This is the end of the finish() function
 }
 function textFor(q,letter){
   const o=q.opts.find(o=>o.l===letter);
