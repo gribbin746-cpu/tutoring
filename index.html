@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutoring Portal</title>
+<style>
+:root{
+  --navy:#002664;--navy2:#06376b;--blue:#1a73c0;--blue-soft:#e8f1fb;
+  --bg:#eceff3;--panel:#fff;--border:#d3d9e1;--line:#e6eaef;--ink:#1b1e23;
+  --muted:#5c6672;--ok:#1d7a3a;--ok-bg:#e7f4ec;--err:#c0392b;--err-bg:#fbeceb;
+  --flag:#d9822b;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:Georgia,"Times New Roman",serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45}
+.hidden{display:none!important}
+button{font-family:inherit;cursor:pointer}
+
+header{height:54px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:600}
+.brand svg{width:22px;height:22px}
+.hstatus{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.dot{width:9px;height:9px;border-radius:50%;background:#8aa0bd}
+.dot.ok{background:#5fd08a}.dot.bad{background:#ff7a6e}
+.wrap{max-width:760px;margin:0 auto;padding:26px 18px 60px}
+
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px 26px;margin:0 0 18px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+h1{font-size:22px;margin:0 0 6px}
+h2{font-size:15px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+p.sub{color:var(--muted);margin:0 0 18px}
+label{display:block;font-size:13px;font-weight:600;color:#3a434e;margin:0 0 6px}
+input[type=text],input[type=password],textarea{width:100%;border:1.5px solid var(--border);border-radius:9px;
+  padding:11px 13px;font-size:15px;font-family:inherit;background:#fff}
+input:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+textarea{min-height:340px;line-height:1.55;font-family:var(--serif);font-size:16px;resize:vertical}
+.btn{border:0;border-radius:9px;padding:11px 20px;font-weight:700;font-size:15px;background:var(--navy);color:#fff}
+.btn:hover{background:var(--navy2)}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--border)}
+.btn.ghost:hover{background:#f1f4f8}
+.btn.sm{padding:8px 14px;font-size:13.5px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+
+.msg{border-radius:9px;padding:10px 13px;font-size:13.5px;margin:12px 0 0}
+.msg.ok{background:var(--ok-bg);color:var(--ok)}
+.msg.err{background:var(--err-bg);color:var(--err)}
+.msg.info{background:#eef3f8;color:#39516e}
+
+.tilegrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.tilegrid{grid-template-columns:1fr}}
+.tile{border:1px solid var(--border);border-radius:12px;padding:18px;background:#fff;display:flex;flex-direction:column;gap:10px}
+.tile .ic{width:40px;height:40px;border-radius:10px;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center}
+.tile .ic svg{width:22px;height:22px}
+.tile h3{margin:0;font-size:17px}
+.tile p{margin:0;color:var(--muted);font-size:13.5px;flex:1}
+.tile.locked{opacity:.55}
+
+.greet{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pill{background:var(--blue-soft);color:#2a5d92;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+
+/* writing */
+.wbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 14px;color:var(--muted);font-size:13.5px}
+.wbar .clock{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
+.wbar .clock.warn{color:var(--err)}
+.prompt{background:#f6f8fb;border-left:4px solid var(--navy);border-radius:8px;padding:13px 15px;margin:0 0 16px;font-family:var(--serif);font-size:16px}
+
+/* admin tables */
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0 18px;display:block;overflow-x:auto}
+.tbl th,.tbl td{border:1px solid var(--line);padding:6px 8px;text-align:left;white-space:nowrap;vertical-align:top}
+.tbl th{background:#f3f6fa;font-weight:700}
+.tbl td.wraptxt{white-space:normal;min-width:280px;max-width:420px}
+
+.debug{margin-top:22px;border:1px dashed var(--border);border-radius:10px;background:#fafbfd}
+.debug summary{cursor:pointer;padding:11px 14px;font-size:13px;font-weight:700;color:var(--muted)}
+.debug pre{margin:0;padding:0 14px 14px;font-size:11.5px;white-space:pre-wrap;word-break:break-word;color:#33404e;max-height:240px;overflow:auto}
+.linkbtn{background:none;border:0;color:var(--blue);font-size:13px;font-weight:600;padding:0;text-decoration:underline}
+.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:10px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.6 5.2 8.4 4.5 5.5 4.5C4.7 4.5 4 5.2 4 6v11.5c0 .6.5 1 1.1 1c2.7-.2 4.8.5 6.9 2c2.1-1.5 4.2-2.2 6.9-2c.6 0 1.1-.4 1.1-1V6c0-.8-.7-1.5-1.5-1.5c-2.9 0-5.1.7-6.5 2z"/><path d="M12 6.5v12"/></svg>
+    <span>Tutoring Portal</span>
+  </div>
+  <div class="hstatus"><span class="dot" id="connDot"></span><span id="connText">not checked</span></div>
+</header>
+
+<div class="wrap">
+
+  <!-- LOGIN -->
+  <section id="vLogin">
+    <div class="card">
+      <h1>Welcome back</h1>
+      <p class="sub">Type your first name to open your dashboard.</p>
+      <label for="nameInput">Your name</label>
+      <input type="text" id="nameInput" placeholder="e.g. Mithran" autocomplete="off">
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="loginBtn">Enter</button>
+        <button class="linkbtn" id="testConnBtn">Test backend connection</button>
+      </div>
+      <div id="loginMsg"></div>
+      <div class="foot">Tutor? <button class="linkbtn" id="toAdmin">Open tutor admin</button></div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="vDash" class="hidden">
+    <div class="card">
+      <div class="greet">
+        <div><h1 id="dashName" style="margin-bottom:2px">Hi</h1><span class="pill" id="dashYear">Year</span></div>
+        <button class="btn ghost sm" id="switchBtn">Switch student</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Your tasks</h2>
+      <div class="tilegrid">
+        <div class="tile" id="tileReading">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></div>
+          <h3>Reading test</h3>
+          <p>40 minutes, 30 questions, marked instantly with a skill and error breakdown.</p>
+          <div class="row">
+            <a class="btn sm" id="openReading" href="Selective_Reading_Mock_Test.html">Start</a>
+            <button class="btn ghost sm" id="sampleReading">Send sample result</button>
+          </div>
+        </div>
+        <div class="tile" id="tileWriting">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h16M6 16l9-9 3 3-9 9H6z"/></svg></div>
+          <h3>Writing task</h3>
+          <p>A timed writing prompt. When you submit, it is sent to your tutor to mark.</p>
+          <div class="row"><button class="btn sm" id="openWriting">Start</button></div>
+        </div>
+      </div>
+      <div id="dashMsg"></div>
+    </div>
+  </section>
+
+  <!-- WRITING -->
+  <section id="vWriting" class="hidden">
+    <div class="card">
+      <div class="row"><button class="btn ghost sm" id="writingBack">Back</button><div class="spacer"></div>
+        <div class="wbar" style="margin:0"><span>Time left</span><span class="clock" id="wClock">30:00</span>
+          <span>Words</span><span class="clock" id="wCount">0</span></div>
+      </div>
+      <h1 id="wTitle" style="margin-top:14px">Writing task</h1>
+      <div class="prompt" id="wPrompt"></div>
+      <textarea id="wText" placeholder="Start writing here..."></textarea>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="wSubmit">Submit to tutor</button>
+        <span class="spacer"></span>
+      </div>
+      <div id="wMsg"></div>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="vAdmin" class="hidden">
+    <div class="card">
+      <div class="row"><button class="btn ghost sm" id="adminBack">Back</button></div>
+      <h1 style="margin-top:14px">Tutor admin</h1>
+      <p class="sub">Enter the admin password to load all student results.</p>
+      <label for="adminPass">Admin password</label>
+      <input type="password" id="adminPass" autocomplete="off">
+      <div class="row" style="margin-top:14px"><button class="btn" id="adminLoadBtn">Load results</button></div>
+      <div id="adminMsg"></div>
+      <div id="adminData"></div>
+    </div>
+  </section>
+
+  <!-- debug panel -->
+  <details class="debug" id="debugPanel">
+    <summary>Debug: last request and response</summary>
+    <pre id="debugOut">No calls yet.</pre>
+  </details>
+
+</div>
+
+<script>
+/* ===== CONFIG ===== */
+const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
+
+/* ===== state ===== */
+let student=null;                 // {nameKey, displayName, yearLevel, testsEnabled}
+let wTimer=null, wLeft=30*60, wSubmitted=false, wStarted=false;
+const $=id=>document.getElementById(id);
+
+/* ===== backend helper (text/plain avoids CORS preflight) ===== */
+async function callBackend(action, payload={}){
+  const reqBody=JSON.stringify({action, payload});
+  let raw;
+  try{
+    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:reqBody,redirect:"follow"});
+    raw=await res.text();
+  }catch(err){
+    setConn(false);
+    debug(action,payload,"NETWORK ERROR: "+err);
+    throw new Error("Could not reach the backend. Check the deployment URL and that access is set to Anyone.");
+  }
+  setConn(true);
+  let parsed;
+  try{ parsed=JSON.parse(raw); }
+  catch(e){ debug(action,payload,raw); throw new Error("Backend did not return JSON. Raw response is in the debug panel below."); }
+  debug(action,payload,parsed);
+  if(!parsed.success) throw new Error(parsed.error||"Unknown backend error.");
+  return parsed.data;
+}
+function debug(action,payload,resp){
+  $("debugOut").textContent =
+    "ACTION: "+action+"\nPAYLOAD: "+JSON.stringify(payload,null,2)+
+    "\n\nRESPONSE:\n"+(typeof resp==="string"?resp:JSON.stringify(resp,null,2));
+}
+function setConn(ok){
+  $("connDot").className="dot "+(ok?"ok":"bad");
+  $("connText").textContent=ok?"connected":"unreachable";
+}
+function msg(el,type,text){ el.innerHTML='<div class="msg '+type+'">'+text+'</div>'; }
+function clearMsg(el){ el.innerHTML=""; }
+function busy(btn,on,label){ if(on){btn.dataset.label=btn.textContent;btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+(label||"Working");}else{btn.disabled=false;btn.textContent=btn.dataset.label||btn.textContent;} }
+
+function showView(id){ ["vLogin","vDash","vWriting","vAdmin"].forEach(v=>$(v).classList.toggle("hidden",v!==id)); window.scrollTo(0,0); }
+
+/* ===== connection test ===== */
+$("testConnBtn").onclick=async()=>{
+  clearMsg($("loginMsg"));
+  msg($("loginMsg"),"info","Pinging backend...");
+  try{
+    // any structured response (even an error) proves the round trip works
+    await callBackend("login",{name:"__connection_test__"});
+    msg($("loginMsg"),"ok","Backend reachable and responding.");
+  }catch(e){
+    if(/not reach|not return JSON/.test(e.message)) msg($("loginMsg"),"err",e.message);
+    else msg($("loginMsg"),"ok","Backend reachable and responding (it correctly rejected the test name).");
+  }
+};
+
+/* ===== login ===== */
+async function doLogin(){
+  const name=$("nameInput").value.trim();
+  if(!name){ msg($("loginMsg"),"err","Type your name first."); return; }
+  clearMsg($("loginMsg")); busy($("loginBtn"),true,"Checking");
+  try{
+    let data=await callBackend("login",{name});
+    let te=data.testsEnabled;
+    if(typeof te==="string") te=te.split(",").map(s=>s.trim());
+    student={nameKey:data.nameKey,displayName:data.displayName,yearLevel:data.yearLevel,testsEnabled:te||[]};
+    openDash();
+  }catch(e){
+    msg($("loginMsg"),"err",e.message==="Student profile not found."?"We could not find that name. Check the spelling, or ask your tutor to add you.":e.message);
+  }finally{ busy($("loginBtn"),false); }
+}
+$("loginBtn").onclick=doLogin;
+$("nameInput").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
+
+/* ===== dashboard ===== */
+function openDash(){
+  $("dashName").textContent="Hi, "+student.displayName;
+  $("dashYear").textContent="Year "+student.yearLevel;
+  const te=student.testsEnabled.map(x=>x.toLowerCase());
+  toggleTile("tileReading","reading",te);
+  toggleTile("tileWriting","writing",te);
+  clearMsg($("dashMsg"));
+  showView("vDash");
+}
+function toggleTile(tileId,key,te){
+  const on=te.includes(key);
+  const tile=$(tileId);
+  tile.classList.toggle("locked",!on);
+  tile.querySelectorAll("button,a").forEach(b=>{ b.style.pointerEvents=on?"auto":"none"; });
+  if(!on && !tile.querySelector(".lockedNote")){
+    const s=document.createElement("p");s.className="lockedNote";s.style.color="var(--muted)";s.style.fontSize="12.5px";
+    s.textContent="Not enabled for you yet.";tile.appendChild(s);
+  }
+}
+$("switchBtn").onclick=()=>{ student=null; $("nameInput").value=""; clearMsg($("loginMsg")); showView("vLogin"); };
+
+/* sample reading result -> tests submitReading endpoint */
+$("sampleReading").onclick=async()=>{
+  clearMsg($("dashMsg")); busy($("sampleReading"),true,"Sending");
+  try{
+    await callBackend("submitReading",{
+      nameKey:student.nameKey, paperId:"reading-mock-1", score:24, outOf:30, timeUsedSec:1480,
+      perSkillJson:{"Inference":{c:3,t:4},"Cohesion & sentence logic":{c:4,t:6},"Synthesis across texts":{c:9,t:11}},
+      answersJson:{1:"C",2:"A",3:"B"}
+    });
+    msg($("dashMsg"),"ok","Sample reading result saved. Check the ReadingResults tab of your sheet.");
+  }catch(e){ msg($("dashMsg"),"err",e.message); }
+  finally{ busy($("sampleReading"),false); }
+};
+
+/* ===== writing ===== */
+const PROMPT={id:"writing-persuasive-1",title:"Failure teaches us more than success",
+  text:"Some people believe we learn far more from our failures than from our successes. Write a response that persuades a reader to agree with your point of view. Use clear reasons and examples."};
+$("openWriting").onclick=()=>{
+  $("wTitle").textContent=PROMPT.title;
+  $("wPrompt").textContent=PROMPT.text;
+  $("wText").value=""; $("wCount").textContent="0";
+  wLeft=30*60; wSubmitted=false; wStarted=false; renderClock();
+  clearMsg($("wMsg"));
+  showView("vWriting");
+};
+$("writingBack").onclick=()=>{ stopWTimer(); showView("vDash"); };
+$("wText").addEventListener("input",()=>{
+  const words=$("wText").value.trim().split(/\s+/).filter(Boolean).length;
+  $("wCount").textContent=words;
+  if(!wStarted){ wStarted=true; startWTimer(); }
+});
+function startWTimer(){ stopWTimer(); wTimer=setInterval(()=>{ wLeft--; renderClock(); if(wLeft<=0){ stopWTimer(); submitWriting(true); } },1000); }
+function stopWTimer(){ if(wTimer) clearInterval(wTimer); wTimer=null; }
+function renderClock(){ const m=Math.floor(Math.max(wLeft,0)/60),s=Math.max(wLeft,0)%60; const el=$("wClock"); el.textContent=m+":"+String(s).padStart(2,"0"); el.classList.toggle("warn",wLeft<=120); }
+async function submitWriting(auto){
+  if(wSubmitted) return;
+  const text=$("wText").value.trim();
+  if(!auto && text.length<20){ msg($("wMsg"),"err","Write a little more before submitting."); return; }
+  const words=text.split(/\s+/).filter(Boolean).length;
+  busy($("wSubmit"),true,"Submitting"); stopWTimer();
+  try{
+    await callBackend("submitWriting",{
+      nameKey:student.nameKey, promptId:PROMPT.id, promptTitle:PROMPT.title,
+      wordCount:words, timeUsedSec:30*60-Math.max(wLeft,0), responseText:text
+    });
+    wSubmitted=true;
+    msg($("wMsg"),"ok","Submitted. Your tutor has been notified and can see your work."+(auto?" (Time ran out, so it was sent automatically.)":""));
+  }catch(e){ msg($("wMsg"),"err",e.message+" Your text is still here, you can try submitting again."); }
+  finally{ busy($("wSubmit"),false); }
+}
+$("wSubmit").onclick=()=>submitWriting(false);
+window.addEventListener("beforeunload",e=>{ if(!wSubmitted && $("wText").value.trim() && !$("vWriting").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; } });
+
+/* ===== admin ===== */
+$("toAdmin").onclick=()=>{ clearMsg($("adminMsg")); $("adminData").innerHTML=""; showView("vAdmin"); };
+$("adminBack").onclick=()=>{ showView("vLogin"); };
+$("adminLoadBtn").onclick=async()=>{
+  const password=$("adminPass").value;
+  if(!password){ msg($("adminMsg"),"err","Enter the password."); return; }
+  clearMsg($("adminMsg")); $("adminData").innerHTML=""; busy($("adminLoadBtn"),true,"Loading");
+  try{
+    const data=await callBackend("getResults",{password});
+    renderAdmin(data);
+    msg($("adminMsg"),"ok","Loaded.");
+  }catch(e){ msg($("adminMsg"),"err",e.message==="Unauthorized access."?"Wrong password.":e.message); }
+  finally{ busy($("adminLoadBtn"),false); }
+};
+function renderAdmin(data){
+  const wrap=$("adminData");
+  wrap.innerHTML=section("Reading results",data.reading)+section("Writing submissions",data.writing);
+}
+function section(title,rows){
+  if(!rows||rows.length<=1) return "<h2 style='margin-top:18px'>"+title+"</h2><p class='sub'>No rows yet.</p>";
+  const head=rows[0], body=rows.slice(1);
+  let html="<h2 style='margin-top:18px'>"+title+" ("+body.length+")</h2><table class='tbl'><tr>";
+  head.forEach(h=>html+="<th>"+esc(h)+"</th>"); html+="</tr>";
+  body.forEach(r=>{ html+="<tr>"; r.forEach((c,i)=>{ const long=String(c).length>60; html+="<td"+(long?" class='wraptxt'":"")+">"+esc(String(c))+"</td>"; }); html+="</tr>"; });
+  html+="</table>"; return html;
+}
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+</script>
+</body>
+</html>
