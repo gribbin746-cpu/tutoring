@@ -140,6 +140,11 @@ textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.
 .wbar .clock{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ink);font-size:15px}
 .wbar .clock.warn{color:var(--err)}
 .prompt{background:#f6f8fc;border-left:4px solid var(--navy);border-radius:11px;padding:14px 16px;margin:0 0 16px;font-family:var(--serif);font-size:16.5px;line-height:1.55}
+.prompt p{margin:0 0 10px}
+.prompt p:last-child{margin-bottom:0}
+.prompt ul{margin:8px 0 0;padding-left:22px}
+.prompt li{margin:0 0 7px}
+.prompt li:last-child{margin-bottom:0}
 
 .acard{border:1px solid var(--border);border-radius:15px;padding:20px;margin-bottom:20px;background:#fbfcfe}
 .ahead{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--line);padding-bottom:12px;margin-bottom:16px}
@@ -168,7 +173,7 @@ textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.
 .toast .tk svg{width:11px;height:11px;color:#0e2b4d}
 </style>
 </head>
-<body spellcheck="false">
+<body>
 <header>
   <div class="brand">
     <span class="logo">N</span>
@@ -185,7 +190,7 @@ textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.
       <h1>Let's get to work</h1>
       <p class="sub">Type your first name to open your dashboard.</p>
       <label for="nameInput">Your name</label>
-      <input type="text" id="nameInput" placeholder="e.g. hanoof" autocomplete="off" autocapitalize="words">
+      <input type="text" id="nameInput" placeholder="e.g. Mithran" autocomplete="off" autocapitalize="words" spellcheck="false">
       <div class="row" style="margin-top:14px"><button class="btn" id="loginBtn">Enter</button></div>
       <div id="loginMsg"></div>
       <div class="foot">Tutor? <button class="linkbtn" id="toAdmin">Open tutor console</button></div>
@@ -243,7 +248,7 @@ textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.
       <p class="eyebrow" style="margin-top:16px" id="wCat">Writing task</p>
       <h1 id="wTitle">Writing task</h1>
       <div class="prompt" id="wPrompt"></div>
-      <textarea id="wText" placeholder="Start writing here. Your work saves as you type."></textarea>
+      <textarea id="wText" placeholder="Start writing here. Your work saves as you type." spellcheck="false"></textarea>
       <div class="row" style="margin-top:14px"><button class="btn" id="wSubmit">Submit to tutor</button></div>
       <div id="wMsg"></div>
     </div>
@@ -256,7 +261,7 @@ textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.
       <h1>Sign in</h1>
       <p class="sub">Enter the admin password to load every student.</p>
       <label for="adminPass">Admin password</label>
-      <input type="password" id="adminPass" autocomplete="off">
+      <input type="password" id="adminPass" autocomplete="off" spellcheck="false">
       <div class="row" style="margin-top:14px"><button class="btn" id="adminLoadBtn">Load console</button></div>
       <div id="adminMsg"></div>
     </div>
@@ -267,11 +272,11 @@ textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.
         <div class="assignbox">
           <div><label>Student</label><select id="asStudent"></select></div>
           <div><label>Type</label><select id="asType"><option value="reading">Reading</option><option value="writing">Writing</option></select></div>
-          <div id="asReadingWrap"><label>Reading paper file</label><input type="text" id="asUrl" placeholder="Selective_Reading_Mock_Test.html"></div>
+          <div id="asReadingWrap"><label>Reading paper file</label><input type="text" id="asUrl" placeholder="Selective_Reading_Mock_Test.html" spellcheck="false"></div>
           <div id="asPromptWrap" class="hidden"><label>Prompt from bank</label><select id="asPrompt"></select></div>
-          <div><label>Title shown to student</label><input type="text" id="asTitle" placeholder="e.g. Reading paper 2"></div>
-          <div><label>Source id <small>(paper id or prompt id, used to auto tick off)</small></label><input type="text" id="asSource" placeholder="reading-mock-2"></div>
-          <div><label>Due date</label><input type="date" id="asDue"></div>
+          <div><label>Title shown to student</label><input type="text" id="asTitle" placeholder="e.g. Reading paper 2" spellcheck="false"></div>
+          <div><label>Source id <small>(paper id or prompt id, used to auto tick off)</small></label><input type="text" id="asSource" placeholder="reading-mock-2" spellcheck="false"></div>
+          <div><label>Due date</label><input type="date" id="asDue" spellcheck="false"></div>
         </div>
         <div class="row" style="margin-top:14px"><button class="btn" id="asSubmit">Assign task</button></div>
         <div id="asMsg"></div>
@@ -458,10 +463,26 @@ function revBody(r){
   return html;
 }
 
+function renderPrompt(text){
+  // turns plain cell text into paragraphs and bullet lists.
+  // lines beginning with *, - or • become list items; blank lines break groups.
+  const lines=String(text||"").split(/\r?\n/);
+  let html="", inList=false;
+  const flush=()=>{ if(inList){ html+="</ul>"; inList=false; } };
+  lines.forEach(line=>{
+    const t=line.trim();
+    if(!t){ flush(); return; }
+    const m=t.match(/^[\*\-\u2022]\s+(.*)/);
+    if(m){ if(!inList){ html+="<ul>"; inList=true; } html+="<li>"+esc(m[1])+"</li>"; }
+    else { flush(); html+="<p>"+esc(t)+"</p>"; }
+  });
+  flush();
+  return html||"<p></p>";
+}
 function openWriting(p){
   activePrompt=p; wTotal=(p.minutes||30)*60; wLeft=wTotal;
   $("wCat").textContent=p.category||"Writing task";
-  $("wTitle").textContent=p.title; $("wPrompt").textContent=p.text;
+  $("wTitle").textContent=p.title; $("wPrompt").innerHTML=renderPrompt(p.text);
   $("wText").value=""; $("wCount").textContent="0";
   wSubmitted=false; wStarted=false; renderClock(); clearMsg($("wMsg")); showView("vWriting");
 }
@@ -594,9 +615,9 @@ function renderAdmin(){
           '<button class="linkbtn" style="margin-top:8px" onclick="tog(\''+bid+'\')">Read draft</button>'+
           '<div id="'+bid+'" style="display:none"><div class="fbblock">'+esc(w.response_text)+'</div></div>'+
           '<div class="fbedit"><label>Feedback for student</label>'+
-          '<textarea id="fb-'+bid+'" placeholder="What they did well, and the one thing to fix next time.">'+esc(w.tutor_feedback||"")+'</textarea>'+
+          '<textarea id="fb-'+bid+'" placeholder="What they did well, and the one thing to fix next time." spellcheck="false">'+esc(w.tutor_feedback||"")+'</textarea>'+
           '<label style="margin-top:8px">Target words for the vault <small>(comma separated)</small></label>'+
-          '<input type="text" id="tw-'+bid+'" value="'+esc(w.target_words||"")+'" placeholder="resilient, nevertheless, momentum">'+
+          '<input type="text" id="tw-'+bid+'" value="'+esc(w.target_words||"")+'" placeholder="resilient, nevertheless, momentum" spellcheck="false">'+
           '<div class="pushrow"><button class="btn sm" onclick="pushFeedback(\''+sid+'\',\''+bid+'\',this)">Push to student</button>'+
           (w.tutor_feedback?' <span class="pill">sent</span>':'')+'</div></div></div>';
       });
