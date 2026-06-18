@@ -243,6 +243,12 @@ textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.
       <div class="vault" id="vaultList"></div>
     </div>
 
+    <div class="card" id="skillsCard">
+      <p class="eyebrow">Your skills so far</p>
+      <p class="sub" style="margin-bottom:12px">Across every reading paper you've done. Weakest at the top, so you know what to drill next.</p>
+      <div class="skillbar" id="skillsList"></div>
+    </div>
+
     <div class="card" id="revCard">
       <p class="eyebrow">Revision archive</p>
       <p class="sub" style="margin-bottom:12px">Your past reading papers. Open one to see exactly which questions to review.</p>
@@ -391,6 +397,35 @@ function busy(btn,on,label){ if(on){btn.dataset.label=btn.textContent;btn.disabl
 function esc(s){ return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function showView(id){ ["vLogin","vDash","vWriting","vAdmin"].forEach(v=>$(v).classList.toggle("hidden",v!==id)); window.scrollTo(0,0); }
 
+/* ===== safe localStorage (works on the live site, no-ops if blocked) ===== */
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+
+/* ===== session: remember the signed in student across refreshes ===== */
+const SESSION_KEY="noof_student";
+function saveSession(){ if(student) lsSet(SESSION_KEY, student.nameKey); }
+function clearSession(){ lsDel(SESSION_KEY); }
+
+/* ===== draft autosave: keep the essay safe across refresh / back ===== */
+function draftKey(){ return "noof_draft_"+(student?student.nameKey:"")+"_"+(activePrompt?activePrompt.promptId:""); }
+function saveDraft(){ if(!student||!activePrompt||wSubmitted) return;
+  lsSet(draftKey(), JSON.stringify({text:$("wText").value, left:wLeft})); }
+function loadDraft(){ const r=lsGet(draftKey()); if(!r) return null; try{ return JSON.parse(r); }catch(e){ return null; } }
+function clearDraft(){ lsDel(draftKey()); }
+
+/* ===== history: make the Back button move between views, not exit ===== */
+function navHome(){ history.replaceState({v:"home"},"",location.pathname); }
+function navPush(v){ history.pushState({v},"",location.pathname); }
+window.addEventListener("popstate",e=>{
+  const v=(e.state&&e.state.v)||"home";
+  if(v==="writing"){ showView("vWriting"); return; }
+  if(v==="admin"){ showView("vAdmin"); return; }
+  // home
+  if(!$("vWriting").classList.contains("hidden")){ saveDraft(); stopWTimer(); }
+  if(student) showView("vDash"); else showView("vLogin");
+});
+
 let toastTimer=null;
 function toast(text){ $("toastText").textContent=text; $("toast").classList.add("show");
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>$("toast").classList.remove("show"),3600); }
@@ -421,6 +456,7 @@ async function doLogin(silent){
   try{
     ctx=await callBackend("login",{name});
     student=ctx.profile;
+    saveSession(); navHome();
     renderDashboard(); showView("vDash");
     return true;
   }catch(e){
@@ -437,7 +473,7 @@ function renderDashboard(){
   $("dashDate").textContent=new Date().toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long"});
   $("dashName").textContent="Hi, "+student.displayName;
   $("dashYear").textContent="Year "+student.yearLevel;
-  renderStatStrip(); renderTasks(); renderInbox(); renderVault(); renderRevision();
+  renderStatStrip(); renderTasks(); renderInbox(); renderVault(); renderSkills(); renderRevision();
 }
 function renderStatStrip(){
   const a=ctx.assignments||[], rh=ctx.readingHistory||[];
@@ -482,7 +518,7 @@ function startTask(t){
     window.location.href=url+join+"student="+encodeURIComponent(student.nameKey)+"&paper="+encodeURIComponent(t.sourceId||"");
   }
 }
-$("switchBtn").onclick=()=>{ ctx=null; student=null; $("nameInput").value=""; clearMsg($("loginMsg"));
+$("switchBtn").onclick=()=>{ clearSession(); ctx=null; student=null; $("nameInput").value=""; clearMsg($("loginMsg"));
   history.replaceState(null,"",location.pathname); showView("vLogin"); };
 
 function renderInbox(){
@@ -506,6 +542,31 @@ function renderVault(){
   const v=ctx.vocab||[];
   $("vaultCard").classList.toggle("hidden",v.length===0);
   $("vaultList").innerHTML=v.map(w=>'<span class="word">'+esc(w)+'</span>').join("");
+}
+/* aggregate per-skill stats across a list of perSkill objects */
+function aggSkills(perSkillObjs){
+  const agg={};
+  (perSkillObjs||[]).forEach(ps=>{
+    if(ps&&typeof ps==="object"){
+      Object.keys(ps).forEach(k=>{ const o=ps[k]||{}; agg[k]=agg[k]||{c:0,t:0};
+        agg[k].c+=Number(o.c)||0; agg[k].t+=Number(o.t)||0; });
+    }
+  });
+  return Object.keys(agg).map(k=>({skill:k,c:agg[k].c,t:agg[k].t,pct:agg[k].t?agg[k].c/agg[k].t:0}))
+    .sort((a,b)=>a.pct-b.pct);
+}
+function skillBarRow(x){
+  const pct=Math.round(x.pct*100);
+  const col=pct>=80?"var(--ok)":pct>=50?"var(--warn)":"var(--err)";
+  return '<div class="skillrow"><div><div>'+esc(x.skill)+'</div>'+
+    '<div class="bar"><i style="width:'+pct+'%;background:'+col+'"></i></div></div>'+
+    '<div style="text-align:right;font-variant-numeric:tabular-nums">'+x.c+'/'+x.t+'<br><small style="color:var(--muted)">'+pct+'%</small></div></div>';
+}
+function renderSkills(){
+  const rh=ctx.readingHistory||[];
+  const agg=aggSkills(rh.map(r=>r.perSkill));
+  $("skillsCard").classList.toggle("hidden",agg.length===0);
+  $("skillsList").innerHTML=agg.map(skillBarRow).join("");
 }
 function renderRevision(){
   const rh=ctx.readingHistory||[];
@@ -565,18 +626,33 @@ function openWriting(p){
   $("wTitle").textContent=p.title; $("wPrompt").innerHTML=renderPrompt(p.text);
   $("wText").value=""; $("wText").readOnly=false; $("wText").style.opacity="1"; $("wCount").textContent="0";
   $("wSubmit").disabled=false; $("wSubmit").textContent="Submit to tutor";
-  wSubmitted=false; wStarted=false; renderClock(); clearMsg($("wMsg")); showView("vWriting");
+  wSubmitted=false; wStarted=false; clearMsg($("wMsg"));
+  // restore an autosaved draft for this student and prompt, if any
+  const dr=loadDraft();
+  if(dr && dr.text && dr.text.trim()){
+    $("wText").value=dr.text;
+    $("wCount").textContent=dr.text.trim().split(/\s+/).filter(Boolean).length;
+    if(typeof dr.left==="number") wLeft=dr.left;
+    wStarted=true; startWTimer();
+    msg($("wMsg"),"info","We restored your saved draft and your timer carried on from where you left off.");
+  }
+  renderClock();
+  navPush("writing");
+  showView("vWriting");
 }
 function lockWriting(){
   $("wText").readOnly=true; $("wText").style.opacity="0.7";
   $("wSubmit").disabled=true; $("wSubmit").textContent="Submitted";
 }
-$("writingBack").onclick=()=>{ stopWTimer(); showView("vDash"); };
+$("writingBack").onclick=()=>{ saveDraft(); history.back(); };
 $("wText").addEventListener("input",()=>{
   $("wCount").textContent=$("wText").value.trim().split(/\s+/).filter(Boolean).length;
   if(!wStarted){ wStarted=true; startWTimer(); }
+  saveDraft();
 });
-function startWTimer(){ stopWTimer(); wTimer=setInterval(()=>{ wLeft--; renderClock(); if(wLeft<=0){ stopWTimer(); submitWriting(true);} },1000); }
+function startWTimer(){ stopWTimer(); wTimer=setInterval(()=>{ wLeft--; renderClock();
+  if(wLeft%5===0) saveDraft();
+  if(wLeft<=0){ stopWTimer(); submitWriting(true);} },1000); }
 function stopWTimer(){ if(wTimer) clearInterval(wTimer); wTimer=null; }
 function renderClock(){ const m=Math.floor(Math.max(wLeft,0)/60),s=Math.max(wLeft,0)%60;
   const el=$("wClock"); el.textContent=m+":"+String(s).padStart(2,"0"); el.classList.toggle("warn",wLeft<=120); }
@@ -591,6 +667,7 @@ async function submitWriting(auto){
     await callBackend("submitWriting",{nameKey:student.nameKey,promptId:activePrompt.promptId,promptTitle:activePrompt.title,
       wordCount:words,timeUsedSec:wTotal-Math.max(wLeft,0),responseText:text});
     wSubmitted=true;
+    clearDraft();
     lockWriting();
     msg($("wMsg"),"ok","Submitted and locked. Your tutor can see your work now."+(auto?" The timer ran out, so it sent automatically.":""));
     try{ ctx=await callBackend("login",{name:student.nameKey}); student=ctx.profile; renderDashboard(); }catch(_){}
@@ -602,8 +679,8 @@ async function submitWriting(auto){
 $("wSubmit").onclick=()=>submitWriting(false);
 window.addEventListener("beforeunload",e=>{ if(!wSubmitted && $("wText").value.trim() && !$("vWriting").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; } });
 
-$("toAdmin").onclick=()=>{ clearMsg($("adminMsg")); $("adminConsole").classList.add("hidden"); showView("vAdmin"); };
-$("adminBack").onclick=()=>{ showView("vLogin"); };
+$("toAdmin").onclick=()=>{ clearMsg($("adminMsg")); $("adminConsole").classList.add("hidden"); navPush("admin"); showView("vAdmin"); };
+$("adminBack").onclick=()=>{ history.back(); };
 $("adminLoadBtn").onclick=async()=>{
   const password=$("adminPass").value;
   if(!password){ msg($("adminMsg"),"err","Enter the password."); return; }
@@ -712,6 +789,13 @@ function renderAdmin(){
           '<div id="'+id+'" style="display:none;margin-top:8px">'+autopsy+'</div></div>';
       });
     }
+    if(totRead){
+      const agg=aggSkills(stu.reading.map(r=>safe(r.per_skill_json)));
+      if(agg.length){
+        h+='<div class="asection">Skill focus across all papers</div>';
+        h+='<div class="aitem"><div class="skillbar">'+agg.map(skillBarRow).join("")+'</div></div>';
+      }
+    }
     if(totWrite){
       h+='<div class="asection">Writing and feedback</div>';
       stu.writing.slice().reverse().forEach((w,i)=>{
@@ -763,14 +847,17 @@ async function delTask(taskId){
   try{ await callBackend("login",{name:"__ping__"}); }catch(e){ /* reject still proves reachable */ }
   const params=new URLSearchParams(location.search);
   const sk=params.get("student");
-  if(sk){
-    $("nameInput").value=sk;
+  const bootName = sk || lsGet(SESSION_KEY) || "";
+  if(bootName){
+    $("nameInput").value=bootName;
     const ok=await doLogin(true);
     if(ok){
       const done=params.get("done");
       if(done==="reading") toast("Reading paper submitted and ticked off");
       else if(done==="writing") toast("Writing submitted");
-      history.replaceState(null,"",location.pathname);
+      navHome();
+    }else{
+      clearSession();   // saved name no longer valid, e.g. removed by tutor
     }
   }
 })();
