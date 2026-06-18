@@ -223,6 +223,9 @@ textarea{min-height:340px;line-height:1.7;font-family:var(--read);font-size:17px
 .fbedit textarea{min-height:92px;font-family:var(--sans);font-size:14px;line-height:1.5}
 .fbedit input{margin-top:9px}
 .pushrow{margin-top:11px}
+.revopt{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:#37414e;font-weight:600}
+.revopt input[type=checkbox]{width:auto;margin:0}
+.revopt input[type=number]{width:56px;padding:5px 7px;border-radius:8px}
 .assignbox{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 
 /* score editor */
@@ -266,6 +269,38 @@ textarea{min-height:340px;line-height:1.7;font-family:var(--read);font-size:17px
   .wrap{padding:24px 14px 80px}
   .card{padding:22px 20px;border-radius:18px}
 }
+/* ---------- inline annotation ---------- */
+.draftsurface{font-family:var(--read);font-size:16.5px;line-height:1.9;white-space:pre-wrap;color:#222a35;
+  background:#fffdf7;border:1px solid #ece4cf;border-radius:12px;padding:15px 17px;margin-top:4px;
+  user-select:text;-webkit-user-select:text;cursor:text;counter-reset:cm}
+mark.cmark{background:linear-gradient(180deg,#fdf0c4,#f8e6a8);color:inherit;border-radius:3px;padding:0 1px;
+  box-shadow:inset 0 -2px 0 rgba(176,137,47,.5);counter-increment:cm}
+mark.cmark::after{content:counter(cm);font-family:var(--sans);font-size:9px;font-weight:800;color:var(--gold-deep);
+  vertical-align:super;margin-left:1px}
+.cmtlist{margin-top:12px;display:flex;flex-direction:column;gap:9px}
+.cmtitem{display:flex;gap:11px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+.cmnum{flex:none;width:22px;height:22px;border-radius:50%;background:var(--gold-soft);color:var(--gold-deep);
+  font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:var(--sans);margin-top:1px}
+.cmtbody{flex:1;min-width:0}
+.cmtq{font-family:var(--read);font-size:14.5px;color:var(--muted);font-style:italic;margin-bottom:3px}
+.cmtn{font-size:14px;color:var(--ink)}
+.cmtitem .linkbtn{flex:none;color:var(--err)}
+
+.cmtpop{position:absolute;z-index:80;background:#fff;border:1px solid var(--border);border-radius:13px;
+  box-shadow:var(--shadow-lg);padding:13px 14px}
+.cmtpopq{font-family:var(--read);font-size:13.5px;font-style:italic;color:var(--muted);margin-bottom:9px;
+  max-height:48px;overflow:hidden;border-left:2px solid var(--gold);padding-left:9px}
+.cmtpop textarea{min-height:70px;font-family:var(--sans);font-size:14px;line-height:1.5}
+.cmtpopbtns{display:flex;gap:8px;margin-top:10px}
+
+/* student annotated draft */
+.annotwrap{margin:8px 0 4px}
+.annotdraft{font-family:var(--read);font-size:16.5px;line-height:1.9;white-space:pre-wrap;color:#222a35;
+  background:#fffdf7;border:1px solid #ece4cf;border-radius:12px;padding:15px 17px;counter-reset:cm}
+.annotnotes{list-style:none;counter-reset:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+.annotnotes li{display:flex;gap:11px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:14px}
+.annotnotes .cmnum{margin-top:0}
+
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
 }
@@ -345,13 +380,14 @@ textarea{min-height:340px;line-height:1.7;font-family:var(--read);font-size:17px
         <button class="btn ghost sm" id="writingBack">Back</button>
         <div class="spacer"></div>
         <div class="wbar">
-          <span>Time left <span class="clock" id="wClock">30:00</span></span>
+          <span id="wTimeWrap">Time left <span class="clock" id="wClock">30:00</span></span>
           <span>Words <span class="clock" id="wCount">0</span></span>
         </div>
       </div>
       <p class="eyebrow" style="margin-top:16px" id="wCat">Writing task</p>
       <h1 id="wTitle">Writing task</h1>
       <div class="prompt" id="wPrompt"></div>
+      <div id="revContext" class="hidden"></div>
       <textarea id="wText" placeholder="Start writing here. Your work saves as you type." spellcheck="false"></textarea>
       <div class="row" style="margin-top:14px"><button class="btn" id="wSubmit">Submit to tutor</button></div>
       <div id="wMsg"></div>
@@ -391,12 +427,20 @@ textarea{min-height:340px;line-height:1.7;font-family:var(--read);font-size:17px
 
 </div>
 
+<div class="cmtpop hidden" id="cmtPop">
+  <div class="cmtpopq" id="cmtPopQuote"></div>
+  <textarea id="cmtPopText" placeholder="Comment on the highlighted words..." spellcheck="false"></textarea>
+  <div class="cmtpopbtns"><button class="btn tiny" id="cmtPopAdd">Add comment</button><button class="btn ghost tiny" id="cmtPopCancel">Cancel</button></div>
+</div>
+
 <div class="toast" id="toast"><span class="tk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><span id="toastText"></span></div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
 
 let ctx=null, student=null, adminCache=null, activePrompt=null;
+let adminComments={}, adminDraftText={};
+let revMode=false, revisionOf=null;
 let wTimer=null, wLeft=30*60, wSubmitted=false, wStarted=false, wTotal=30*60;
 const $=id=>document.getElementById(id);
 
@@ -528,6 +572,7 @@ function dueState(iso){
 
 const IC_READ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>';
 const IC_WRITE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h16M6 16l9-9 3 3-9 9H6z"/></svg>';
+const IC_REV='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/></svg>';
 const CHEV='<svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>';
 
 async function doLogin(silent){
@@ -582,14 +627,17 @@ function taskEl(t,isDone){
   const el=document.createElement("div");
   const ds=dueState(t.dueDate);
   el.className="task "+(isDone?"done":ds.cls);
-  const ic=t.type==="writing"?IC_WRITE:IC_READ;
+  const isRev=t.type==="revision";
+  const ic=(t.type==="writing"||isRev)?(isRev?IC_REV:IC_WRITE):IC_READ;
+  const typeLabel=isRev?"Revision":(t.type==="writing"?"Writing task":"Reading paper");
   const meta=isDone?"Submitted":'<span class="due '+ds.cls+'">'+ds.label+"</span>";
   el.innerHTML='<div class="ticon">'+ic+'</div><div class="tmid"><p class="ttitle">'+esc(t.title)+'</p>'+
-    '<div class="tmeta">'+(t.type==="writing"?"Writing task":"Reading paper")+' &middot; '+meta+'</div></div>';
+    '<div class="tmeta">'+typeLabel+' &middot; '+meta+'</div></div>';
   if(!isDone){ const b=document.createElement("button"); b.className="btn sm"; b.textContent="Start"; b.onclick=()=>startTask(t); el.appendChild(b); }
   return el;
 }
 function startTask(t){
+  if(t.type==="revision"){ openRevision(t); return; }
   if(t.type==="writing"){
     const p=(ctx.prompts||[]).find(p=>String(p.promptId)===String(t.sourceId));
     openWriting(p||{promptId:t.sourceId||"writing-task",title:t.title,text:"Your tutor will share the prompt. Write your best response to the title above.",category:"Writing",minutes:30});
@@ -611,6 +659,7 @@ function renderInbox(){
     let words=(f.targetWords&&f.targetWords.length)?'<div class="words">'+f.targetWords.map(w=>'<span class="word">'+esc(w)+'</span>').join("")+'</div>':"";
     let body="";
     if(f.score) body+=scoreBlock(f.score);
+    if(Array.isArray(f.comments) && f.comments.length && f.responseText) body+=annotatedDraft(f.responseText, f.comments);
     if(f.feedback && String(f.feedback).trim()) body+='<div class="fbblock">'+esc(f.feedback)+'</div>';
     body+=words;
     const summaryRight = f.score ? ('<span class="pill">'+esc(f.score.total)+'/'+esc(f.score.max)+'</span>') : ('<span class="aitemmeta">'+fmtDate(f.date)+'</span>');
@@ -618,6 +667,22 @@ function renderInbox(){
       '<div class="fbbody">'+body+'</div>';
     list.appendChild(d);
   });
+}
+/* build a student-facing annotated draft: highlighted ranges + numbered notes */
+function annotatedDraft(text, comments){
+  const cs=(comments||[]).slice().filter(c=>c&&c.end>c.start).sort((a,b)=>a.start-b.start);
+  let html="", pos=0, n=0; const notes=[];
+  cs.forEach(c=>{
+    if(c.start<pos) return;            // skip overlaps
+    n++;
+    html+=esc(text.slice(pos,c.start));
+    html+='<mark class="cmark">'+esc(text.slice(c.start,c.end))+'</mark>';
+    notes.push('<li><span class="cmnum">'+n+'</span><span>'+esc(c.note)+'</span></li>');
+    pos=c.end;
+  });
+  html+=esc(text.slice(pos));
+  return '<div class="annotwrap"><div class="annotdraft">'+html+'</div>'+
+    (notes.length?'<ol class="annotnotes">'+notes.join("")+'</ol>':'')+'</div>';
 }
 function renderVault(){
   const v=ctx.vocab||[];
@@ -702,13 +767,15 @@ function renderPrompt(text){
   return html||"<p></p>";
 }
 function openWriting(p){
+  revMode=false; revisionOf=null;
+  $("revContext").classList.add("hidden"); $("revContext").innerHTML="";
+  $("wTimeWrap").classList.remove("hidden");
   activePrompt=p; wTotal=(p.minutes||30)*60; wLeft=wTotal;
   $("wCat").textContent=p.category||"Writing task";
   $("wTitle").textContent=p.title; $("wPrompt").innerHTML=renderPrompt(p.text);
   $("wText").value=""; $("wText").readOnly=false; $("wText").style.opacity="1"; $("wCount").textContent="0";
   $("wSubmit").disabled=false; $("wSubmit").textContent="Submit to tutor";
   wSubmitted=false; wStarted=false; clearMsg($("wMsg"));
-  // restore an autosaved draft for this student and prompt, if any
   const dr=loadDraft();
   if(dr && dr.text && dr.text.trim()){
     $("wText").value=dr.text;
@@ -721,6 +788,46 @@ function openWriting(p){
   navPush("writing");
   showView("vWriting");
 }
+function openRevision(task){
+  const item=(ctx.feedbackInbox||[]).find(f=>String(f.submissionId)===String(task.sourceId));
+  const promptObj=item?(ctx.prompts||[]).find(p=>String(p.promptId)===String(item.promptId)):null;
+  revMode=true; revisionOf=task.sourceId;
+  activePrompt={
+    promptId:"rev_"+task.sourceId,
+    submitPromptId:item?item.promptId:"",
+    submitTitle:item?item.promptTitle:(task.title||"Writing"),
+    title:item?("Revision: "+item.promptTitle):(task.title||"Revision"),
+    text:promptObj?promptObj.text:"",
+    minutes:0, category:"Revision"
+  };
+  $("wTimeWrap").classList.add("hidden");
+  $("wCat").textContent="Revision \u00b7 no time limit";
+  $("wTitle").textContent=activePrompt.title;
+  $("wPrompt").innerHTML=activePrompt.text?renderPrompt(activePrompt.text):"<p>Revise your piece using your tutor\u2019s comments below.</p>";
+  // tutor feedback context (read only)
+  let c="";
+  if(item){
+    if(item.score) c+=scoreBlock(item.score);
+    if(Array.isArray(item.comments)&&item.comments.length&&item.responseText) c+=annotatedDraft(item.responseText,item.comments);
+    if(item.feedback&&String(item.feedback).trim()) c+='<div class="fbblock">'+esc(item.feedback)+'</div>';
+    if(item.targetWords&&item.targetWords.length) c+='<div class="words">'+item.targetWords.map(w=>'<span class="word">'+esc(w)+'</span>').join("")+'</div>';
+  }else{
+    c='<div class="aitemmeta">Open this piece in your feedback inbox to see the comments.</div>';
+  }
+  $("revContext").innerHTML='<p class="eyebrow">Your tutor\u2019s feedback</p>'+c+'<p class="eyebrow" style="margin-top:18px">Your revision</p>';
+  $("revContext").classList.remove("hidden");
+  // editable starting from their original text, or a saved revision draft
+  $("wText").readOnly=false; $("wText").style.opacity="1";
+  $("wSubmit").disabled=false; $("wSubmit").textContent="Submit revision";
+  wSubmitted=false; wStarted=false; clearMsg($("wMsg"));
+  const dr=loadDraft();
+  const base=(dr&&dr.text!=null)?dr.text:(item?item.responseText:"");
+  $("wText").value=base||"";
+  $("wCount").textContent=(base||"").trim().split(/\s+/).filter(Boolean).length;
+  if(dr&&dr.text&&dr.text.trim()) msg($("wMsg"),"info","We restored your saved revision.");
+  navPush("writing");
+  showView("vWriting");
+}
 function lockWriting(){
   $("wText").readOnly=true; $("wText").style.opacity="0.7";
   $("wSubmit").disabled=true; $("wSubmit").textContent="Submitted";
@@ -728,7 +835,7 @@ function lockWriting(){
 $("writingBack").onclick=()=>{ saveDraft(); history.back(); };
 $("wText").addEventListener("input",()=>{
   $("wCount").textContent=$("wText").value.trim().split(/\s+/).filter(Boolean).length;
-  if(!wStarted){ wStarted=true; startWTimer(); }
+  if(!revMode && !wStarted){ wStarted=true; startWTimer(); }
   saveDraft();
 });
 function startWTimer(){ stopWTimer(); wTimer=setInterval(()=>{ wLeft--; renderClock();
@@ -741,16 +848,22 @@ async function submitWriting(auto){
   if(wSubmitted) return;
   const text=$("wText").value.trim();
   if(!auto && text.length<20){ msg($("wMsg"),"err","Write a little more before you submit."); return; }
-  if(auto){ $("wText").readOnly=true; }   // time is up: stop typing immediately
+  if(auto && !revMode){ $("wText").readOnly=true; }   // time is up: stop typing immediately
   const words=text.split(/\s+/).filter(Boolean).length;
   busy($("wSubmit"),true,"Submitting"); stopWTimer();
   try{
-    await callBackend("submitWriting",{nameKey:student.nameKey,promptId:activePrompt.promptId,promptTitle:activePrompt.title,
-      wordCount:words,timeUsedSec:wTotal-Math.max(wLeft,0),responseText:text});
+    const pid=activePrompt.submitPromptId||activePrompt.promptId;
+    const ptitle=revMode?(activePrompt.submitTitle+" (revision)"):activePrompt.title;
+    const payload={nameKey:student.nameKey,promptId:pid,promptTitle:ptitle,
+      wordCount:words,timeUsedSec:revMode?0:(wTotal-Math.max(wLeft,0)),responseText:text};
+    if(revMode) payload.revisionOf=revisionOf;
+    await callBackend("submitWriting",payload);
     wSubmitted=true;
     clearDraft();
     lockWriting();
-    msg($("wMsg"),"ok","Submitted and locked. Your tutor can see your work now."+(auto?" The timer ran out, so it sent automatically.":""));
+    msg($("wMsg"),"ok", revMode
+      ? "Revision submitted. Your tutor can see your updated piece."
+      : ("Submitted and locked. Your tutor can see your work now."+(auto?" The timer ran out, so it sent automatically.":"")));
     try{ ctx=await callBackend("login",{name:student.nameKey}); student=ctx.profile; renderDashboard(); }catch(_){}
   }catch(e){
     msg($("wMsg"),"err",e.message+" Your writing is still here, you can submit again.");
@@ -823,6 +936,7 @@ $("asSubmit").onclick=async()=>{
 };
 function renderAdmin(){
   const wrap=$("adminData"); wrap.innerHTML="";
+  adminComments={}; adminDraftText={};
   const reading=adminCache.reading||[],writing=adminCache.writing||[],assigns=adminCache.assignments||[];
   const keys={};
   (adminCache.students||[]).forEach(s=>keys[String(s.name_key).toLowerCase()]={display:s.display_name||s.name_key,reading:[],writing:[],tasks:[]});
@@ -881,16 +995,23 @@ function renderAdmin(){
       h+='<div class="asection">Writing and feedback</div>';
       stu.writing.slice().reverse().forEach((w,i)=>{
         const bid="w-"+k+"-"+i; const sid=esc(w.submission_id||"");
+        adminDraftText[bid]=String(w.response_text==null?"":w.response_text);
+        adminComments[bid]=(safe(w.comments_json)||[]).filter(c=>c&&c.end>c.start);
         h+='<div class="aitem"><div class="aitemhead"><span class="aitemtitle">'+esc(w.prompt_title)+'</span>'+
           '<span class="aitemmeta">'+fmtDate(isoLike(w.timestamp))+'</span></div>'+
           '<div class="aitemmeta">'+esc(w.word_count)+' words &middot; '+Math.floor(w.time_used_sec/60)+'m '+(w.time_used_sec%60)+'s</div>'+
-          '<button class="linkbtn" style="margin-top:8px" onclick="tog(\''+bid+'\')">Read draft</button>'+
-          '<div id="'+bid+'" style="display:none"><div class="fbblock">'+esc(w.response_text)+'</div></div>'+
-          '<div class="fbedit"><label>Feedback for student</label>'+
+          '<button class="linkbtn" style="margin-top:8px" onclick="tog(\''+bid+'\')">Annotate draft</button>'+
+          '<div id="'+bid+'" style="display:none">'+
+            '<div class="aitemmeta" style="margin:8px 0 6px">Select any words in the draft to attach a comment.</div>'+
+            '<div id="draft-'+bid+'" class="draftsurface"></div>'+
+            '<div id="cmts-'+bid+'" class="cmtlist"></div>'+
+          '</div>'+
+          '<div class="fbedit"><label>Overall feedback for student</label>'+
           '<textarea id="fb-'+bid+'" placeholder="What they did well, and the one thing to fix next time." spellcheck="false">'+esc(w.tutor_feedback||"")+'</textarea>'+
           '<label style="margin-top:8px">Target words for the vault <small>(comma separated)</small></label>'+
           '<input type="text" id="tw-'+bid+'" value="'+esc(w.target_words||"")+'" placeholder="resilient, nevertheless, momentum" spellcheck="false">'+
           scoreEditor(bid, safe(w.score_json))+
+          '<label class="revopt"><input type="checkbox" id="rev-'+bid+'" checked> Set a revision task, due in <input type="number" id="revd-'+bid+'" value="7" min="1"> days</label>'+
           '<div class="pushrow"><button class="btn sm" onclick="pushFeedback(\''+sid+'\',\''+bid+'\',this)">Push to student</button>'+
           (w.tutor_feedback?' <span class="pill">sent</span>':'')+'</div></div></div>';
       });
@@ -898,8 +1019,75 @@ function renderAdmin(){
     h+='</div></div>';
     wrap.insertAdjacentHTML("beforeend",h);
   });
+  Object.keys(adminDraftText).forEach(bid=>{ renderDraftHighlights(bid); renderCommentList(bid); });
 }
-function statBox(label,val){ return '<div class="statbox"><div class="statlabel">'+label+'</div><div class="statval">'+val+'</div></div>'; }
+/* ===== inline annotation engine (tutor side) ===== */
+function escAttr(s){ return esc(s).replace(/"/g,"&quot;"); }
+function caretOffset(surface,node,offset){
+  const r=document.createRange(); r.selectNodeContents(surface); r.setEnd(node,offset);
+  return r.toString().length;
+}
+function renderDraftHighlights(bid){
+  const surface=document.getElementById("draft-"+bid); if(!surface) return;
+  const text=adminDraftText[bid]||"";
+  const cs=(adminComments[bid]||[]).slice().sort((a,b)=>a.start-b.start);
+  let html="", pos=0, n=0;
+  cs.forEach(c=>{ if(c.start<pos) return; n++;
+    html+=esc(text.slice(pos,c.start));
+    html+='<mark class="cmark" data-id="'+c.id+'" title="'+escAttr(c.note)+'">'+esc(text.slice(c.start,c.end))+'</mark>';
+    pos=c.end; });
+  html+=esc(text.slice(pos));
+  surface.innerHTML=html;
+}
+function renderCommentList(bid){
+  const el=document.getElementById("cmts-"+bid); if(!el) return;
+  const cs=(adminComments[bid]||[]).slice().sort((a,b)=>a.start-b.start);
+  el.innerHTML=cs.length
+    ? cs.map((c,i)=>'<div class="cmtitem"><span class="cmnum">'+(i+1)+'</span>'+
+        '<div class="cmtbody"><div class="cmtq">&ldquo;'+esc(c.quote)+'&rdquo;</div><div class="cmtn">'+esc(c.note)+'</div></div>'+
+        '<button class="linkbtn" onclick="delComment(\''+bid+'\',\''+c.id+'\')">Remove</button></div>').join("")
+    : '<div class="aitemmeta" style="margin-top:8px">No inline comments yet.</div>';
+}
+let cmtPending=null;
+document.addEventListener("mouseup",e=>{
+  if(e.target.closest && e.target.closest("#cmtPop")) return;     // ignore clicks in the popup
+  const surface=e.target.closest && e.target.closest(".draftsurface");
+  const sel=window.getSelection();
+  if(!surface || !sel || sel.isCollapsed){ if(!(e.target.closest&&e.target.closest("#cmtPop"))) hideCmtPop(); return; }
+  const range=sel.getRangeAt(0);
+  if(!surface.contains(range.startContainer)||!surface.contains(range.endContainer)){ hideCmtPop(); return; }
+  const bid=surface.id.replace("draft-","");
+  const start=caretOffset(surface,range.startContainer,range.startOffset);
+  const end=caretOffset(surface,range.endContainer,range.endOffset);
+  if(end<=start){ hideCmtPop(); return; }
+  const quote=(adminDraftText[bid]||"").slice(start,end);
+  cmtPending={bid,start,end,quote};
+  showCmtPop(range);
+});
+function showCmtPop(range){
+  const pop=$("cmtPop"); const rect=range.getBoundingClientRect();
+  pop.classList.remove("hidden");
+  $("cmtPopText").value=""; $("cmtPopQuote").textContent="\u201C"+cmtPending.quote+"\u201D";
+  const pw=Math.min(320,window.innerWidth-20);
+  let left=rect.left+window.scrollX; left=Math.max(10,Math.min(left,window.scrollX+window.innerWidth-pw-10));
+  pop.style.width=pw+"px"; pop.style.left=left+"px"; pop.style.top=(rect.bottom+window.scrollY+8)+"px";
+  setTimeout(()=>$("cmtPopText").focus(),0);
+}
+function hideCmtPop(){ $("cmtPop").classList.add("hidden"); cmtPending=null; }
+$("cmtPopAdd").onclick=()=>{
+  if(!cmtPending) return; const note=$("cmtPopText").value.trim();
+  if(!note){ $("cmtPopText").focus(); return; }
+  const bid=cmtPending.bid;
+  adminComments[bid]=adminComments[bid]||[];
+  adminComments[bid].push({id:"c"+Date.now()+Math.floor(Math.random()*1000),start:cmtPending.start,end:cmtPending.end,quote:cmtPending.quote,note});
+  renderDraftHighlights(bid); renderCommentList(bid);
+  window.getSelection().removeAllRanges(); hideCmtPop();
+};
+$("cmtPopCancel").onclick=()=>{ window.getSelection().removeAllRanges(); hideCmtPop(); };
+function delComment(bid,id){
+  adminComments[bid]=(adminComments[bid]||[]).filter(c=>c.id!==id);
+  renderDraftHighlights(bid); renderCommentList(bid);
+}
 function isoLike(v){ if(v==null||v==="") return null; const d=new Date(v); return isNaN(d)?String(v):d.toISOString(); }
 function safe(v){ if(v==null||v==="") return null; if(typeof v==="object") return v; try{return JSON.parse(v);}catch(e){return null;} }
 function tog(id){ const el=document.getElementById(id); el.style.display=el.style.display==="block"?"none":"block"; }
@@ -909,9 +1097,14 @@ async function pushFeedback(sid,bid,btn){
   const targetWords=document.getElementById("tw-"+bid).value;
   const score=gatherScore(bid);
   const scoreJson=score?JSON.stringify(score):"";
+  const commentsJson=(adminComments[bid]&&adminComments[bid].length)?JSON.stringify(adminComments[bid]):"";
+  const revEl=document.getElementById("rev-"+bid);
+  const requestRevision=revEl?revEl.checked:false;
+  const dEl=document.getElementById("revd-"+bid);
+  const revisionDueDays=dEl?(parseInt(dEl.value,10)||7):7;
   busy(btn,true,"Sending");
   try{
-    await callBackend("saveFeedback",{password:adminCache.password,submissionId:sid,feedback,targetWords,scoreJson});
+    await callBackend("saveFeedback",{password:adminCache.password,submissionId:sid,feedback,targetWords,scoreJson,commentsJson,requestRevision,revisionDueDays});
     btn.textContent="Sent"; setTimeout(()=>{ btn.disabled=false; btn.textContent="Push to student"; },1200);
   }catch(e){ alert(e.message); btn.disabled=false; btn.textContent="Push to student"; }
 }
