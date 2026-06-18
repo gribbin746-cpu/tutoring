@@ -1,111 +1,157 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tutoring Portal</title>
+<title>Noof Portal</title>
 <style>
 :root{
-  --navy:#002664;--navy2:#06376b;--blue:#1a73c0;--blue-soft:#e8f1fb;
-  --bg:#eceff3;--panel:#fff;--border:#d3d9e1;--line:#e6eaef;--ink:#1b1e23;
-  --muted:#5c6672;--ok:#1d7a3a;--ok-bg:#e7f4ec;--err:#c0392b;--err-bg:#fbeceb;
-  --flag:#d9822b;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --serif:Georgia,"Times New Roman",serif;
+  --navy:#002b5c; --navy2:#063e7a; --blue:#1668c4; --blue-soft:#e7f0fb;
+  --bg:#f3f5f9; --panel:#ffffff; --border:#dbe1ea; --line:#eef1f6; --ink:#181c22; --muted:#5a6573;
+  --ok:#15783a; --ok-bg:#e6f4ec; --warn:#b46a12; --warn-bg:#fcf1e2; --err:#bb2d23; --err-bg:#fbecea;
+  --gold:#a9802f;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
+  --shadow:0 1px 2px rgba(16,32,64,.04),0 6px 18px rgba(16,32,64,.05);
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%}
-body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5}
 .hidden{display:none!important}
 button{font-family:inherit;cursor:pointer}
+small{font-size:12px}
 
-header{height:54px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:600}
-.brand svg{width:22px;height:22px}
-.hstatus{display:flex;align-items:center;gap:8px;font-size:12.5px}
-.dot{width:9px;height:9px;border-radius:50%;background:#8aa0bd}
-.dot.ok{background:#5fd08a}.dot.bad{background:#ff7a6e}
-.wrap{max-width:760px;margin:0 auto;padding:26px 18px 60px}
+/* header */
+header{height:58px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:650;letter-spacing:.01em}
+.brand .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#3f7cc9,#0c2f63);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;font-family:var(--serif)}
+.brand .sub{font-size:11px;font-weight:500;opacity:.7;letter-spacing:.06em;text-transform:uppercase;margin-left:2px}
+.hstatus{display:flex;align-items:center;gap:8px;font-size:12px;opacity:.85}
+.dot{width:8px;height:8px;border-radius:50%;background:#7e92ad}
+.dot.ok{background:#62d790}.dot.bad{background:#ff8377}
 
-.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px 26px;margin:0 0 18px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-h1{font-size:22px;margin:0 0 6px}
-h2{font-size:15px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.wrap{max-width:840px;margin:0 auto;padding:26px 18px 70px}
+
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px 26px;margin:0 0 18px;box-shadow:var(--shadow)}
+h1{font-size:24px;margin:0 0 6px;letter-spacing:-.01em}
+.eyebrow{font-size:11.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 14px}
 p.sub{color:var(--muted);margin:0 0 18px}
-label{display:block;font-size:13px;font-weight:600;color:#3a434e;margin:0 0 6px}
-input[type=text],input[type=password],textarea{width:100%;border:1.5px solid var(--border);border-radius:9px;
-  padding:11px 13px;font-size:15px;font-family:inherit;background:#fff}
-input:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
-textarea{min-height:340px;line-height:1.55;font-family:var(--serif);font-size:16px;resize:vertical}
-.btn{border:0;border-radius:9px;padding:11px 20px;font-weight:700;font-size:15px;background:var(--navy);color:#fff}
+label{display:block;font-size:12.5px;font-weight:650;color:#3a434e;margin:0 0 6px}
+input[type=text],input[type=password],input[type=date],textarea,select{width:100%;border:1.5px solid var(--border);border-radius:10px;
+  padding:11px 13px;font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.5px;resize:vertical}
+
+.btn{border:0;border-radius:10px;padding:11px 20px;font-weight:700;font-size:14.5px;background:var(--navy);color:#fff;transition:background .15s}
 .btn:hover{background:var(--navy2)}
-.btn:disabled{opacity:.55;cursor:default}
+.btn:disabled{opacity:.5;cursor:default}
 .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--border)}
-.btn.ghost:hover{background:#f1f4f8}
-.btn.sm{padding:8px 14px;font-size:13.5px}
+.btn.ghost:hover{background:#f4f7fb}
+.btn.sm{padding:8px 15px;font-size:13.5px;border-radius:9px}
+.btn.tiny{padding:6px 12px;font-size:12.5px;border-radius:8px}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .spacer{flex:1}
+.linkbtn{background:none;border:0;color:var(--blue);font-size:13.5px;font-weight:650;padding:0;cursor:pointer}
+.linkbtn:hover{text-decoration:underline}
 
-.msg{border-radius:9px;padding:10px 13px;font-size:13.5px;margin:12px 0 0}
+.msg{border-radius:10px;padding:10px 14px;font-size:13.5px;margin:13px 0 0}
 .msg.ok{background:var(--ok-bg);color:var(--ok)}
 .msg.err{background:var(--err-bg);color:var(--err)}
-.msg.info{background:#eef3f8;color:#39516e}
-
-.tilegrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:560px){.tilegrid{grid-template-columns:1fr}}
-.tile{border:1px solid var(--border);border-radius:12px;padding:18px;background:#fff;display:flex;flex-direction:column;gap:10px}
-.tile .ic{width:40px;height:40px;border-radius:10px;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center}
-.tile .ic svg{width:22px;height:22px}
-.tile h3{margin:0;font-size:17px}
-.tile p{margin:0;color:var(--muted);font-size:13.5px;flex:1}
-.tile.locked{opacity:.55}
-
-.greet{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.pill{background:var(--blue-soft);color:#2a5d92;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
-
-/* writing */
-.wbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 14px;color:var(--muted);font-size:13.5px}
-.wbar .clock{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
-.wbar .clock.warn{color:var(--err)}
-.prompt{background:#f6f8fb;border-left:4px solid var(--navy);border-radius:8px;padding:13px 15px;margin:0 0 16px;font-family:var(--serif);font-size:16px}
-
-/* admin tables */
-.tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin:8px 0 18px;display:block;overflow-x:auto}
-.tbl th,.tbl td{border:1px solid var(--line);padding:6px 8px;text-align:left;white-space:nowrap;vertical-align:top}
-.tbl th{background:#f3f6fa;font-weight:700}
-.tbl td.wraptxt{white-space:normal;min-width:280px;max-width:420px}
-
-.debug{margin-top:22px;border:1px dashed var(--border);border-radius:10px;background:#fafbfd}
-.debug summary{cursor:pointer;padding:11px 14px;font-size:13px;font-weight:700;color:var(--muted)}
-.debug pre{margin:0;padding:0 14px 14px;font-size:11.5px;white-space:pre-wrap;word-break:break-word;color:#33404e;max-height:240px;overflow:auto}
-.linkbtn{background:none;border:0;color:var(--blue);font-size:13px;font-weight:600;padding:0;text-decoration:underline}
-.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:10px}
+.msg.info{background:#eef3f9;color:#33516f}
+.pill{display:inline-block;background:var(--blue-soft);color:#22568c;font-size:11.5px;font-weight:700;padding:3px 11px;border-radius:999px}
 .spin{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
 @keyframes sp{to{transform:rotate(360deg)}}
-  /* --- Admin Dashboard Enhancements --- */
-.admin-student-card { border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; background: #fafbfd; }
-.admin-student-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--line); padding-bottom: 12px; margin-bottom: 16px; }
-.admin-student-name { font-size: 18px; font-weight: 700; color: var(--navy); text-transform: capitalize; }
-.admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
-.stat-box { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
-.stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; margin-bottom: 4px; }
-.stat-val { font-size: 22px; font-weight: 700; color: var(--ink); line-height: 1; }
-.admin-section-title { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; margin-top: 24px; }
-.admin-list { display: flex; flex-direction: column; gap: 10px; }
-.admin-item { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 14px; font-size: 14px; }
-.admin-item-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
-.admin-item-title { font-weight: 700; color: var(--ink); font-size: 15px; }
-.admin-item-meta { color: var(--muted); font-size: 13px; }
-.admin-writing-body { background: #f6f8fb; padding: 14px; border-radius: 8px; font-family: var(--serif); font-size: 15px; line-height: 1.6; margin-top: 10px; white-space: pre-wrap; display: none; border-left: 4px solid var(--navy); color: #23272d; }
-.toggle-btn { background: none; border: none; color: var(--blue); cursor: pointer; font-size: 13.5px; font-weight: 600; padding: 0; margin-top: 8px; }
-.toggle-btn:hover { text-decoration: underline; }
+.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:8px}
+
+/* greeting */
+.greet{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.greet h1{margin-bottom:3px}
+
+/* task list */
+.tasklist{display:flex;flex-direction:column;gap:11px}
+.task{display:flex;align-items:center;gap:14px;border:1px solid var(--border);border-radius:13px;padding:15px 17px;background:#fff;border-left-width:4px}
+.task.overdue{border-left-color:var(--err)}
+.task.soon{border-left-color:var(--warn)}
+.task.open{border-left-color:var(--blue)}
+.task.done{border-left-color:var(--ok);background:#fbfdfb}
+.task .ticon{width:38px;height:38px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--blue-soft);color:var(--blue)}
+.task .ticon svg{width:20px;height:20px}
+.task.done .ticon{background:var(--ok-bg);color:var(--ok)}
+.task .tmid{flex:1;min-width:0}
+.task .ttitle{font-weight:700;font-size:15.5px;margin:0 0 2px}
+.task.done .ttitle{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.task .tmeta{font-size:12.5px;color:var(--muted)}
+.due{font-weight:700}
+.due.overdue{color:var(--err)}.due.soon{color:var(--warn)}
+.emptyline{color:var(--muted);font-size:14px;padding:6px 2px}
+
+/* inbox / feedback */
+.fb{border:1px solid var(--border);border-radius:13px;padding:0;margin:0 0 11px;overflow:hidden;background:#fff}
+.fb summary{cursor:pointer;list-style:none;padding:15px 17px;display:flex;align-items:center;gap:12px}
+.fb summary::-webkit-details-marker{display:none}
+.fb .fbtitle{font-weight:700}
+.fb .chev{margin-left:auto;color:var(--muted);transition:transform .2s}
+.fb[open] .chev{transform:rotate(90deg)}
+.fb .fbbody{padding:0 17px 17px}
+.fbblock{background:#f6f8fc;border-left:4px solid var(--navy);border-radius:9px;padding:13px 15px;font-family:var(--serif);font-size:15.5px;line-height:1.6;white-space:pre-wrap;color:#23272d;margin:6px 0 0}
+.words{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.word{background:#fbf4e4;color:var(--gold);border:1px solid #ecdcb6;border-radius:8px;padding:5px 11px;font-size:14px;font-weight:650;font-family:var(--serif)}
+
+/* vocab vault */
+.vault{display:flex;flex-wrap:wrap;gap:9px}
+
+/* revision archive */
+.rev{border:1px solid var(--border);border-radius:13px;margin:0 0 11px;background:#fff;overflow:hidden}
+.rev summary{cursor:pointer;list-style:none;padding:15px 17px;display:flex;align-items:center;gap:13px}
+.rev summary::-webkit-details-marker{display:none}
+.rev .score{font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
+.rev .chev{margin-left:auto;color:var(--muted);transition:transform .2s}
+.rev[open] .chev{transform:rotate(90deg)}
+.rev .revbody{padding:2px 17px 17px}
+.autopsy{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
+.autopsy th,.autopsy td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line)}
+.autopsy th{color:var(--muted);font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.autopsy .pick{color:var(--err);font-weight:700}
+.autopsy .corr{color:var(--ok);font-weight:700}
+.skillbar{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.skillrow{display:grid;grid-template-columns:1fr 56px;gap:10px;align-items:center;font-size:12.5px}
+.bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--blue)}
+
+/* writing */
+.wbar{display:flex;align-items:center;gap:18px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.wbar .clock{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ink);font-size:15px}
+.wbar .clock.warn{color:var(--err)}
+.prompt{background:#f6f8fc;border-left:4px solid var(--navy);border-radius:10px;padding:14px 16px;margin:0 0 16px;font-family:var(--serif);font-size:16.5px;line-height:1.55}
+
+/* admin */
+.acard{border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;background:#fbfcfe}
+.ahead{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--line);padding-bottom:12px;margin-bottom:16px}
+.aname{font-size:18px;font-weight:800;color:var(--navy);text-transform:capitalize}
+.astats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:8px}
+.statbox{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.statlabel{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-bottom:5px}
+.statval{font-size:23px;font-weight:800;line-height:1}
+.asection{font-size:12px;font-weight:800;color:var(--muted);margin:22px 0 10px;text-transform:uppercase;letter-spacing:.06em}
+.aitem{background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin-bottom:10px}
+.aitemhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:4px}
+.aitemtitle{font-weight:700}
+.aitemmeta{color:var(--muted);font-size:12.5px}
+.fbedit{margin-top:12px;border-top:1px dashed var(--border);padding-top:12px}
+.fbedit textarea{min-height:90px;font-family:var(--sans);font-size:14px}
+.fbedit input{margin-top:8px}
+.pushrow{margin-top:10px}
+.assignbox{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:620px){.assignbox{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header>
   <div class="brand">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.6 5.2 8.4 4.5 5.5 4.5C4.7 4.5 4 5.2 4 6v11.5c0 .6.5 1 1.1 1c2.7-.2 4.8.5 6.9 2c2.1-1.5 4.2-2.2 6.9-2c.6 0 1.1-.4 1.1-1V6c0-.8-.7-1.5-1.5-1.5c-2.9 0-5.1.7-6.5 2z"/><path d="M12 6.5v12"/></svg>
-    <span>Tutoring Portal</span>
+    <span class="logo">E</span>
+    <span>Noof Portal<span class="sub">Selective prep</span></span>
   </div>
-  <div class="hstatus"><span class="dot" id="connDot"></span><span id="connText">not checked</span></div>
+  <div class="hstatus"><span class="dot" id="connDot"></span><span id="connText">connecting</span></div>
 </header>
 
 <div class="wrap">
@@ -113,16 +159,16 @@ textarea{min-height:340px;line-height:1.55;font-family:var(--serif);font-size:16
   <!-- LOGIN -->
   <section id="vLogin">
     <div class="card">
+      <p class="eyebrow">Student sign in</p>
       <h1>Welcome back</h1>
       <p class="sub">Type your first name to open your dashboard.</p>
       <label for="nameInput">Your name</label>
-      <input type="text" id="nameInput" placeholder="e.g. Mithran" autocomplete="off">
+      <input type="text" id="nameInput" placeholder="e.g. Mithran" autocomplete="off" autocapitalize="words">
       <div class="row" style="margin-top:14px">
         <button class="btn" id="loginBtn">Enter</button>
-        <button class="linkbtn" id="testConnBtn">Test backend connection</button>
       </div>
       <div id="loginMsg"></div>
-      <div class="foot">Tutor? <button class="linkbtn" id="toAdmin">Open tutor admin</button></div>
+      <div class="foot">Tutor? <button class="linkbtn" id="toAdmin">Open tutor console</button></div>
     </div>
   </section>
 
@@ -130,46 +176,57 @@ textarea{min-height:340px;line-height:1.55;font-family:var(--serif);font-size:16
   <section id="vDash" class="hidden">
     <div class="card">
       <div class="greet">
-        <div><h1 id="dashName" style="margin-bottom:2px">Hi</h1><span class="pill" id="dashYear">Year</span></div>
-        <button class="btn ghost sm" id="switchBtn">Switch student</button>
+        <div>
+          <p class="eyebrow" id="dashDate">Today</p>
+          <h1 id="dashName">Hi</h1>
+          <span class="pill" id="dashYear">Year</span>
+        </div>
+        <button class="btn ghost sm" id="switchBtn">Not you? Switch</button>
       </div>
     </div>
+
     <div class="card">
-      <h2>Your tasks</h2>
-      <div class="tilegrid">
-        <div class="tile" id="tileReading">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></div>
-          <h3>Reading test</h3>
-          <p>40 minutes, 30 questions, marked instantly with a skill and error breakdown.</p>
-          <div class="row">
-            <a class="btn sm" id="openReading" href="Selective_Reading_Mock_Test.html">Start</a>
-            <button class="btn ghost sm" id="sampleReading">Send sample result</button>
-          </div>
-        </div>
-        <div class="tile" id="tileWriting">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h16M6 16l9-9 3 3-9 9H6z"/></svg></div>
-          <h3>Writing task</h3>
-          <p>A timed writing prompt. When you submit, it is sent to your tutor to mark.</p>
-          <div class="row"><button class="btn sm" id="openWriting">Start</button></div>
-        </div>
-      </div>
-      <div id="dashMsg"></div>
+      <p class="eyebrow">To do</p>
+      <div class="tasklist" id="taskList"></div>
     </div>
+
+    <div class="card" id="inboxCard">
+      <p class="eyebrow">Feedback from your tutor</p>
+      <div id="inboxList"></div>
+    </div>
+
+    <div class="card" id="vaultCard">
+      <p class="eyebrow">Vocabulary vault</p>
+      <p class="sub" style="margin-bottom:12px">Words your tutor wants you to use. Aim to weave one or two into your next piece.</p>
+      <div class="vault" id="vaultList"></div>
+    </div>
+
+    <div class="card" id="revCard">
+      <p class="eyebrow">Revision archive</p>
+      <p class="sub" style="margin-bottom:12px">Your past reading papers. Open one to see exactly which questions to review.</p>
+      <div id="revList"></div>
+    </div>
+
+    <div id="dashMsg"></div>
   </section>
 
   <!-- WRITING -->
   <section id="vWriting" class="hidden">
     <div class="card">
-      <div class="row"><button class="btn ghost sm" id="writingBack">Back</button><div class="spacer"></div>
-        <div class="wbar" style="margin:0"><span>Time left</span><span class="clock" id="wClock">30:00</span>
-          <span>Words</span><span class="clock" id="wCount">0</span></div>
+      <div class="row">
+        <button class="btn ghost sm" id="writingBack">Back</button>
+        <div class="spacer"></div>
+        <div class="wbar">
+          <span>Time left <span class="clock" id="wClock">30:00</span></span>
+          <span>Words <span class="clock" id="wCount">0</span></span>
+        </div>
       </div>
-      <h1 id="wTitle" style="margin-top:14px">Writing task</h1>
+      <p class="eyebrow" style="margin-top:16px" id="wCat">Writing task</p>
+      <h1 id="wTitle">Writing task</h1>
       <div class="prompt" id="wPrompt"></div>
-      <textarea id="wText" placeholder="Start writing here..."></textarea>
+      <textarea id="wText" placeholder="Start writing here. Your work saves as you type."></textarea>
       <div class="row" style="margin-top:14px">
         <button class="btn" id="wSubmit">Submit to tutor</button>
-        <span class="spacer"></span>
       </div>
       <div id="wMsg"></div>
     </div>
@@ -179,21 +236,57 @@ textarea{min-height:340px;line-height:1.55;font-family:var(--serif);font-size:16
   <section id="vAdmin" class="hidden">
     <div class="card">
       <div class="row"><button class="btn ghost sm" id="adminBack">Back</button></div>
-      <h1 style="margin-top:14px">Tutor admin</h1>
-      <p class="sub">Enter the admin password to load all student results.</p>
+      <p class="eyebrow" style="margin-top:14px">Tutor console</p>
+      <h1>Sign in</h1>
+      <p class="sub">Enter the admin password to load every student.</p>
       <label for="adminPass">Admin password</label>
       <input type="password" id="adminPass" autocomplete="off">
-      <div class="row" style="margin-top:14px"><button class="btn" id="adminLoadBtn">Load results</button></div>
+      <div class="row" style="margin-top:14px"><button class="btn" id="adminLoadBtn">Load console</button></div>
       <div id="adminMsg"></div>
+    </div>
+
+    <div id="adminConsole" class="hidden">
+      <div class="card">
+        <p class="eyebrow">Assign a task</p>
+        <div class="assignbox">
+          <div>
+            <label>Student</label>
+            <select id="asStudent"></select>
+          </div>
+          <div>
+            <label>Type</label>
+            <select id="asType"><option value="reading">Reading</option><option value="writing">Writing</option></select>
+          </div>
+          <div id="asReadingWrap">
+            <label>Reading paper file</label>
+            <input type="text" id="asUrl" placeholder="Selective_Reading_Mock_Test.html">
+          </div>
+          <div id="asPromptWrap" class="hidden">
+            <label>Prompt from bank</label>
+            <select id="asPrompt"></select>
+          </div>
+          <div>
+            <label>Title shown to student</label>
+            <input type="text" id="asTitle" placeholder="e.g. Reading paper 2">
+          </div>
+          <div>
+            <label>Source id <small>(paper id or prompt id, used to auto tick off)</small></label>
+            <input type="text" id="asSource" placeholder="reading-mock-2">
+          </div>
+          <div>
+            <label>Due date</label>
+            <input type="date" id="asDue">
+          </div>
+        </div>
+        <div class="row" style="margin-top:14px">
+          <button class="btn" id="asSubmit">Assign task</button>
+        </div>
+        <div id="asMsg"></div>
+      </div>
+
       <div id="adminData"></div>
     </div>
   </section>
-
-  <!-- debug panel -->
-  <details class="debug" id="debugPanel">
-    <summary>Debug: last request and response</summary>
-    <pre id="debugOut">No calls yet.</pre>
-  </details>
 
 </div>
 
@@ -202,58 +295,58 @@ textarea{min-height:340px;line-height:1.55;font-family:var(--serif);font-size:16
 const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
 
 /* ===== state ===== */
-let student=null;                 // {nameKey, displayName, yearLevel, testsEnabled}
-let wTimer=null, wLeft=30*60, wSubmitted=false, wStarted=false;
-const $=id=>document.getElementById(id);
+let ctx = null;                 // full login bundle
+let student = null;             // ctx.profile
+let adminCache = null;          // last admin payload (incl password)
+let activePrompt = null;        // prompt object loaded into writing view
+let wTimer=null, wLeft=30*60, wSubmitted=false, wStarted=false, wTotal=30*60;
+const $ = id => document.getElementById(id);
 
-/* ===== backend helper (text/plain avoids CORS preflight) ===== */
+/* ===== backend helper ===== */
 async function callBackend(action, payload={}){
-  const reqBody=JSON.stringify({action, payload});
   let raw;
   try{
-    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:reqBody,redirect:"follow"});
-    raw=await res.text();
+    const res = await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},
+      body:JSON.stringify({action,payload}),redirect:"follow"});
+    raw = await res.text();
   }catch(err){
     setConn(false);
-    debug(action,payload,"NETWORK ERROR: "+err);
-    throw new Error("Could not reach the backend. Check the deployment URL and that access is set to Anyone.");
+    throw new Error("Could not reach the server. Check your connection and try again.");
   }
   setConn(true);
   let parsed;
-  try{ parsed=JSON.parse(raw); }
-  catch(e){ debug(action,payload,raw); throw new Error("Backend did not return JSON. Raw response is in the debug panel below."); }
-  debug(action,payload,parsed);
-  if(!parsed.success) throw new Error(parsed.error||"Unknown backend error.");
+  try{ parsed = JSON.parse(raw); }
+  catch(e){ throw new Error("The server sent an unexpected response. Try again in a moment."); }
+  if(!parsed.success) throw new Error(parsed.error || "Something went wrong.");
   return parsed.data;
 }
-function debug(action,payload,resp){
-  $("debugOut").textContent =
-    "ACTION: "+action+"\nPAYLOAD: "+JSON.stringify(payload,null,2)+
-    "\n\nRESPONSE:\n"+(typeof resp==="string"?resp:JSON.stringify(resp,null,2));
-}
-function setConn(ok){
-  $("connDot").className="dot "+(ok?"ok":"bad");
-  $("connText").textContent=ok?"connected":"unreachable";
-}
+function setConn(ok){ $("connDot").className="dot "+(ok?"ok":"bad"); $("connText").textContent=ok?"connected":"offline"; }
 function msg(el,type,text){ el.innerHTML='<div class="msg '+type+'">'+text+'</div>'; }
 function clearMsg(el){ el.innerHTML=""; }
 function busy(btn,on,label){ if(on){btn.dataset.label=btn.textContent;btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+(label||"Working");}else{btn.disabled=false;btn.textContent=btn.dataset.label||btn.textContent;} }
-
+function esc(s){ return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 function showView(id){ ["vLogin","vDash","vWriting","vAdmin"].forEach(v=>$(v).classList.toggle("hidden",v!==id)); window.scrollTo(0,0); }
 
-/* ===== connection test ===== */
-$("testConnBtn").onclick=async()=>{
-  clearMsg($("loginMsg"));
-  msg($("loginMsg"),"info","Pinging backend...");
-  try{
-    // any structured response (even an error) proves the round trip works
-    await callBackend("login",{name:"__connection_test__"});
-    msg($("loginMsg"),"ok","Backend reachable and responding.");
-  }catch(e){
-    if(/not reach|not return JSON/.test(e.message)) msg($("loginMsg"),"err",e.message);
-    else msg($("loginMsg"),"ok","Backend reachable and responding (it correctly rejected the test name).");
-  }
-};
+/* date helpers */
+function startOfToday(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+function fmtDate(iso){ if(!iso) return ""; const d=new Date(iso); if(isNaN(d)) return String(iso);
+  return d.toLocaleDateString("en-AU",{day:"numeric",month:"short"}); }
+function dueState(iso){
+  if(!iso) return {cls:"open",label:"No due date"};
+  const d=new Date(iso); if(isNaN(d)) return {cls:"open",label:String(iso)};
+  d.setHours(0,0,0,0);
+  const days=Math.round((d-startOfToday())/86400000);
+  if(days<0) return {cls:"overdue",label:"Overdue, due "+fmtDate(iso)};
+  if(days===0) return {cls:"soon",label:"Due today"};
+  if(days===1) return {cls:"soon",label:"Due tomorrow"};
+  if(days<=3) return {cls:"soon",label:"Due "+fmtDate(iso)};
+  return {cls:"open",label:"Due "+fmtDate(iso)};
+}
+
+/* icons */
+const IC_READ='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>';
+const IC_WRITE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h16M6 16l9-9 3 3-9 9H6z"/></svg>';
+const CHEV='<svg class="chev" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>';
 
 /* ===== login ===== */
 async function doLogin(){
@@ -261,216 +354,370 @@ async function doLogin(){
   if(!name){ msg($("loginMsg"),"err","Type your name first."); return; }
   clearMsg($("loginMsg")); busy($("loginBtn"),true,"Checking");
   try{
-    let data=await callBackend("login",{name});
-    let te=data.testsEnabled;
-    if(typeof te==="string") te=te.split(",").map(s=>s.trim());
-    student={nameKey:data.nameKey,displayName:data.displayName,yearLevel:data.yearLevel,testsEnabled:te||[]};
-    openDash();
+    ctx = await callBackend("login",{name});
+    student = ctx.profile;
+    renderDashboard();
+    showView("vDash");
   }catch(e){
-    msg($("loginMsg"),"err",e.message==="Student profile not found."?"We could not find that name. Check the spelling, or ask your tutor to add you.":e.message);
+    const t = /not found/i.test(e.message)
+      ? "We could not find that name. Check the spelling, or ask your tutor to add you."
+      : e.message;
+    msg($("loginMsg"),"err",t);
   }finally{ busy($("loginBtn"),false); }
 }
 $("loginBtn").onclick=doLogin;
 $("nameInput").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
 
 /* ===== dashboard ===== */
-function openDash(){
-  $("dashName").textContent="Hi, "+student.displayName;
-  $("dashYear").textContent="Year "+student.yearLevel;
-  const te=student.testsEnabled.map(x=>x.toLowerCase());
-  $("openReading").href = "Selective_Reading_Mock_Test.html?student=" + student.nameKey;
-  toggleTile("tileReading","reading",te);
-  toggleTile("tileWriting","writing",te);
-  clearMsg($("dashMsg"));
-  showView("vDash");
+function renderDashboard(){
+  $("dashDate").textContent = new Date().toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long"});
+  $("dashName").textContent = "Hi, "+student.displayName;
+  $("dashYear").textContent = "Year "+student.yearLevel;
+  renderTasks();
+  renderInbox();
+  renderVault();
+  renderRevision();
 }
-function toggleTile(tileId,key,te){
-  const on=te.includes(key);
-  const tile=$(tileId);
-  tile.classList.toggle("locked",!on);
-  tile.querySelectorAll("button,a").forEach(b=>{ b.style.pointerEvents=on?"auto":"none"; });
-  if(!on && !tile.querySelector(".lockedNote")){
-    const s=document.createElement("p");s.className="lockedNote";s.style.color="var(--muted)";s.style.fontSize="12.5px";
-    s.textContent="Not enabled for you yet.";tile.appendChild(s);
+
+function renderTasks(){
+  const list=$("taskList"); list.innerHTML="";
+  const tasks=(ctx.assignments||[]).slice();
+  const open=tasks.filter(t=>String(t.status).toLowerCase()!=="submitted");
+  const done=tasks.filter(t=>String(t.status).toLowerCase()==="submitted");
+
+  if(open.length===0){
+    list.innerHTML='<div class="emptyline">Nothing due right now. Nice work staying on top of it.</div>';
+  }
+  open.forEach(t=>list.appendChild(taskEl(t,false)));
+  if(done.length){
+    const lab=document.createElement("div");
+    lab.className="emptyline"; lab.style.marginTop="6px";
+    lab.textContent="Completed";
+    list.appendChild(lab);
+    done.slice().reverse().forEach(t=>list.appendChild(taskEl(t,true)));
   }
 }
-$("switchBtn").onclick=()=>{ student=null; $("nameInput").value=""; clearMsg($("loginMsg")); showView("vLogin"); };
+function taskEl(t,isDone){
+  const el=document.createElement("div");
+  const ds=dueState(t.dueDate);
+  el.className="task "+(isDone?"done":ds.cls);
+  const ic=t.type==="writing"?IC_WRITE:IC_READ;
+  const meta=isDone?"Submitted":'<span class="due '+ds.cls+'">'+ds.label+"</span>";
+  el.innerHTML=
+    '<div class="ticon">'+ic+'</div>'+
+    '<div class="tmid"><p class="ttitle">'+esc(t.title)+'</p>'+
+      '<div class="tmeta">'+(t.type==="writing"?"Writing task":"Reading paper")+' &middot; '+meta+'</div></div>';
+  if(!isDone){
+    const btn=document.createElement("button");
+    btn.className="btn sm"; btn.textContent="Start";
+    btn.onclick=()=>startTask(t);
+    el.appendChild(btn);
+  }
+  return el;
+}
+function startTask(t){
+  if(t.type==="writing"){
+    const p=(ctx.prompts||[]).find(p=>String(p.promptId)===String(t.sourceId));
+    openWriting(p || {promptId:t.sourceId||"writing-task",title:t.title,text:"Your tutor will share the prompt. Write your best response to the title above.",category:"Writing",minutes:30});
+  }else{
+    const url=t.targetUrl || "Selective_Reading_Mock_Test.html";
+    const join=url.indexOf("?")>=0?"&":"?";
+    window.location.href = url+join+"student="+encodeURIComponent(student.nameKey)+"&paper="+encodeURIComponent(t.sourceId||"");
+  }
+}
+$("switchBtn").onclick=()=>{ ctx=null; student=null; $("nameInput").value=""; clearMsg($("loginMsg")); showView("vLogin"); };
 
-/* sample reading result -> tests submitReading endpoint */
-$("sampleReading").onclick=async()=>{
-  clearMsg($("dashMsg")); busy($("sampleReading"),true,"Sending");
-  try{
-    await callBackend("submitReading",{
-      nameKey:student.nameKey, paperId:"reading-mock-1", score:24, outOf:30, timeUsedSec:1480,
-      perSkillJson:{"Inference":{c:3,t:4},"Cohesion & sentence logic":{c:4,t:6},"Synthesis across texts":{c:9,t:11}},
-      answersJson:{1:"C",2:"A",3:"B"}
-    });
-    msg($("dashMsg"),"ok","Sample reading result saved. Check the ReadingResults tab of your sheet.");
-  }catch(e){ msg($("dashMsg"),"err",e.message); }
-  finally{ busy($("sampleReading"),false); }
-};
+function renderInbox(){
+  const fb=ctx.feedbackInbox||[];
+  $("inboxCard").classList.toggle("hidden",fb.length===0);
+  const list=$("inboxList"); list.innerHTML="";
+  fb.forEach(f=>{
+    const d=document.createElement("details"); d.className="fb";
+    let words="";
+    if(f.targetWords && f.targetWords.length){
+      words='<div class="words">'+f.targetWords.map(w=>'<span class="word">'+esc(w)+'</span>').join("")+'</div>';
+    }
+    d.innerHTML=
+      '<summary><span class="fbtitle">'+esc(f.promptTitle)+'</span>'+
+        '<span class="aitemmeta">'+fmtDate(f.date)+'</span>'+CHEV+'</summary>'+
+      '<div class="fbbody"><div class="fbblock">'+esc(f.feedback)+'</div>'+words+'</div>';
+    list.appendChild(d);
+  });
+}
+
+function renderVault(){
+  const v=ctx.vocab||[];
+  $("vaultCard").classList.toggle("hidden",v.length===0);
+  $("vaultList").innerHTML = v.map(w=>'<span class="word">'+esc(w)+'</span>').join("");
+}
+
+function renderRevision(){
+  const rh=ctx.readingHistory||[];
+  $("revCard").classList.toggle("hidden",rh.length===0);
+  const list=$("revList"); list.innerHTML="";
+  rh.forEach(r=>{
+    const pct=r.outOf?Math.round(r.score/r.outOf*100):0;
+    const col=pct>=80?"var(--ok)":pct>=50?"var(--warn)":"var(--err)";
+    const d=document.createElement("details"); d.className="rev";
+    d.innerHTML=
+      '<summary><span class="score" style="color:'+col+'">'+r.score+'/'+r.outOf+'</span>'+
+        '<span><div style="font-weight:700">'+esc(r.paperId)+'</div>'+
+        '<div class="aitemmeta">'+fmtDate(r.date)+' &middot; '+pct+'%</div></span>'+CHEV+'</summary>'+
+      '<div class="revbody">'+revBody(r)+'</div>';
+    list.appendChild(d);
+  });
+}
+function revBody(r){
+  let html="";
+  const wrong=Array.isArray(r.wrong)?r.wrong:[];
+  if(wrong.length){
+    html+='<div class="aitemmeta" style="margin-top:6px">Questions to review</div>'+
+      '<table class="autopsy"><tr><th>Q</th><th>Skill</th><th>You chose</th><th>Answer</th></tr>'+
+      wrong.map(w=>'<tr><td>'+esc(w.q)+'</td><td>'+esc(w.skill||"")+'</td>'+
+        '<td class="pick">'+esc(w.picked!=null?w.picked:"-")+'</td>'+
+        '<td class="corr">'+esc(w.correct!=null?w.correct:"-")+'</td></tr>').join("")+'</table>';
+  }else{
+    html+='<div class="aitemmeta" style="margin-top:6px">Per question detail was not captured for this paper.</div>';
+  }
+  if(r.perSkill && typeof r.perSkill==="object"){
+    const rows=Object.keys(r.perSkill).map(k=>{
+      const o=r.perSkill[k]; const t=Number(o.t)||0, c=Number(o.c)||0;
+      const p=t?Math.round(c/t*100):0;
+      return '<div class="skillrow"><div><div>'+esc(k)+'</div><div class="bar"><i style="width:'+p+'%"></i></div></div>'+
+        '<div style="text-align:right;font-variant-numeric:tabular-nums">'+c+'/'+t+'</div></div>';
+    }).join("");
+    html+='<div class="asection" style="margin:16px 0 8px">Skill breakdown</div><div class="skillbar">'+rows+'</div>';
+  }
+  return html;
+}
 
 /* ===== writing ===== */
-const PROMPT={id:"writing-persuasive-1",title:"Failure teaches us more than success",
-  text:"Some people believe we learn far more from our failures than from our successes. Write a response that persuades a reader to agree with your point of view. Use clear reasons and examples."};
-$("openWriting").onclick=()=>{
-  $("wTitle").textContent=PROMPT.title;
-  $("wPrompt").textContent=PROMPT.text;
+function openWriting(p){
+  activePrompt=p;
+  wTotal=(p.minutes||30)*60; wLeft=wTotal;
+  $("wCat").textContent=p.category||"Writing task";
+  $("wTitle").textContent=p.title;
+  $("wPrompt").textContent=p.text;
   $("wText").value=""; $("wCount").textContent="0";
-  wLeft=30*60; wSubmitted=false; wStarted=false; renderClock();
+  wSubmitted=false; wStarted=false; renderClock();
   clearMsg($("wMsg"));
   showView("vWriting");
-};
+}
 $("writingBack").onclick=()=>{ stopWTimer(); showView("vDash"); };
 $("wText").addEventListener("input",()=>{
-  const words=$("wText").value.trim().split(/\s+/).filter(Boolean).length;
-  $("wCount").textContent=words;
+  $("wCount").textContent = $("wText").value.trim().split(/\s+/).filter(Boolean).length;
   if(!wStarted){ wStarted=true; startWTimer(); }
 });
-function startWTimer(){ stopWTimer(); wTimer=setInterval(()=>{ wLeft--; renderClock(); if(wLeft<=0){ stopWTimer(); submitWriting(true); } },1000); }
+function startWTimer(){ stopWTimer(); wTimer=setInterval(()=>{ wLeft--; renderClock(); if(wLeft<=0){ stopWTimer(); submitWriting(true);} },1000); }
 function stopWTimer(){ if(wTimer) clearInterval(wTimer); wTimer=null; }
-function renderClock(){ const m=Math.floor(Math.max(wLeft,0)/60),s=Math.max(wLeft,0)%60; const el=$("wClock"); el.textContent=m+":"+String(s).padStart(2,"0"); el.classList.toggle("warn",wLeft<=120); }
+function renderClock(){ const m=Math.floor(Math.max(wLeft,0)/60),s=Math.max(wLeft,0)%60;
+  const el=$("wClock"); el.textContent=m+":"+String(s).padStart(2,"0"); el.classList.toggle("warn",wLeft<=120); }
 async function submitWriting(auto){
   if(wSubmitted) return;
   const text=$("wText").value.trim();
-  if(!auto && text.length<20){ msg($("wMsg"),"err","Write a little more before submitting."); return; }
+  if(!auto && text.length<20){ msg($("wMsg"),"err","Write a little more before you submit."); return; }
   const words=text.split(/\s+/).filter(Boolean).length;
   busy($("wSubmit"),true,"Submitting"); stopWTimer();
   try{
     await callBackend("submitWriting",{
-      nameKey:student.nameKey, promptId:PROMPT.id, promptTitle:PROMPT.title,
-      wordCount:words, timeUsedSec:30*60-Math.max(wLeft,0), responseText:text
+      nameKey:student.nameKey, promptId:activePrompt.promptId, promptTitle:activePrompt.title,
+      wordCount:words, timeUsedSec:wTotal-Math.max(wLeft,0), responseText:text
     });
     wSubmitted=true;
-    msg($("wMsg"),"ok","Submitted. Your tutor has been notified and can see your work."+(auto?" (Time ran out, so it was sent automatically.)":""));
-  }catch(e){ msg($("wMsg"),"err",e.message+" Your text is still here, you can try submitting again."); }
+    msg($("wMsg"),"ok","Submitted. Your tutor can see your work now."+(auto?" The timer ran out, so it sent automatically.":""));
+    ctx = await callBackend("login",{name:student.nameKey});  // refresh tasks
+    student = ctx.profile;
+    renderDashboard();
+  }catch(e){ msg($("wMsg"),"err",e.message+" Your writing is still here, you can submit again."); }
   finally{ busy($("wSubmit"),false); }
 }
 $("wSubmit").onclick=()=>submitWriting(false);
-window.addEventListener("beforeunload",e=>{ if(!wSubmitted && $("wText").value.trim() && !$("vWriting").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; } });
+window.addEventListener("beforeunload",e=>{
+  if(!wSubmitted && $("wText").value.trim() && !$("vWriting").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; }
+});
 
 /* ===== admin ===== */
-$("toAdmin").onclick=()=>{ clearMsg($("adminMsg")); $("adminData").innerHTML=""; showView("vAdmin"); };
+$("toAdmin").onclick=()=>{ clearMsg($("adminMsg")); $("adminConsole").classList.add("hidden"); showView("vAdmin"); };
 $("adminBack").onclick=()=>{ showView("vLogin"); };
+
 $("adminLoadBtn").onclick=async()=>{
   const password=$("adminPass").value;
   if(!password){ msg($("adminMsg"),"err","Enter the password."); return; }
-  clearMsg($("adminMsg")); $("adminData").innerHTML=""; busy($("adminLoadBtn"),true,"Loading");
+  clearMsg($("adminMsg")); busy($("adminLoadBtn"),true,"Loading");
   try{
     const data=await callBackend("getResults",{password});
-    renderAdmin(data);
-    msg($("adminMsg"),"ok","Loaded.");
-  }catch(e){ msg($("adminMsg"),"err",e.message==="Unauthorized access."?"Wrong password.":e.message); }
+    adminCache={...data,password};
+    buildAssignForm();
+    renderAdmin();
+    $("adminConsole").classList.remove("hidden");
+    clearMsg($("adminMsg"));
+  }catch(e){ msg($("adminMsg"),"err",/Unauthorized/i.test(e.message)?"Wrong password.":e.message); }
   finally{ busy($("adminLoadBtn"),false); }
 };
-function renderAdmin(data){
-  const wrap=$("adminData");
-  wrap.innerHTML="";
 
-  // 1. Convert raw spreadsheet rows into readable objects based on the header row
-  const reading = sheetToObjects(data.reading);
-  const writing = sheetToObjects(data.writing);
-
-  // 2. Group all data by student key
-  const students = {};
-  const initStudent = (key) => { if(!students[key]) students[key] = { reading: [], writing: [] }; };
-  
-  reading.forEach(r => { initStudent(r.name_key); students[r.name_key].reading.push(r); });
-  writing.forEach(w => { initStudent(w.name_key); students[w.name_key].writing.push(w); });
-
-  if(Object.keys(students).length === 0){
-    wrap.innerHTML="<p class='sub'>No student data has been submitted yet.</p>";
-    return;
+function buildAssignForm(){
+  $("asStudent").innerHTML=(adminCache.students||[])
+    .map(s=>'<option value="'+esc(s.name_key)+'">'+esc(s.display_name||s.name_key)+'</option>').join("");
+  $("asPrompt").innerHTML=(adminCache.prompts||[])
+    .map(p=>'<option value="'+esc(p.prompt_id)+'">'+esc(p.title)+'</option>').join("");
+  syncAssignType();
+}
+function syncAssignType(){
+  const writing=$("asType").value==="writing";
+  $("asReadingWrap").classList.toggle("hidden",writing);
+  $("asPromptWrap").classList.toggle("hidden",!writing);
+  if(writing){ // auto fill title and source from the chosen prompt
+    const p=(adminCache.prompts||[]).find(p=>String(p.prompt_id)===$("asPrompt").value);
+    if(p){ if(!$("asTitle").value) $("asTitle").value=p.title; $("asSource").value=p.prompt_id; }
   }
+}
+$("asType").onchange=syncAssignType;
+$("asPrompt").onchange=()=>{ const p=(adminCache.prompts||[]).find(p=>String(p.prompt_id)===$("asPrompt").value);
+  if(p){ $("asTitle").value=p.title; $("asSource").value=p.prompt_id; } };
 
-  // 3. Build a beautiful profile card for each student
-  Object.keys(students).forEach(nameKey => {
-    const stu = students[nameKey];
-    const totalRead = stu.reading.length;
-    const totalWrite = stu.writing.length;
-    const avgScore = totalRead > 0 ? Math.round(stu.reading.reduce((sum, r) => sum + Number(r.score), 0) / totalRead) : 0;
+$("asSubmit").onclick=async()=>{
+  const taskType=$("asType").value;
+  const body={
+    password:adminCache.password,
+    studentKey:$("asStudent").value,
+    taskType,
+    title:$("asTitle").value.trim(),
+    targetUrl:taskType==="reading"?$("asUrl").value.trim():"",
+    sourceId:$("asSource").value.trim(),
+    dueDate:$("asDue").value
+  };
+  if(!body.title){ msg($("asMsg"),"err","Give the task a title."); return; }
+  busy($("asSubmit"),true,"Assigning");
+  try{
+    await callBackend("assignTask",body);
+    const data=await callBackend("getResults",{password:adminCache.password});
+    adminCache={...data,password:adminCache.password};
+    renderAdmin();
+    msg($("asMsg"),"ok","Task assigned to "+body.studentKey+".");
+    $("asTitle").value=""; $("asDue").value="";
+  }catch(e){ msg($("asMsg"),"err",e.message); }
+  finally{ busy($("asSubmit"),false); }
+};
 
-    let html = `
-      <div class="admin-student-card">
-        <div class="admin-student-header">
-          <div class="admin-student-name">${nameKey}</div>
-          <div class="pill">${totalRead + totalWrite} Total Activities</div>
-        </div>
-        
-        <div class="admin-stats">
-          <div class="stat-box"><div class="stat-label">Reading Tests</div><div class="stat-val">${totalRead}</div></div>
-          <div class="stat-box"><div class="stat-label">Average Score</div><div class="stat-val">${avgScore} <small style="font-size:14px;color:var(--muted)">/ 30</small></div></div>
-          <div class="stat-box"><div class="stat-label">Writing Drafts</div><div class="stat-val">${totalWrite}</div></div>
-        </div>
-    `;
+function renderAdmin(){
+  const wrap=$("adminData"); wrap.innerHTML="";
+  const reading=adminCache.reading||[], writing=adminCache.writing||[], assigns=adminCache.assignments||[];
+  const keys={};
+  (adminCache.students||[]).forEach(s=>keys[String(s.name_key).toLowerCase()]={display:s.display_name||s.name_key,reading:[],writing:[],tasks:[]});
+  const bucket=k=>{ k=String(k||"").toLowerCase(); if(!keys[k]) keys[k]={display:k,reading:[],writing:[],tasks:[]}; return keys[k]; };
+  reading.forEach(r=>bucket(r.name_key).reading.push(r));
+  writing.forEach(w=>bucket(w.name_key).writing.push(w));
+  assigns.forEach(a=>bucket(a.student_key).tasks.push(a));
 
-    // Render Reading History (Newest first)
-    if(totalRead > 0){
-      html += `<div class="admin-section-title">Reading History</div><div class="admin-list">`;
-      stu.reading.slice().reverse().forEach(r => {
-        const date = new Date(r.timestamp).toLocaleDateString();
-        const scorePct = Math.round((Number(r.score) / Number(r.out_of)) * 100);
-        const col = scorePct >= 80 ? "var(--ok)" : scorePct >= 50 ? "var(--flag)" : "var(--err)";
-        
-        html += `
-          <div class="admin-item">
-            <div class="admin-item-header">
-              <span class="admin-item-title">${r.paper_id}</span>
-              <span class="admin-item-meta">${date}</span>
-            </div>
-            <div>
-              <strong style="color:${col}; font-size:16px;">${r.score}/${r.out_of}</strong> <span style="color:var(--muted); font-size:13px;">(${scorePct}%)</span>
-              <span style="color:var(--muted); margin-left: 12px; font-size: 13px;">⏱️ ${Math.floor(r.time_used_sec/60)}m ${r.time_used_sec%60}s</span>
-            </div>
-          </div>
-        `;
+  if(Object.keys(keys).length===0){ wrap.innerHTML="<div class='card'><p class='sub'>No students yet.</p></div>"; return; }
+
+  Object.keys(keys).forEach(k=>{
+    const stu=keys[k];
+    const totRead=stu.reading.length, totWrite=stu.writing.length;
+    const avg=totRead?Math.round(stu.reading.reduce((s,r)=>s+(Number(r.score)/Number(r.out_of||30)*100),0)/totRead):0;
+    const openTasks=stu.tasks.filter(t=>String(t.status).toLowerCase()!=="submitted").length;
+
+    let h='<div class="card"><div class="acard">'+
+      '<div class="ahead"><div class="aname">'+esc(stu.display)+'</div>'+
+        '<span class="pill">'+(totRead+totWrite)+' activities</span></div>'+
+      '<div class="astats">'+
+        statBox("Reading papers",totRead)+
+        statBox("Average",avg+'<small style="font-size:13px;color:var(--muted)">%</small>')+
+        statBox("Writing drafts",totWrite)+
+        statBox("Open tasks",openTasks)+
+      '</div>';
+
+    // assigned tasks
+    if(stu.tasks.length){
+      h+='<div class="asection">Assigned tasks</div>';
+      stu.tasks.slice().reverse().forEach(t=>{
+        const done=String(t.status).toLowerCase()==="submitted";
+        h+='<div class="aitem"><div class="aitemhead"><span class="aitemtitle">'+esc(t.title)+'</span>'+
+          '<span class="aitemmeta">'+(done?"Submitted":"Pending")+'</span></div>'+
+          '<div class="aitemmeta">'+esc(t.task_type)+' &middot; due '+(fmtDate(isoLike(t.due_date))||"none")+
+          ' &middot; id '+esc(t.source_id||"-")+'</div>'+
+          '<div class="pushrow"><button class="btn ghost tiny" onclick="delTask(\''+esc(t.task_id)+'\')">Remove</button></div></div>';
       });
-      html += `</div>`;
     }
 
-    // Render Writing History with expandable text (Newest first)
-    if(totalWrite > 0){
-      html += `<div class="admin-section-title">Writing History</div><div class="admin-list">`;
-      stu.writing.slice().reverse().forEach((w, idx) => {
-        const date = new Date(w.timestamp).toLocaleDateString();
-        const bodyId = `draft-${nameKey}-${idx}`; // Unique ID to toggle the draft view
-        
-        html += `
-          <div class="admin-item">
-            <div class="admin-item-header">
-              <span class="admin-item-title">${w.prompt_title}</span>
-              <span class="admin-item-meta">${date}</span>
-            </div>
-            <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">
-              ${w.word_count} words &middot; ⏱️ ${Math.floor(w.time_used_sec/60)}m ${w.time_used_sec%60}s
-            </div>
-            <button class="toggle-btn" onclick="document.getElementById('${bodyId}').style.display = document.getElementById('${bodyId}').style.display === 'block' ? 'none' : 'block'">Read / Hide Draft</button>
-            <div id="${bodyId}" class="admin-writing-body">${esc(w.response_text)}</div>
-          </div>
-        `;
+    // reading with error autopsy
+    if(totRead){
+      h+='<div class="asection">Reading history and error autopsy</div>';
+      stu.reading.slice().reverse().forEach((r,i)=>{
+        const pct=Math.round(Number(r.score)/Number(r.out_of||30)*100);
+        const col=pct>=80?"var(--ok)":pct>=50?"var(--warn)":"var(--err)";
+        const id="aut-"+k+"-"+i;
+        const wrong=safe(r.wrong_json);
+        let autopsy='<div class="aitemmeta" style="margin-top:6px">Per question detail was not captured.</div>';
+        if(Array.isArray(wrong)&&wrong.length){
+          autopsy='<table class="autopsy"><tr><th>Q</th><th>Skill</th><th>Chose</th><th>Answer</th></tr>'+
+            wrong.map(w=>'<tr><td>'+esc(w.q)+'</td><td>'+esc(w.skill||"")+'</td>'+
+            '<td class="pick">'+esc(w.picked!=null?w.picked:"-")+'</td>'+
+            '<td class="corr">'+esc(w.correct!=null?w.correct:"-")+'</td></tr>').join("")+'</table>';
+        }
+        h+='<div class="aitem"><div class="aitemhead">'+
+          '<span class="aitemtitle">'+esc(r.paper_id)+'</span>'+
+          '<span class="aitemmeta">'+fmtDate(isoLike(r.timestamp))+'</span></div>'+
+          '<div><strong style="color:'+col+'">'+r.score+'/'+r.out_of+'</strong> '+
+          '<span class="aitemmeta">('+pct+'%) &middot; '+Math.floor(r.time_used_sec/60)+'m '+(r.time_used_sec%60)+'s</span></div>'+
+          '<button class="toggle linkbtn" style="margin-top:8px" onclick="tog(\''+id+'\')">Error autopsy</button>'+
+          '<div id="'+id+'" style="display:none;margin-top:8px">'+autopsy+'</div></div>';
       });
-      html += `</div>`;
     }
 
-    html += `</div>`; // Close student card
-    wrap.insertAdjacentHTML('beforeend', html);
+    // writing with feedback editor
+    if(totWrite){
+      h+='<div class="asection">Writing and feedback</div>';
+      stu.writing.slice().reverse().forEach((w,i)=>{
+        const bid="w-"+k+"-"+i;
+        const sid=esc(w.submission_id||"");
+        h+='<div class="aitem"><div class="aitemhead">'+
+          '<span class="aitemtitle">'+esc(w.prompt_title)+'</span>'+
+          '<span class="aitemmeta">'+fmtDate(isoLike(w.timestamp))+'</span></div>'+
+          '<div class="aitemmeta">'+esc(w.word_count)+' words &middot; '+Math.floor(w.time_used_sec/60)+'m '+(w.time_used_sec%60)+'s</div>'+
+          '<button class="toggle linkbtn" style="margin-top:8px" onclick="tog(\''+bid+'\')">Read draft</button>'+
+          '<div id="'+bid+'" style="display:none"><div class="fbblock">'+esc(w.response_text)+'</div></div>'+
+          '<div class="fbedit"><label>Feedback for student</label>'+
+          '<textarea id="fb-'+bid+'" placeholder="What they did well, and the one thing to fix next time.">'+esc(w.tutor_feedback||"")+'</textarea>'+
+          '<label style="margin-top:8px">Target words for the vault <small>(comma separated)</small></label>'+
+          '<input type="text" id="tw-'+bid+'" value="'+esc(w.target_words||"")+'" placeholder="resilient, nevertheless, momentum">'+
+          '<div class="pushrow"><button class="btn sm" onclick="pushFeedback(\''+sid+'\',\''+bid+'\',this)">Push to student</button>'+
+          (w.tutor_feedback?' <span class="pill">sent</span>':'')+'</div></div></div>';
+      });
+    }
+
+    h+='</div></div>';
+    wrap.insertAdjacentHTML("beforeend",h);
   });
 }
+function statBox(label,val){ return '<div class="statbox"><div class="statlabel">'+label+'</div><div class="statval">'+val+'</div></div>'; }
+function isoLike(v){ if(v==null||v==="") return null; const d=new Date(v); return isNaN(d)?String(v):d.toISOString(); }
+function safe(v){ if(v==null||v==="") return null; if(typeof v==="object") return v; try{return JSON.parse(v);}catch(e){return null;} }
+function tog(id){ const el=document.getElementById(id); el.style.display=el.style.display==="block"?"none":"block"; }
 
-// Utility: Turns a raw 2D spreadsheet array into an array of objects
-function sheetToObjects(sheetData) {
-  if (!sheetData || sheetData.length < 2) return [];
-  const keys = sheetData[0];
-  return sheetData.slice(1).map(row => {
-    let obj = {};
-    keys.forEach((k, i) => obj[k] = row[i]);
-    return obj;
-  });
+async function pushFeedback(sid,bid,btn){
+  if(!sid){ alert("This submission has no id. Older rows submitted before the upgrade cannot receive pushed feedback."); return; }
+  const feedback=document.getElementById("fb-"+bid).value;
+  const targetWords=document.getElementById("tw-"+bid).value;
+  busy(btn,true,"Sending");
+  try{
+    await callBackend("saveFeedback",{password:adminCache.password,submissionId:sid,feedback,targetWords});
+    btn.textContent="Sent";
+    setTimeout(()=>{ btn.disabled=false; btn.textContent="Push to student"; },1200);
+  }catch(e){ alert(e.message); btn.disabled=false; btn.textContent="Push to student"; }
+}
+async function delTask(taskId){
+  if(!confirm("Remove this task?")) return;
+  try{
+    await callBackend("deleteTask",{password:adminCache.password,taskId});
+    const data=await callBackend("getResults",{password:adminCache.password});
+    adminCache={...data,password:adminCache.password};
+    renderAdmin();
+  }catch(e){ alert(e.message); }
 }
 
-// Utility: Escapes dangerous characters to prevent HTML injection
-function esc(s){ return s? s.toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;") : ""; }
-function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+/* ping on load so the status dot is honest */
+(async()=>{ try{ await callBackend("login",{name:"__ping__"}); }catch(e){ /* expected reject still proves reachability */ } })();
 </script>
 </body>
 </html>
