@@ -162,6 +162,23 @@ textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.
 .fbedit textarea{min-height:90px;font-family:var(--sans);font-size:14px}
 .fbedit input{margin-top:8px}
 .pushrow{margin-top:10px}
+.scorewrap{margin-top:12px;border-top:1px dashed var(--border);padding-top:12px}
+.scoreset{margin:8px 0 4px}
+.scoresetname{font-size:11.5px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.04em;margin:6px 0 6px}
+.scorerow2{display:grid;grid-template-columns:1fr 70px auto;gap:8px;align-items:center;margin:0 0 6px;font-size:13.5px}
+.scorerow2 select{padding:6px 8px;border-radius:8px}
+.scorerow2 small{color:var(--muted)}
+.scoretotal{margin-top:8px;font-size:14px;font-weight:700}
+.scoretotal b{color:var(--navy);font-size:17px}
+.scorecard{background:#0e2b4d;color:#fff;border-radius:11px;padding:14px 16px;margin:0 0 10px}
+.scorecardtop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.scorecardtop span:first-child{font-size:12px;text-transform:uppercase;letter-spacing:.06em;opacity:.75;font-weight:700}
+.scorecardtot{font-size:24px;font-weight:800}
+.scorecardtot small{font-size:14px;opacity:.7;font-weight:600}
+.screvs{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px}
+@media(max-width:520px){.screvs{grid-template-columns:1fr}}
+.screv{display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.14);padding:4px 0;font-size:13.5px}
+.screv b{font-weight:700}
 .assignbox{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:620px){.assignbox{grid-template-columns:1fr}.statstrip{grid-template-columns:1fr}}
 
@@ -190,7 +207,7 @@ textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.
       <h1>Let's get to work</h1>
       <p class="sub">Type your first name to open your dashboard.</p>
       <label for="nameInput">Your name</label>
-      <input type="text" id="nameInput" placeholder="e.g. Mithran" autocomplete="off" autocapitalize="words" spellcheck="false">
+      <input type="text" id="nameInput" placeholder="e.g. Noof" autocomplete="off" autocapitalize="words" spellcheck="false">
       <div class="row" style="margin-top:14px"><button class="btn" id="loginBtn">Enter</button></div>
       <div id="loginMsg"></div>
       <div class="foot">Tutor? <button class="linkbtn" id="toAdmin">Open tutor console</button></div>
@@ -272,7 +289,7 @@ textarea{min-height:340px;line-height:1.6;font-family:var(--serif);font-size:16.
         <div class="assignbox">
           <div><label>Student</label><select id="asStudent"></select></div>
           <div><label>Type</label><select id="asType"><option value="reading">Reading</option><option value="writing">Writing</option></select></div>
-          <div id="asReadingWrap"><label>Reading paper file</label><input type="text" id="asUrl" placeholder="Selective_Reading_Mock_Test.html" spellcheck="false"></div>
+          <div id="asReadingWrap"><label>Reading paper</label><select id="asPaper"></select><input type="text" id="asUrl" placeholder="Selective_Reading_Mock_Test.html" spellcheck="false"></div>
           <div id="asPromptWrap" class="hidden"><label>Prompt from bank</label><select id="asPrompt"></select></div>
           <div><label>Title shown to student</label><input type="text" id="asTitle" placeholder="e.g. Reading paper 2" spellcheck="false"></div>
           <div><label>Source id <small>(paper id or prompt id, used to auto tick off)</small></label><input type="text" id="asSource" placeholder="reading-mock-2" spellcheck="false"></div>
@@ -295,6 +312,64 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-
 let ctx=null, student=null, adminCache=null, activePrompt=null;
 let wTimer=null, wLeft=30*60, wSubmitted=false, wStarted=false, wTotal=30*60;
 const $=id=>document.getElementById(id);
+
+/* ===== Writing marking criteria (edit freely) =====
+   Two sets, Selective style. Each criterion scores 0..max. Total auto-sums. */
+const WRITING_CRITERIA = {
+  "Set A \u2013 Ideas & structure":[
+    {key:"audience",  label:"Audience & purpose",        max:5},
+    {key:"ideas",     label:"Ideas & content",           max:5},
+    {key:"structure", label:"Structure & organisation",  max:5}
+  ],
+  "Set B \u2013 Language & mechanics":[
+    {key:"vocab",     label:"Vocabulary & word choice",  max:5},
+    {key:"sentences", label:"Sentence structure",        max:5},
+    {key:"spelling",  label:"Spelling & punctuation",    max:5}
+  ]
+};
+function criteriaFlat(){ const a=[]; Object.keys(WRITING_CRITERIA).forEach(s=>WRITING_CRITERIA[s].forEach(c=>a.push(c))); return a; }
+function criteriaMaxTotal(){ return criteriaFlat().reduce((s,c)=>s+c.max,0); }
+function criteriaLabel(key){ const c=criteriaFlat().find(c=>c.key===key); return c?c.label:key; }
+
+/* admin: build the score editor under a draft */
+function scoreEditor(bid, existing){
+  const sc=(existing&&existing.scores)||{};
+  let html='<div class="scorewrap"><label>Selective score</label>';
+  Object.keys(WRITING_CRITERIA).forEach(setName=>{
+    html+='<div class="scoreset"><div class="scoresetname">'+esc(setName)+'</div>';
+    WRITING_CRITERIA[setName].forEach(c=>{
+      let opts='<option value="">\u2013</option>';
+      for(let i=0;i<=c.max;i++){ opts+='<option value="'+i+'"'+(String(sc[c.key])===String(i)?' selected':'')+'>'+i+'</option>'; }
+      html+='<div class="scorerow2"><span>'+esc(c.label)+'</span>'+
+        '<select id="sc-'+bid+'-'+c.key+'" onchange="recalcScore(\''+bid+'\')">'+opts+'</select>'+
+        '<small>/ '+c.max+'</small></div>';
+    });
+    html+='</div>';
+  });
+  const initTotal=(existing&&existing.total!=null)?existing.total:0;
+  html+='<div class="scoretotal">Total <b id="tot-'+bid+'">'+initTotal+'</b> / '+criteriaMaxTotal()+'</div></div>';
+  return html;
+}
+function recalcScore(bid){
+  let total=0, any=false;
+  criteriaFlat().forEach(c=>{ const el=document.getElementById('sc-'+bid+'-'+c.key);
+    if(el&&el.value!==''){ total+=Number(el.value); any=true; } });
+  document.getElementById('tot-'+bid).textContent=any?total:0;
+}
+function gatherScore(bid){
+  const scores={}; let total=0, any=false; const max=criteriaMaxTotal();
+  criteriaFlat().forEach(c=>{ const el=document.getElementById('sc-'+bid+'-'+c.key);
+    if(el&&el.value!==''){ scores[c.key]=Number(el.value); total+=Number(el.value); any=true; } });
+  return any? {scores,total,max} : null;
+}
+/* student: render a pushed score */
+function scoreBlock(score){
+  if(!score||!score.scores) return "";
+  const rows=Object.keys(score.scores).map(k=>'<div class="screv"><span>'+esc(criteriaLabel(k))+'</span><b>'+esc(score.scores[k])+'</b></div>').join("");
+  return '<div class="scorecard"><div class="scorecardtop"><span>Your score</span>'+
+    '<span class="scorecardtot">'+esc(score.total)+' <small>/ '+esc(score.max)+'</small></span></div>'+
+    '<div class="screvs">'+rows+'</div></div>';
+}
 
 async function callBackend(action, payload={}){
   let raw;
@@ -417,8 +492,13 @@ function renderInbox(){
   fb.forEach(f=>{
     const d=document.createElement("details"); d.className="fb";
     let words=(f.targetWords&&f.targetWords.length)?'<div class="words">'+f.targetWords.map(w=>'<span class="word">'+esc(w)+'</span>').join("")+'</div>':"";
-    d.innerHTML='<summary><span class="fbtitle">'+esc(f.promptTitle)+'</span><span class="aitemmeta">'+fmtDate(f.date)+'</span>'+CHEV+'</summary>'+
-      '<div class="fbbody"><div class="fbblock">'+esc(f.feedback)+'</div>'+words+'</div>';
+    let body="";
+    if(f.score) body+=scoreBlock(f.score);
+    if(f.feedback && String(f.feedback).trim()) body+='<div class="fbblock">'+esc(f.feedback)+'</div>';
+    body+=words;
+    const summaryRight = f.score ? ('<span class="pill">'+esc(f.score.total)+'/'+esc(f.score.max)+'</span>') : ('<span class="aitemmeta">'+fmtDate(f.date)+'</span>');
+    d.innerHTML='<summary><span class="fbtitle">'+esc(f.promptTitle)+'</span>'+summaryRight+CHEV+'</summary>'+
+      '<div class="fbbody">'+body+'</div>';
     list.appendChild(d);
   });
 }
@@ -483,8 +563,13 @@ function openWriting(p){
   activePrompt=p; wTotal=(p.minutes||30)*60; wLeft=wTotal;
   $("wCat").textContent=p.category||"Writing task";
   $("wTitle").textContent=p.title; $("wPrompt").innerHTML=renderPrompt(p.text);
-  $("wText").value=""; $("wCount").textContent="0";
+  $("wText").value=""; $("wText").readOnly=false; $("wText").style.opacity="1"; $("wCount").textContent="0";
+  $("wSubmit").disabled=false; $("wSubmit").textContent="Submit to tutor";
   wSubmitted=false; wStarted=false; renderClock(); clearMsg($("wMsg")); showView("vWriting");
+}
+function lockWriting(){
+  $("wText").readOnly=true; $("wText").style.opacity="0.7";
+  $("wSubmit").disabled=true; $("wSubmit").textContent="Submitted";
 }
 $("writingBack").onclick=()=>{ stopWTimer(); showView("vDash"); };
 $("wText").addEventListener("input",()=>{
@@ -499,16 +584,20 @@ async function submitWriting(auto){
   if(wSubmitted) return;
   const text=$("wText").value.trim();
   if(!auto && text.length<20){ msg($("wMsg"),"err","Write a little more before you submit."); return; }
+  if(auto){ $("wText").readOnly=true; }   // time is up: stop typing immediately
   const words=text.split(/\s+/).filter(Boolean).length;
   busy($("wSubmit"),true,"Submitting"); stopWTimer();
   try{
     await callBackend("submitWriting",{nameKey:student.nameKey,promptId:activePrompt.promptId,promptTitle:activePrompt.title,
       wordCount:words,timeUsedSec:wTotal-Math.max(wLeft,0),responseText:text});
     wSubmitted=true;
-    msg($("wMsg"),"ok","Submitted. Your tutor can see your work now."+(auto?" The timer ran out, so it sent automatically.":""));
-    ctx=await callBackend("login",{name:student.nameKey}); student=ctx.profile; renderDashboard();
-  }catch(e){ msg($("wMsg"),"err",e.message+" Your writing is still here, you can submit again."); }
-  finally{ busy($("wSubmit"),false); }
+    lockWriting();
+    msg($("wMsg"),"ok","Submitted and locked. Your tutor can see your work now."+(auto?" The timer ran out, so it sent automatically.":""));
+    try{ ctx=await callBackend("login",{name:student.nameKey}); student=ctx.profile; renderDashboard(); }catch(_){}
+  }catch(e){
+    msg($("wMsg"),"err",e.message+" Your writing is still here, you can submit again.");
+    busy($("wSubmit"),false);
+  }
 }
 $("wSubmit").onclick=()=>submitWriting(false);
 window.addEventListener("beforeunload",e=>{ if(!wSubmitted && $("wText").value.trim() && !$("vWriting").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; } });
@@ -530,7 +619,18 @@ $("adminLoadBtn").onclick=async()=>{
 function buildAssignForm(){
   $("asStudent").innerHTML=(adminCache.students||[]).map(s=>'<option value="'+esc(s.name_key)+'">'+esc(s.display_name||s.name_key)+'</option>').join("");
   $("asPrompt").innerHTML=(adminCache.prompts||[]).map(p=>'<option value="'+esc(p.prompt_id)+'">'+esc(p.title)+'</option>').join("");
-  syncAssignType();
+  const papers=adminCache.readingPapers||[];
+  if(papers.length){
+    $("asPaper").classList.remove("hidden"); $("asUrl").classList.add("hidden");
+    $("asPaper").innerHTML=papers.map(p=>'<option value="'+esc(p.paper_id)+'">'+esc(p.title||p.paper_id)+'</option>').join("");
+  }else{
+    $("asPaper").classList.add("hidden"); $("asUrl").classList.remove("hidden");
+  }
+  applyPaper(); syncAssignType();
+}
+function applyPaper(){
+  const p=(adminCache.readingPapers||[]).find(p=>String(p.paper_id)===$("asPaper").value);
+  if(p){ $("asTitle").value=p.title||p.paper_id; $("asSource").value=p.paper_id; }
 }
 function syncAssignType(){
   const writing=$("asType").value==="writing";
@@ -540,12 +640,19 @@ function syncAssignType(){
     if(p){ if(!$("asTitle").value) $("asTitle").value=p.title; $("asSource").value=p.prompt_id; } }
 }
 $("asType").onchange=syncAssignType;
+$("asPaper").onchange=applyPaper;
 $("asPrompt").onchange=()=>{ const p=(adminCache.prompts||[]).find(p=>String(p.prompt_id)===$("asPrompt").value);
   if(p){ $("asTitle").value=p.title; $("asSource").value=p.prompt_id; } };
 $("asSubmit").onclick=async()=>{
   const taskType=$("asType").value;
+  let targetUrl="";
+  if(taskType==="reading"){
+    const papers=adminCache.readingPapers||[];
+    const p=papers.find(p=>String(p.paper_id)===$("asPaper").value);
+    targetUrl=(papers.length&&p)?(p.file_url||""):$("asUrl").value.trim();
+  }
   const body={password:adminCache.password,studentKey:$("asStudent").value,taskType,
-    title:$("asTitle").value.trim(),targetUrl:taskType==="reading"?$("asUrl").value.trim():"",
+    title:$("asTitle").value.trim(),targetUrl:targetUrl,
     sourceId:$("asSource").value.trim(),dueDate:$("asDue").value};
   if(!body.title){ msg($("asMsg"),"err","Give the task a title."); return; }
   busy($("asSubmit"),true,"Assigning");
@@ -618,6 +725,7 @@ function renderAdmin(){
           '<textarea id="fb-'+bid+'" placeholder="What they did well, and the one thing to fix next time." spellcheck="false">'+esc(w.tutor_feedback||"")+'</textarea>'+
           '<label style="margin-top:8px">Target words for the vault <small>(comma separated)</small></label>'+
           '<input type="text" id="tw-'+bid+'" value="'+esc(w.target_words||"")+'" placeholder="resilient, nevertheless, momentum" spellcheck="false">'+
+          scoreEditor(bid, safe(w.score_json))+
           '<div class="pushrow"><button class="btn sm" onclick="pushFeedback(\''+sid+'\',\''+bid+'\',this)">Push to student</button>'+
           (w.tutor_feedback?' <span class="pill">sent</span>':'')+'</div></div></div>';
       });
@@ -634,9 +742,11 @@ async function pushFeedback(sid,bid,btn){
   if(!sid){ alert("This submission has no id. Older rows submitted before the upgrade cannot receive pushed feedback."); return; }
   const feedback=document.getElementById("fb-"+bid).value;
   const targetWords=document.getElementById("tw-"+bid).value;
+  const score=gatherScore(bid);
+  const scoreJson=score?JSON.stringify(score):"";
   busy(btn,true,"Sending");
   try{
-    await callBackend("saveFeedback",{password:adminCache.password,submissionId:sid,feedback,targetWords});
+    await callBackend("saveFeedback",{password:adminCache.password,submissionId:sid,feedback,targetWords,scoreJson});
     btn.textContent="Sent"; setTimeout(()=>{ btn.disabled=false; btn.textContent="Push to student"; },1200);
   }catch(e){ alert(e.message); btn.disabled=false; btn.textContent="Push to student"; }
 }
