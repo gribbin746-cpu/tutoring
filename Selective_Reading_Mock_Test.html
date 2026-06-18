@@ -259,9 +259,9 @@ footer{height:64px;position:fixed;bottom:0;left:0;right:0;background:#fff;border
       <h3>Questions to review</h3>
       <div id="reviewBox"></div>
     </div>
-    <div class="results-actions">
+   <div class="results-actions">
       <button class="btn-ghost" id="restartBtn">Restart test</button>
-      <button class="btn-primary" id="closeResultsBtn">Close</button>
+      <button class="btn-primary" id="backToDashBtn">Back to dashboard</button>
     </div>
   </div>
 </div>
@@ -740,32 +740,39 @@ function finish(){
   $("finishBtn").textContent="Results";
   showResults();
 
-  /* ===== NEW: Send results to Google Sheets ===== */
-  // Look at the URL to see who is taking the test
+/* ===== Send results to the portal backend ===== */
   const urlParams = new URLSearchParams(window.location.search);
-  const studentKey = urlParams.get('student') || $("nameInput").value.trim() || "unknown";
+  const studentKey = urlParams.get('student') || ($("nameInput").value||"").trim() || "unknown";
+  const paperId    = urlParams.get('paper')   || "reading-mock-1";
 
-  // Send the data
+  // exact list of missed questions, for the autopsy and tick-off
+  const wrongJson = Q.filter(q => answers[q.n] !== q.ans).map(q => ({
+    q: q.n,
+    picked: answers[q.n] || null,
+    correct: q.ans,
+    skill: SKILL_OF[q.n]
+  }));
+
   callBackend("submitReading", {
     nameKey: studentKey,
-    paperId: "reading-mock-1",
+    paperId: paperId,
     score: score,
     outOf: 30,
     timeUsedSec: Math.max(used, 0),
     perSkillJson: skillStat,
-    answersJson: answers
-  }).then(() => {
-    console.log("Successfully saved to database!");
-  }).catch(err => {
-    console.error("Could not save to database: ", err);
-  });
-} 
+    answersJson: answers,
+    wrongJson: wrongJson
+  }).then(()=>console.log("Saved")).catch(err=>console.error("Save failed:", err));
+}
 
 function textFor(q,letter){
   const o=q.opts.find(o=>o.l===letter);
   return o?o.t:"";
 }
-$("closeResultsBtn").onclick=()=>$("resultsOverlay").classList.add("hidden");
+$("backToDashBtn").onclick=()=>{
+  const k=new URLSearchParams(window.location.search).get('student');
+  window.location.href = "index.html" + (k ? ("?student="+encodeURIComponent(k)+"&done=reading") : "");
+};
 $("restartBtn").onclick=()=>location.reload();
 
 /* keyboard: arrows to move, A-D / A-G to answer */
