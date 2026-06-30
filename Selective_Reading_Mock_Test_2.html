@@ -1,0 +1,701 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selective High School Placement Test (Practice): Reading 2</title>
+<style>
+:root{
+  --navy:#002664; --navy2:#06376b; --blue:#1a73c0; --blue-soft:#e8f1fb;
+  --bg:#eceff3; --panel:#ffffff; --border:#d3d9e1; --line:#e6eaef;
+  --ink:#1b1e23; --muted:#5c6672; --correct:#1d7a3a; --correct-bg:#e7f4ec;
+  --wrong:#c0392b; --wrong-bg:#fbeceb; --flag:#d9822b; --flag-bg:#fcefe0;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45}
+button{font-family:inherit}
+.hidden{display:none!important}
+header{height:54px;background:var(--navy);color:#fff;display:flex;align-items:center;
+  justify-content:space-between;padding:0 16px;position:fixed;top:0;left:0;right:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand .mark{width:24px;height:24px;flex:0 0 auto;color:#fff;opacity:.95}
+.brand .mark svg{width:24px;height:24px;display:block}
+.brand .ttl{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand .pill{background:rgba(255,255,255,.16);padding:2px 9px;border-radius:999px;font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;flex:0 0 auto}
+.hright{display:flex;align-items:center;gap:12px}
+.timer{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);padding:6px 12px;
+  border-radius:8px;font-variant-numeric:tabular-nums;font-weight:600;font-size:15px}
+.timer.warn{background:#7a1f1a;color:#ffd9d4}
+.timer svg{width:15px;height:15px}
+.btn{border:0;border-radius:8px;padding:9px 16px;font-weight:600;font-size:14px;cursor:pointer}
+.btn-finish{background:#fff;color:var(--navy)}
+.btn-finish:hover{background:#eaf0f8}
+.progbar{position:fixed;top:54px;left:0;right:0;height:3px;background:var(--line);z-index:19}
+.progbar>i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+main{position:fixed;top:57px;bottom:64px;left:0;right:0;display:flex}
+.pane{height:100%;overflow:auto;background:var(--panel)}
+.stim{flex:1 1 56%;border-right:1px solid var(--border);padding:26px 30px}
+.qpane{flex:1 1 44%;padding:22px 28px}
+.stim h2{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 14px}
+.stim .extract-head{font-family:var(--serif);font-style:italic;font-weight:700;font-size:16px;margin:20px 0 8px}
+.stim .work-title{font-family:var(--serif);font-weight:700;font-size:20px;margin:2px 0 12px}
+.stim p,.stim .stanza{font-family:var(--serif);font-size:16px;line-height:1.62;margin:0 0 13px;color:#23272d}
+.stanza{white-space:pre-line}
+.gap{display:inline-block;min-width:30px;text-align:center;border-bottom:2px solid #b9c2cd;
+  color:var(--muted);font-family:var(--sans);font-size:13px;font-weight:700;padding:0 4px;border-radius:3px}
+.gap.active{background:#fff3cf;border-bottom-color:var(--flag);color:#7a4d12}
+.ex-block{margin:0 0 18px;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.ex-block .lbl{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--blue);margin:0 0 4px}
+.qtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.qnum{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.flagbtn{display:flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;
+  color:var(--muted);border-radius:7px;padding:6px 11px;font-size:13px;font-weight:600;cursor:pointer}
+.flagbtn svg{width:13px;height:13px}
+.flagbtn.on{background:var(--flag-bg);border-color:var(--flag);color:#9a5713}
+.qstem{font-size:16.5px;font-weight:600;line-height:1.5;margin:10px 0 16px}
+.qstem .qq{font-style:italic;font-weight:600}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;
+  border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;margin:0 0 10px;cursor:pointer;
+  font-size:15px;line-height:1.45;color:var(--ink);transition:border-color .12s,background .12s}
+.opt:hover{border-color:#9db8d6;background:#fafcff}
+.opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid #b6c0cc;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .badge{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt:focus-visible{outline:3px solid #9bc2ec;outline-offset:2px}
+.opt .otext{padding-top:2px}
+footer{height:64px;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;padding:0 16px;z-index:20}
+.nav-side{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.navwrap{flex:1 1 auto;overflow-x:auto;display:flex;gap:6px;padding:4px 2px;justify-content:center}
+.navbtn{position:relative;flex:0 0 auto;width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);
+  background:#fff;color:var(--ink);font-size:13px;font-weight:600;cursor:pointer}
+.navbtn.answered{background:var(--navy);border-color:var(--navy);color:#fff}
+.navbtn.current{outline:3px solid #9bc2ec;outline-offset:1px;border-color:var(--blue)}
+.navbtn.flagged::after{content:"";position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;
+  background:var(--flag);border:1.5px solid #fff}
+.btn-nav{border:1px solid var(--border);background:#fff;border-radius:8px;padding:9px 15px;font-weight:600;
+  font-size:14px;cursor:pointer;color:var(--ink)}
+.btn-nav:hover:not(:disabled){background:#f1f4f8}
+.btn-nav:disabled{opacity:.4;cursor:default}
+.btn-nav.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn-nav.primary:hover{background:var(--navy2)}
+.overlay{position:fixed;inset:0;background:rgba(12,20,33,.55);z-index:40;display:flex;
+  align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:14px;max-width:680px;width:100%;max-height:90vh;overflow:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.card .cap{background:var(--navy);color:#fff;padding:22px 28px}
+.card .cap h1{margin:0 0 4px;font-size:21px}
+.card .cap p{margin:0;opacity:.85;font-size:14px}
+.card .body{padding:24px 28px}
+.card .body h3{margin:18px 0 8px;font-size:14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.card ul{margin:0 0 4px;padding-left:20px}
+.card li{margin:0 0 7px;font-size:14.5px}
+.field{display:flex;gap:10px;align-items:center;margin:16px 0 4px}
+.field input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;font-family:inherit}
+.start-actions{display:flex;justify-content:flex-end;gap:10px;padding:18px 28px 24px}
+.btn-primary{background:var(--navy);color:#fff;border:0;border-radius:9px;padding:12px 22px;font-weight:700;font-size:15px;cursor:pointer}
+.btn-primary:hover{background:var(--navy2)}
+.btn-ghost{background:#fff;border:1px solid var(--border);border-radius:9px;padding:12px 20px;font-weight:600;font-size:15px;cursor:pointer}
+.scorerow{display:flex;gap:18px;align-items:center;margin:4px 0 18px}
+.scorebig{font-size:46px;font-weight:800;color:var(--navy);line-height:1}
+.scorebig small{font-size:20px;color:var(--muted);font-weight:600}
+.scorepct{font-size:15px;color:var(--muted)}
+.brk{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-size:14.5px;margin:0 0 8px}
+.brk .b-lbl{color:var(--muted)}
+.brk .b-val{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.results-actions{display:flex;gap:10px;justify-content:flex-end;padding:6px 28px 24px}
+.skillrow{display:grid;grid-template-columns:175px 1fr 62px;gap:10px;align-items:center;margin:0 0 9px}
+.skillrow .sl{font-size:13.5px;color:#2b323b}
+.skilltrack{height:11px;background:#eef1f5;border-radius:6px;overflow:hidden}
+.skillfill{height:100%;border-radius:6px;transition:width .4s}
+.skillrow .sv{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.skillrow .sv b{color:#2b323b}
+.autopsy{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.donut-wrap{position:relative;width:150px;height:150px;flex:0 0 auto}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-center .dn{font-size:26px;font-weight:800;color:var(--navy);line-height:1}
+.donut-center .dl{font-size:11px;color:var(--muted);letter-spacing:.03em}
+.legend{flex:1 1 200px;min-width:200px}
+.legend .lg{display:flex;align-items:center;gap:9px;margin:0 0 7px;font-size:13.5px}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto}
+.legend .lc{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;color:#2b323b}
+.no-errors{background:var(--correct-bg);color:var(--correct);border-radius:10px;padding:14px 16px;font-weight:600;font-size:14.5px}
+.focus{display:flex;flex-direction:column;gap:9px}
+.focus .fitem{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:9px;padding:11px 13px;background:#fbfcfe}
+.focus .fitem.warn{border-left-color:var(--flag)}
+.focus .fitem.good{border-left-color:var(--correct);background:var(--correct-bg)}
+.focus .ft{font-weight:700;font-size:14px;margin-bottom:2px}
+.focus .fb{font-size:13.5px;color:#3a434e}
+.chip{font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.01em}
+.chip.skill{background:#eef2f7;color:#41506a}
+.chip.err{background:var(--wrong-bg);color:var(--wrong)}
+.rev-nums{font-size:13.5px;color:#2b323b;background:#f3f6fa;border-radius:8px;padding:9px 12px;margin:0 0 12px}
+.rev-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--line);
+  border-left:4px solid var(--wrong);border-radius:9px;padding:9px 12px;margin:0 0 8px}
+.rev-row .rev-n{font-weight:800;color:var(--navy);font-size:14px;min-width:34px}
+.rev-row .rev-ans{margin-left:auto;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rev-row .rev-ans b.no{color:var(--wrong)}
+.rev-row .rev-ans b.ok{color:var(--correct)}
+@media (max-width:880px){
+  main{flex-direction:column;bottom:96px}
+  .stim{flex:0 0 auto;max-height:42vh;border-right:0;border-bottom:1px solid var(--border)}
+  .qpane{flex:1 1 auto}
+  footer{height:auto;flex-wrap:wrap;padding:8px 10px;gap:8px}
+  .navwrap{order:3;width:100%;justify-content:flex-start}
+  .brand .ttl{max-width:44vw}
+  .skillrow{grid-template-columns:130px 1fr 58px}
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="startOverlay">
+  <div class="card">
+    <div class="cap">
+      <h1>Selective High School Placement Test</h1>
+      <p>Reading &middot; Practice paper 2 &middot; 45 minutes &middot; 38 questions</p>
+    </div>
+    <div class="body">
+      <p>This paper has five parts: two short fiction extracts, a poem, a sentence-gap text, four extracts on a single theme, and a vocabulary cloze. For each question, choose the one answer you think is best.</p>
+      <h3>How it works</h3>
+      <ul>
+        <li>Read the text on the left and answer the question on the right.</li>
+        <li>Use <b>Next</b> and <b>Previous</b>, or the number buttons at the bottom, to move around.</li>
+        <li><b>Flag</b> a question to come back to it. You can change any answer before you finish.</li>
+        <li>The timer runs for 45 minutes. The paper submits itself when time runs out.</li>
+        <li>You will not lose marks for a wrong answer, so attempt all 38.</li>
+      </ul>
+      <div class="field">
+        <input id="nameInput" type="text" placeholder="Name (optional)" autocomplete="off">
+      </div>
+    </div>
+    <div class="start-actions">
+      <button class="btn-primary" id="beginBtn">Begin test</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="confirmOverlay">
+  <div class="card" style="max-width:460px">
+    <div class="cap"><h1>Finish the test?</h1><p id="confirmSub">You have answered all questions.</p></div>
+    <div class="start-actions">
+      <button class="btn-ghost" id="keepGoingBtn">Keep working</button>
+      <button class="btn-primary" id="confirmFinishBtn">Finish and mark</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="resultsOverlay">
+  <div class="card">
+    <div class="cap"><h1>Your results</h1><p id="resultsWho">Reading practice paper</p></div>
+    <div class="body">
+      <div class="scorerow">
+        <div class="scorebig" id="scoreBig">0<small>/38</small></div>
+        <div>
+          <div class="scorepct" id="scorePct"></div>
+          <div class="scorepct" id="scoreTime"></div>
+        </div>
+      </div>
+      <h3>By section</h3>
+      <div class="brk" id="brkBox"></div>
+      <h3>Skill mastery</h3>
+      <div id="skillBox"></div>
+      <h3>Error autopsy</h3>
+      <div id="autopsyBox"></div>
+      <h3>What to work on next</h3>
+      <div id="focusBox"></div>
+      <h3>Questions to review</h3>
+      <div id="reviewBox"></div>
+    </div>
+   <div class="results-actions">
+      <button class="btn-ghost" id="restartBtn">Restart test</button>
+      <button class="btn-primary" id="backToDashBtn">Back to dashboard</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="brand">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.6 5.2 8.4 4.5 5.5 4.5C4.7 4.5 4 5.2 4 6v11.5c0 .6.5 1 1.1 1c2.7-.2 4.8.5 6.9 2c2.1-1.5 4.2-2.2 6.9-2c.6 0 1.1-.4 1.1-1V6c0-.8-.7-1.5-1.5-1.5c-2.9 0-5.1.7-6.5 2z"/><path d="M12 6.5v12"/></svg></span>
+    <div class="ttl">Selective High School Placement Test</div>
+    <div class="pill">Reading</div>
+  </div>
+  <div class="hright">
+    <div class="timer" id="timer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg>
+      <span id="timeText">45:00</span>
+    </div>
+    <button class="btn btn-finish" id="finishBtn">Finish</button>
+  </div>
+</header>
+<div class="progbar"><i id="progFill"></i></div>
+
+<main>
+  <section class="pane stim" id="stim"></section>
+  <section class="pane qpane" id="qpane">
+    <div class="qtop">
+      <div class="qnum" id="qnum">Question 1 of 38</div>
+      <button class="flagbtn" id="flagBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg>
+        <span>Flag</span>
+      </button>
+    </div>
+    <div class="qstem" id="qstem"></div>
+    <div id="opts"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="nav-side"><button class="btn-nav" id="prevBtn">Previous</button></div>
+  <div class="navwrap" id="navwrap"></div>
+  <div class="nav-side"><button class="btn-nav primary" id="nextBtn">Next</button></div>
+</footer>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
+async function callBackend(action, payload={}){
+  const reqBody=JSON.stringify({action, payload});
+  const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:reqBody,redirect:"follow"});
+  const parsed=await res.json();
+  if(!parsed.success) throw new Error(parsed.error);
+  return parsed.data;
+}
+
+/* ---------------- stimulus content ---------------- */
+const STIM = {
+fiction:`<h2>Read the two extracts, then answer questions 1 to 8</h2>
+<div class="extract-head">Extract A: from The Last Watch</div>
+<p>On the final afternoon Mr Halloran did not hurry. He had repaired watches in the narrow shop on Carrow Street for fifty-one years, and he saw no reason to treat the last of those days differently from the rest. He cleaned the counter glass. He wound the clocks in the window, all nine of them, though they would be sold or skipped within the week, because a stopped clock in a window looked to him like a discourtesy to the street. A young man from the property company had come by in the morning with papers and a soft, apologetic manner, and had used the word opportunity four times, and Mr Halloran had signed where he was asked and offered him tea, which was refused.</p>
+<p>The regulars knew. Mrs Iredale came in at two with a carriage clock that did not need mending and stood for a while turning it in her hands and not mentioning the closure, and he was grateful to her for that. A boy he did not know put his face to the window, cupped his hands, and looked at the movements laid out on their velvet, the way Mr Halloran himself had looked into such a window once, on a wet day in 1961, and decided what he would be.</p>
+<p>At six he turned the sign and let down the blind. He stood for a moment among the ticking, which was very loud now that the street noise was shut out, fifty years of other people's time all running at once and slightly out of step, and then he went along the row and stopped each clock with his thumb, gently, as you would settle a child, until the shop was as silent as it would ever be. He put the key through the letter slot of the agent's office two doors down, because he found he did not want to hand it to anyone, and walked to the bus in the ordinary evening with his hands in his pockets.</p>
+<div class="extract-head">Extract B: from Milk Bar</div>
+<p>Our milk bar was dying for most of my childhood, though my father refused to use the word, or any word in its vicinity. Business was quiet, or building, or about to turn the corner, a corner we never quite reached in fifteen years of looking for it. The fridge that held the drinks hummed like a small aircraft and kept nothing especially cold. The lolly jars on the top shelf held varieties that had stopped being made, which my father regarded not as stock he could not sell but as a kind of museum, and he would explain them to any child who asked, at length, until the child's parent appeared in the doorway looking for them.</p>
+<p>I worked the counter from the age of about nine, which I am fairly sure was illegal, and I loved it and was ashamed of it in roughly equal amounts, sometimes within the same minute, depending on who walked in. When kids from school came in I found things to do in the back. When the old men came in for their paper and their forty cents of mixed lollies, weighed out and argued over, I was the happiest I have ever been at a job, and I have had better ones since.</p>
+<p>We closed in my last year of high school. I had wanted it closed for years, had been embarrassed by it, had a whole speech ready about how it bled money. On the last day I cleared the lolly jars into boxes and could not throw out a single one, and my father watched me not throwing them out and said nothing, which was unlike him, and I understood that he had known about the speech all along, and had let me have it, the way you let a child win.</p>`,
+
+poem:`<h2>Read the poem, then answer questions 9 to 14</h2>
+<div class="work-title">Scarecrow</div>
+<div class="stanza">They dressed him in my grandfather's coat,
+the one too worn to give away,
+and stood him at the field's far edge
+to frighten what he could not chase.</div>
+<div class="stanza">All summer he kept the kind of watch
+the dead keep: faithful, and no use.
+The crows learned his exact intentions,
+which were none, and walked the furrows
+at his feet like guests who know the host
+too well to thank him for the room.</div>
+<div class="stanza">By autumn the rain had had its way.
+His straw came out in handfuls, his face,
+a flour sack a child had drawn,
+ran in the weather till he wore
+the blank, forgiving look of someone
+who has stopped expecting to be obeyed.</div>
+<div class="stanza">We took him down before the snow.
+There is a photograph: my grandfather
+in that same coat, in that same field,
+his arms out, laughing, showing us
+how still a man must learn to stand
+if he wants the birds to trust him.</div>`,
+
+cloze:`<h2>Read the text, then answer questions 15 to 20. Choose the sentence (A to G) that fits each gap. One sentence is not needed.</h2>
+<div class="work-title">The Pump</div>
+<p>In the summer of 1854 a deadly outbreak of cholera swept through a crowded district of London. Within ten days more than five hundred people in a few narrow streets were dead. <span class="gap" data-g="15">15</span> At the time, almost everyone, including the city's leading doctors, believed the disease was carried through the air, in a poisonous mist they called the miasma that rose from filth and rotting matter.</p>
+<p>One doctor disagreed. John Snow had long suspected that cholera was spread not by bad air but by something people swallowed, most likely in their water. <span class="gap" data-g="16">16</span> He began to map the deaths, marking each one as a small bar on a street plan of the district, and as the marks accumulated a pattern emerged that the miasma theory could not explain.</p>
+<p>The deaths were not spread evenly through the foul air of the slum. They clustered, tightly, around a single public water pump on Broad Street. <span class="gap" data-g="17">17</span> Households a few doors further from the pump, who drew their water elsewhere, were almost untouched, while a distant workhouse with its own well and a brewery whose men drank only beer lost almost no one.</p>
+<p>Snow took his map to the local officials and argued that the pump was the source. They were unconvinced, but the evidence was hard to dismiss, and they agreed to a simple test. <span class="gap" data-g="18">18</span> The handle of the Broad Street pump was removed, so that no one could draw water from it. Within days the outbreak, already fading, came to an end.</p>
+<p>For years afterward the official reports continued to blame the air, and Snow died before his idea was widely accepted. <span class="gap" data-g="19">19</span> Only later, when scientists identified the tiny organism that causes cholera and found it living in contaminated water, was he proved right. <span class="gap" data-g="20">20</span> The removal of a single iron handle is now remembered as one of the first victories of the science of tracing disease.</p>`,
+
+matching:`<h2>Read the four extracts on the theme of maps, then answer questions 21 to 30</h2>
+<div class="ex-block"><div class="lbl">Extract A</div><p>No map tells the truth, and the better the map, the more convincing the lie. A map of a round world on a flat page must stretch something, and mapmakers have always chosen what to stretch and what to shrink according to what they wanted you to believe. The familiar classroom map of the world, the one that puts Europe in the comfortable middle and swells it far beyond its real size, is not a neutral picture of the planet. It is an argument about which places matter, made so long ago that we have forgotten it is an argument at all. Every map leaves things out, and what a map leaves out is never an accident. To read a map well is to keep asking a single question: who made this, and what did they want me to see?</p></div>
+<div class="ex-block"><div class="lbl">Extract B</div><p>Long before paper, the brain was already a mapmaker. Deep in a structure called the hippocampus sit cells that fire only when an animal is in a particular spot, and others nearby that fire in a regular grid as it moves, together forming a kind of living chart of the space around it. These cells build and store the mental maps by which we find our way home without thinking. Researchers have found that people who navigate constantly by memory, such as the drivers of London's black cabs, develop measurably larger memory structures in this region, while those who follow a satellite voice turn by turn show less of this growth. The map in the hand, it seems, may slowly weaken the map in the head.</p></div>
+<div class="ex-block"><div class="lbl">Extract C</div><p>I still have the map my father drew me the first time I walked to school alone. It is not to scale and not, strictly, correct, but it taught me the way better than any accurate one could have, because it marked only what mattered: the dog to avoid, the corner where the road bent, the shop that meant I had gone too far. I think of it whenever I follow the blue dot on my phone into a place I will never actually learn, arriving without ever having travelled, certain of the route and ignorant of the journey. My father's map made me pay attention. The phone asks nothing of me, and gives me, in return, a city I cannot hold in my mind for more than a street at a time.</p></div>
+<div class="ex-block"><div class="lbl">Extract D</div><p>On the oldest maps, the edges of the known world dissolve into decoration. Where the mapmaker's knowledge ran out, the parchment filled with coiling sea monsters, with winds drawn as puffing faces, and sometimes with the famous warning that here be dragons. These were not simply ignorance dressed up as art. A blank space on a map is unsettling, an admission that the maker does not know, and the monsters were a way of covering that silence, of turning the frightening edge of knowledge into something a patron would pay for. As explorers filled in the coastlines, the dragons retreated, until at last the blank spaces were labelled, honestly, as unknown, which is a braver thing to write than any dragon.</p></div>`,
+
+wordcloze:`<h2>Read the passage, then answer questions 31 to 38. For each gap, choose the word that best fits.</h2>
+<div class="work-title">The Mimic</div>
+<p>Of all the animals that hide, none is as <span class="gap" data-g="31">31</span> as the octopus. Most creatures that camouflage themselves are limited to a single disguise, a fixed colour or pattern that serves them well in one place and <span class="gap" data-g="32">32</span> them everywhere else. The octopus is bound by no such rule. In less than a second it can <span class="gap" data-g="33">33</span> the exact colour, brightness and even texture of whatever lies beneath it, melting into coral, sand or bare rock with a speed that still <span class="gap" data-g="34">34</span> the scientists who study it. This is all the more <span class="gap" data-g="35">35</span> because the octopus is, as far as anyone can tell, colourblind. How a creature that cannot see colour can match it so <span class="gap" data-g="36">36</span> remains one of the genuine puzzles of the sea. Some researchers now suspect that the answer lies in the skin itself, which may sense light directly, without <span class="gap" data-g="37">37</span> the eyes at all. If they are right, the octopus does not so much look at its surroundings as <span class="gap" data-g="38">38</span> them, reading the world through its whole body at once.</p>`
+};
+
+const CLOZE_OPTS = [
+ {l:"A",t:`To test an idea so far from the common view, he needed evidence that no one could argue with.`},
+ {l:"B",t:`His careful map had been correct, but it had arrived a generation too early to be believed.`},
+ {l:"C",t:`The closer a household stood to that one pump, the more of its members had died.`},
+ {l:"D",t:`Cholera remains a serious threat in parts of the world without clean water today.`},
+ {l:"E",t:`The cause was a complete mystery, and the panic in the streets was matched only by the confusion among the experts.`},
+ {l:"F",t:`What he had invented, without quite knowing it, was a way of letting the dead point to their own killer.`},
+ {l:"G",t:`If the pump truly was to blame, then shutting it off should halt the deaths.`}
+];
+const MATCH_OPTS = [{l:"A",t:`Extract A`},{l:"B",t:`Extract B`},{l:"C",t:`Extract C`},{l:"D",t:`Extract D`}];
+function ab(a,b,c,d){return [{l:"A",t:a},{l:"B",t:b},{l:"C",t:c},{l:"D",t:d}];}
+
+/* ---------------- questions ---------------- */
+const Q = [
+{n:1,sec:"Part 1: Fiction",stim:"fiction",stem:`Both extracts mainly focus on:`,
+ opts:ab(`a young narrator who is glad the business is closing.`,`the final day of a small family business that is ending.`,`an argument about money between two members of a family.`,`an older man who refuses to accept that his shop has failed.`),ans:"B",
+ exp:`Both show the last day of a small family business. A and C are true of one extract at most; D overstates.`},
+{n:2,sec:"Part 1: Fiction",stim:"fiction",stem:`The image of Mr Halloran stopping each clock "gently, as you would settle a child" mainly suggests that he:`,
+ opts:ab(`was angry that the clocks would soon be thrown away.`,`wanted to make sure the clocks could still be sold later.`,`felt a quiet tenderness towards the shop he was closing.`,`was relieved to be finished with the work at last.`),ans:"C",
+ exp:`The simile signals tenderness, not anger, relief, or a practical motive.`},
+{n:3,sec:"Part 1: Fiction",stim:"fiction",stem:`The detail of the unknown boy looking through the shop window mainly works to:`,
+ opts:ab(`echo the moment Mr Halloran's own life was decided.`,`show that children were often a nuisance at the shop.`,`hint that the shop may soon reopen under new owners.`,`prove that the craft of watch repair is still popular.`),ans:"A",
+ exp:`The boy mirrors Halloran in 1961, when such a window decided his own life.`},
+{n:4,sec:"Part 1: Fiction",stim:"fiction",stem:`That Mr Halloran posts the key rather than handing it over suggests he:`,
+ opts:ab(`could not find the agent's office in time before closing.`,`was worried about being charged some kind of late fee.`,`quietly distrusted the man from the property company.`,`wished to avoid a parting that would have hurt.`),ans:"D",
+ exp:`He avoids the painful moment of handing it over in person.`},
+{n:5,sec:"Part 1: Fiction",stim:"fiction",stem:`The narrator lists the father's words for the business ("quiet, or building, or about to turn the corner") mainly to:`,
+ opts:ab(`show the father had a real gift for marketing.`,`gently mock his refusal to admit trouble.`,`explain the true reason the business eventually failed.`,`praise the father's genuine optimism about future sales.`),ans:"B",
+ exp:`The string of euphemisms wryly mocks the father's denial.`},
+{n:6,sec:"Part 1: Fiction",stim:"fiction",stem:`The narrator's mixed feelings about the counter ("loved it and was ashamed of it") are best explained by:`,
+ opts:ab(`the work being both genuinely enjoyable and socially embarrassing.`,`the father forcing the narrator to work against their will.`,`the counter work being dangerous as well as illegal.`,`the narrator disliking the customers who came into the shop.`),ans:"A",
+ exp:`Loved the work, embarrassed by who might see; not forced, not dangerous, not dislike of customers.`},
+{n:7,sec:"Part 1: Fiction",stim:"fiction",stem:`At the end of both extracts, the older man's silence shows that he:`,
+ opts:ab(`has finally lost patience with the younger person.`,`blames the younger person for the business closing.`,`understands more than he chooses to say aloud.`,`has already forgotten the years spent in the business.`),ans:"C",
+ exp:`Both men withhold what they feel and understand; the silence is full, not empty.`},
+{n:8,sec:"Part 1: Fiction",stim:"fiction",stem:`The two extracts are most clearly different in that:`,
+ opts:ab(`only Extract A describes the final closing of a family business.`,`Extract B takes place long ago while Extract A is set in the present.`,`only Extract B shows real affection for the business that is closing.`,`Extract A watches its man from outside, while Extract B speaks from within.`),ans:"D",
+ exp:`A is observed third person; B is first person. The others are false on a cross-read.`},
+
+{n:9,sec:"Part 2: Poem",stim:"poem",stem:`The poem is mainly concerned with:`,
+ opts:ab(`the best methods for keeping crows away from a field.`,`the sadness of a scarecrow left out in bad weather.`,`a connection drawn between the scarecrow and the grandfather.`,`how clever crows can outwit the tricks of farmers.`),ans:"C",
+ exp:`The scarecrow in the grandfather's coat becomes a way of speaking about the grandfather himself.`},
+{n:10,sec:"Part 2: Poem",stim:"poem",stem:`The phrase "the kind of watch the dead keep: faithful, and no use" mainly suggests the scarecrow's guarding is:`,
+ opts:ab(`frightening to anything that comes near the field.`,`secretly more effective than the farmer expects.`,`a danger to the crows that come to the furrows.`,`loyal but completely powerless to change anything.`),ans:"D",
+ exp:`Faithful but useless: loyal and powerless. The crows are not frightened.`},
+{n:11,sec:"Part 2: Poem",stim:"poem",stem:`Comparing the crows to "guests who know the host too well to thank him" mainly conveys that they:`,
+ opts:ab(`had grown completely unafraid of a harmless figure.`,`were grateful for the shelter the scarecrow gave them.`,`were planning to leave the field very soon.`,`respected the scarecrow as the owner of the field.`),ans:"A",
+ exp:`The irony is that the crows treat the harmless scarecrow with familiar contempt, not gratitude or respect.`},
+{n:12,sec:"Part 2: Poem",stim:"poem",stem:`The description of the scarecrow's weathered face ("the blank, forgiving look of someone who has stopped expecting to be obeyed") mainly creates a tone of:`,
+ opts:ab(`fear of the coming winter snow.`,`gentle sadness about lost authority.`,`anger at the crows for their disrespect.`,`cheerful relief that the work is over.`),ans:"B",
+ exp:`Gentle sadness at faded authority; not fear, anger, or relief.`},
+{n:13,sec:"Part 2: Poem",stim:"poem",stem:`The final stanza changes the poem by:`,
+ opts:ab(`revealing that the scarecrow had been real all along.`,`explaining at last how the scarecrow was taken down.`,`shifting from the scarecrow to the grandfather himself.`,`proving that the crows had been frightened after all.`),ans:"C",
+ exp:`The photograph turns the poem from the scarecrow to the grandfather.`},
+{n:14,sec:"Part 2: Poem",stim:"poem",stem:`The poem's closing lines suggest that the grandfather, unlike the scarecrow, wanted:`,
+ opts:ab(`to be trusted rather than feared.`,`to frighten the birds away from his crops.`,`to teach his family how to farm.`,`to be remembered only through photographs.`),ans:"A",
+ exp:`The scarecrow's job is to frighten; the grandfather, arms out, wanted the birds to trust him.`},
+
+{n:15,sec:"Part 3: Sentence gap",stim:"cloze",gap:15,stem:`Choose the sentence that best fits Gap 15.`,opts:CLOZE_OPTS,ans:"E",
+ exp:`Bridges the deaths to the prevailing miasma belief: the cause was a mystery and the experts were confused.`},
+{n:16,sec:"Part 3: Sentence gap",stim:"cloze",gap:16,stem:`Choose the sentence that best fits Gap 16.`,opts:CLOZE_OPTS,ans:"A",
+ exp:`Between his suspicion and his mapping: to challenge the common view he needed undeniable evidence.`},
+{n:17,sec:"Part 3: Sentence gap",stim:"cloze",gap:17,stem:`Choose the sentence that best fits Gap 17.`,opts:CLOZE_OPTS,ans:"C",
+ exp:`States the pump correlation, which the further-away households then confirm by contrast.`},
+{n:18,sec:"Part 3: Sentence gap",stim:"cloze",gap:18,stem:`Choose the sentence that best fits Gap 18.`,opts:CLOZE_OPTS,ans:"G",
+ exp:`The conditional that leads to removing the handle as the test.`},
+{n:19,sec:"Part 3: Sentence gap",stim:"cloze",gap:19,stem:`Choose the sentence that best fits Gap 19.`,opts:CLOZE_OPTS,ans:"B",
+ exp:`He was right but ahead of his time, which the "only later" sentence then resolves.`},
+{n:20,sec:"Part 3: Sentence gap",stim:"cloze",gap:20,stem:`Choose the sentence that best fits Gap 20.`,opts:CLOZE_OPTS,ans:"F",
+ exp:`The legacy before the closing line: he found a way of letting the dead reveal their killer.`},
+
+{n:21,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract argues that no map is ever truly neutral?`,opts:MATCH_OPTS,ans:"A",
+ exp:`Extract A: a map is an argument about which places matter.`},
+{n:22,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract describes brain cells that record where we are?`,opts:MATCH_OPTS,ans:"B",
+ exp:`Extract B: the hippocampus cells that fire by location.`},
+{n:23,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract recalls a map that was useful precisely because it was inaccurate?`,opts:MATCH_OPTS,ans:"C",
+ exp:`Extract C: the father's not-to-scale map taught the way better than an accurate one.`},
+{n:24,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract explains why mapmakers once drew monsters at the edges?`,opts:MATCH_OPTS,ans:"D",
+ exp:`Extract D: monsters covered the unsettling blank of what was unknown.`},
+{n:25,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract reports research suggesting satellite navigation may weaken the brain's own map?`,opts:MATCH_OPTS,ans:"B",
+ exp:`Extract B: cab drivers grow the region; satnav users show less growth.`},
+{n:26,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract describes arriving somewhere without truly learning the place?`,opts:MATCH_OPTS,ans:"C",
+ exp:`Extract C: arriving without ever having travelled.`},
+{n:27,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract claims that what a map leaves out is always deliberate?`,opts:MATCH_OPTS,ans:"A",
+ exp:`Extract A: what a map leaves out is never an accident.`},
+{n:28,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract says that admitting ignorance can be braver than disguising it?`,opts:MATCH_OPTS,ans:"D",
+ exp:`Extract D: writing "unknown" is braver than any dragon.`},
+{n:29,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract compares a map to an argument the reader has forgotten to question?`,opts:MATCH_OPTS,ans:"A",
+ exp:`Extract A: an argument made so long ago we forget it is one.`},
+{n:30,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract contrasts a map that demanded attention with a device that demands nothing?`,opts:MATCH_OPTS,ans:"C",
+ exp:`Extract C: the father's map made me pay attention; the phone asks nothing.`},
+
+{n:31,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:31,stem:`Choose the best word for Gap 31.`,opts:ab(`accomplished`,`conspicuous`,`colourful`,`industrious`),ans:"A",
+ exp:`Accomplished = skilled at hiding. Conspicuous means noticeable (opposite); colourful and industrious miss the sense.`},
+{n:32,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:32,stem:`Choose the best word for Gap 32.`,opts:ab(`protects`,`betrays`,`resembles`,`follows`),ans:"B",
+ exp:`A fixed disguise that works in one place betrays the animal elsewhere. Protects is the opposite.`},
+{n:33,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:33,stem:`Choose the best word for Gap 33.`,opts:ab(`imagine`,`demand`,`assume`,`inherit`),ans:"C",
+ exp:`Assume = take on. Imagine is mental, inherit is genetic, demand makes no sense here.`},
+{n:34,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:34,stem:`Choose the best word for Gap 34.`,opts:ab(`convinces`,`irritates`,`rewards`,`astonishes`),ans:"D",
+ exp:`A speed that still astonishes the scientists. The others mismatch the meaning or tone.`},
+{n:35,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:35,stem:`Choose the best word for Gap 35.`,opts:ab(`remarkable`,`understandable`,`colourful`,`common`),ans:"A",
+ exp:`Matching colour while colourblind is remarkable. Understandable and common are the reverse; colourful is theme bait.`},
+{n:36,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:36,stem:`Choose the best word for Gap 36.`,opts:ab(`occasionally`,`precisely`,`vaguely`,`reluctantly`),ans:"B",
+ exp:`Match it so precisely. Occasionally and vaguely contradict the point; reluctantly is wrong sense.`},
+{n:37,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:37,stem:`Choose the best word for Gap 37.`,opts:ab(`opening`,`trusting`,`blaming`,`involving`),ans:"D",
+ exp:`Sense light without involving the eyes. Opening is eye-theme bait; the others miss the sense.`},
+{n:38,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:38,stem:`Choose the best word for Gap 38.`,opts:ab(`ignore`,`photograph`,`feel`,`question`),ans:"C",
+ exp:`Reads the world through its body, so it feels its surroundings. Ignore is the opposite; photograph is literal bait.`}
+];
+
+/* ---------------- diagnostic tagging ---------------- */
+const SKILL_OF={
+ 1:"Synthesis across texts",2:"Inference",3:"Effect of language",4:"Inference",
+ 5:"Tone & attitude",6:"Inference",7:"Synthesis across texts",8:"Text structure",
+ 9:"Main idea & theme",10:"Effect of language",11:"Inference",12:"Tone & attitude",
+ 13:"Text structure",14:"Inference",
+ 15:"Cohesion & sentence logic",16:"Cohesion & sentence logic",17:"Cohesion & sentence logic",
+ 18:"Cohesion & sentence logic",19:"Cohesion & sentence logic",20:"Cohesion & sentence logic",
+ 21:"Synthesis across texts",22:"Synthesis across texts",23:"Synthesis across texts",
+ 24:"Synthesis across texts",25:"Synthesis across texts",26:"Synthesis across texts",
+ 27:"Synthesis across texts",28:"Synthesis across texts",29:"Synthesis across texts",30:"Synthesis across texts",
+ 31:"Vocabulary in context",32:"Cohesion & sentence logic",33:"Vocabulary in context",34:"Vocabulary in context",
+ 35:"Vocabulary in context",36:"Vocabulary in context",37:"Cohesion & sentence logic",38:"Vocabulary in context"
+};
+const TRAP_OF={
+ 1:{A:"Half-right",C:"Literal trap",D:"Overstatement"},
+ 2:{A:"Reversal",B:"Literal trap",D:"Reversal"},
+ 3:{B:"Half-right",C:"Overstatement",D:"Reversal"},
+ 4:{A:"Literal trap",B:"Literal trap",C:"Half-right"},
+ 5:{A:"Reversal",C:"Half-right",D:"Reversal"},
+ 6:{B:"Reversal",C:"Literal trap",D:"Reversal"},
+ 7:{A:"Reversal",B:"Reversal",D:"Overstatement"},
+ 8:{A:"Reversal",B:"Reversal",C:"Reversal"},
+ 9:{A:"Literal trap",B:"Half-right",D:"Half-right"},
+ 10:{A:"Reversal",B:"Reversal",C:"Reversal"},
+ 11:{B:"Reversal",C:"Half-right",D:"Reversal"},
+ 12:{A:"Literal trap",C:"Reversal",D:"Reversal"},
+ 13:{A:"Reversal",B:"Literal trap",D:"Reversal"},
+ 14:{B:"Reversal",C:"Half-right",D:"Overstatement"},
+ 31:{B:"Reversal",C:"Literal trap",D:"Half-right"},
+ 32:{A:"Reversal",C:"Half-right",D:"Half-right"},
+ 33:{A:"Literal trap",B:"Half-right",D:"Half-right"},
+ 34:{A:"Half-right",B:"Reversal",C:"Half-right"},
+ 35:{B:"Reversal",C:"Literal trap",D:"Reversal"},
+ 36:{A:"Reversal",C:"Reversal",D:"Half-right"},
+ 37:{A:"Literal trap",B:"Half-right",C:"Half-right"},
+ 38:{A:"Reversal",B:"Literal trap",D:"Half-right"}
+};
+function errorCategory(q,picked){
+  if(picked==null || picked===q.ans) return null;
+  if(TRAP_OF[q.n]) return TRAP_OF[q.n][picked] || "Logic / locating";
+  return "Logic / locating";
+}
+const ERRORS={
+ "Half-right":{c:"#2f7ec4",tip:"You picked a true detail that did not answer the exact question. Re-read the stem and ask what is actually being asked before choosing."},
+ "Literal trap":{c:"#7a5bb5",tip:"You answered the surface meaning and missed what the line implies. Ask what it suggests, not just what it says."},
+ "Overstatement":{c:"#b5562b",tip:"You chose an option pushed too far. Watch for always, never, all, cruel; the text rarely commits that hard."},
+ "Reversal":{c:"#c0392b",tip:"You picked the opposite of the text, worded to sound familiar. Check the option actually agrees with the passage."},
+ "Popular misreading":{c:"#d98324",tip:"You picked the obvious, poster-style reading. In English that is often the trap; look for the complication."},
+ "Logic / locating":{c:"#2a9d6f",tip:"On gap and four-extract questions you matched the topic, not the precise link or idea. Prove the connection from the sentences around it."}
+};
+const SKILL_TIP={
+ "Main idea & theme":"Ask what the whole text is really about, not one striking detail.",
+ "Purpose & viewpoint":"Ask why the writer wrote this and what they think of the subject.",
+ "Tone & attitude":"Name the feeling with one word you can point to in the text.",
+ "Inference":"Answer only from what the text supports; never add outside knowledge.",
+ "Effect of language":"Ask what a phrase or image does, not just what it literally says.",
+ "Text structure":"Track how the text changes from start to finish, and find the turn.",
+ "Cohesion & sentence logic":"For each gap, read the sentence before and after, and match the link, not the keyword.",
+ "Synthesis across texts":"Match the exact idea asked for, not the shared topic, and check every extract.",
+ "Vocabulary in context":"Work out the word's meaning from the sentence around it, not a memorised definition."
+};
+
+/* ---------------- state ---------------- */
+let cur=0;
+const answers={};
+const flags=new Set();
+let secondsLeft=45*60;
+let timerId=null, started=false, currentStim=null, finished=false;
+const $=id=>document.getElementById(id);
+
+/* ---------------- rendering ---------------- */
+function renderStim(q){
+  if(currentStim!==q.stim){
+    $("stim").innerHTML=STIM[q.stim];
+    $("stim").scrollTop=0;
+    currentStim=q.stim;
+  }
+  if(q.stim==="cloze" || q.stim==="wordcloze"){
+    document.querySelectorAll("#stim .gap").forEach(g=>{
+      g.classList.toggle("active", Number(g.dataset.g)===q.gap);
+    });
+  }
+}
+function stemHTML(s){ return s.replace(/"([^"]+)"/g, '<span class="qq">&ldquo;$1&rdquo;</span>'); }
+function renderQuestion(){
+  const q=Q[cur];
+  renderStim(q);
+  $("qnum").textContent="Question "+q.n+" of "+Q.length;
+  $("qstem").innerHTML=stemHTML(q.stem);
+  const wrap=$("opts"); wrap.innerHTML="";
+  q.opts.forEach(o=>{
+    const b=document.createElement("button");
+    b.className="opt"+(answers[q.n]===o.l?" sel":"");
+    b.setAttribute("role","radio");
+    b.setAttribute("aria-checked",answers[q.n]===o.l?"true":"false");
+    b.innerHTML='<span class="badge">'+o.l+'</span><span class="otext">'+o.t+'</span>';
+    b.onclick=()=>{ if(finished) return; answers[q.n]=o.l; renderQuestion(); renderNav(); updateProgress(); };
+    wrap.appendChild(b);
+  });
+  $("flagBtn").classList.toggle("on",flags.has(q.n));
+  $("prevBtn").disabled = cur===0;
+  $("nextBtn").textContent = cur===Q.length-1 ? "Review" : "Next";
+  renderNav();
+}
+function renderNav(){
+  const w=$("navwrap"); w.innerHTML="";
+  Q.forEach((q,i)=>{
+    const b=document.createElement("button");
+    b.className="navbtn"+(answers[q.n]?" answered":"")+(i===cur?" current":"")+(flags.has(q.n)?" flagged":"");
+    b.textContent=q.n;
+    b.title="Question "+q.n+(answers[q.n]?" (answered)":"")+(flags.has(q.n)?" (flagged)":"");
+    b.onclick=()=>{ cur=i; renderQuestion(); };
+    w.appendChild(b);
+  });
+}
+function updateProgress(){ $("progFill").style.width=(Object.keys(answers).length/Q.length*100)+"%"; }
+
+/* ---------------- navigation ---------------- */
+$("prevBtn").onclick=()=>{ if(cur>0){cur--;renderQuestion();} };
+$("nextBtn").onclick=()=>{ if(cur<Q.length-1){cur++;renderQuestion();} else openConfirm(); };
+$("flagBtn").onclick=()=>{ const n=Q[cur].n; flags.has(n)?flags.delete(n):flags.add(n); renderQuestion(); };
+
+/* ---------------- timer ---------------- */
+function fmt(s){const m=Math.floor(s/60),x=s%60;return m+":"+String(x).padStart(2,"0");}
+function tick(){
+  secondsLeft--;
+  $("timeText").textContent=fmt(Math.max(secondsLeft,0));
+  if(secondsLeft<=300) $("timer").classList.add("warn");
+  if(secondsLeft<=0){ clearInterval(timerId); finish(); }
+}
+
+/* ---------------- start / finish ---------------- */
+$("beginBtn").onclick=()=>{
+  $("startOverlay").classList.add("hidden");
+  started=true;
+  renderQuestion(); updateProgress();
+  timerId=setInterval(tick,1000);
+};
+function openConfirm(){
+  const unanswered=Q.length-Object.keys(answers).length;
+  $("confirmSub").textContent = unanswered===0
+    ? "You have answered all "+Q.length+" questions."
+    : "You still have "+unanswered+" question"+(unanswered>1?"s":"")+" unanswered.";
+  $("confirmOverlay").classList.remove("hidden");
+}
+function showResults(){
+  $("resultsOverlay").classList.remove("hidden");
+  $("resultsOverlay").querySelector(".card").scrollTop=0;
+}
+$("finishBtn").onclick=()=>{ finished ? showResults() : openConfirm(); };
+$("keepGoingBtn").onclick=()=>$("confirmOverlay").classList.add("hidden");
+$("confirmFinishBtn").onclick=()=>{ $("confirmOverlay").classList.add("hidden"); finish(); };
+
+function finish(){
+  if(timerId) clearInterval(timerId);
+  let score=0; const bySec={}; const skillStat={}; const errCount={};
+  Q.forEach(q=>{
+    bySec[q.sec]=bySec[q.sec]||{c:0,t:0}; bySec[q.sec].t++;
+    const sk=SKILL_OF[q.n];
+    skillStat[sk]=skillStat[sk]||{c:0,t:0}; skillStat[sk].t++;
+    const ok=answers[q.n]===q.ans;
+    if(ok){ score++; bySec[q.sec].c++; skillStat[sk].c++; }
+    else { const cat=errorCategory(q,answers[q.n]); errCount[cat]=(errCount[cat]||0)+1; }
+  });
+  const totalWrong=Q.length-score;
+  const name=($("nameInput").value||"").trim();
+  $("resultsWho").textContent = (name?name+": ":"")+"Reading practice paper";
+  $("scoreBig").innerHTML=score+'<small>/'+Q.length+'</small>';
+  $("scorePct").textContent=Math.round(score/Q.length*100)+"% correct";
+  const used=45*60-secondsLeft;
+  $("scoreTime").textContent="Time used: "+fmt(Math.max(used,0));
+
+  const bb=$("brkBox"); bb.innerHTML="";
+  Object.keys(bySec).forEach(s=>{
+    bb.insertAdjacentHTML("beforeend",'<div class="b-lbl">'+s+'</div><div class="b-val">'+bySec[s].c+" / "+bySec[s].t+'</div>');
+  });
+
+  const skBox=$("skillBox"); skBox.innerHTML="";
+  const skills=Object.keys(skillStat).map(s=>({s, ...skillStat[s], pct:skillStat[s].c/skillStat[s].t}))
+                     .sort((a,b)=>a.pct-b.pct || b.t-a.t);
+  skills.forEach(x=>{
+    const col = x.pct>=0.8?"var(--correct)" : x.pct>=0.5?"#c9871f" : "var(--wrong)";
+    skBox.insertAdjacentHTML("beforeend",
+      '<div class="skillrow"><div class="sl">'+x.s+'</div>'+
+      '<div class="skilltrack"><div class="skillfill" style="width:'+Math.round(x.pct*100)+'%;background:'+col+'"></div></div>'+
+      '<div class="sv"><b>'+x.c+'/'+x.t+'</b> &middot; '+Math.round(x.pct*100)+'%</div></div>');
+  });
+
+  const apBox=$("autopsyBox"); apBox.innerHTML="";
+  if(totalWrong===0){
+    apBox.innerHTML='<div class="no-errors">No errors to autopsy. Clean sweep.</div>';
+  } else {
+    const slices=Object.keys(errCount).map(k=>({label:k,value:errCount[k],color:(ERRORS[k]||{}).c||"#888"})).sort((a,b)=>b.value-a.value);
+    const r=58, w=20, C=2*Math.PI*r, cx=75, cy=75; let off=0, circles="";
+    slices.forEach(s=>{
+      const len=s.value/totalWrong*C;
+      circles+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+s.color+'" stroke-width="'+w+'" stroke-dasharray="'+len+' '+(C-len)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 '+cx+' '+cy+')"></circle>';
+      off+=len;
+    });
+    let legend=""; slices.forEach(s=>{ legend+='<div class="lg"><span class="sw" style="background:'+s.color+'"></span>'+s.label+'<span class="lc">'+s.value+'</span></div>'; });
+    apBox.innerHTML='<div class="autopsy"><div class="donut-wrap"><svg viewBox="0 0 150 150" width="150" height="150">'+circles+
+      '</svg><div class="donut-center"><span class="dn">'+totalWrong+'</span><span class="dl">'+(totalWrong===1?"error":"errors")+'</span></div></div><div class="legend">'+legend+'</div></div>';
+  }
+
+  const fBox=$("focusBox"); fBox.innerHTML=""; const items=[];
+  if(score>=Q.length-1){ items.push({cls:"good",t:"Excellent control",b:"Almost nothing to fix on this paper. To keep stretching, redo it under a tighter clock or move to a harder set."}); }
+  const topErr=Object.keys(errCount).sort((a,b)=>errCount[b]-errCount[a])[0];
+  if(topErr){ items.push({cls:"",t:"Biggest leak: "+topErr+" ("+errCount[topErr]+" of "+totalWrong+" "+(totalWrong===1?"error":"errors")+")",b:(ERRORS[topErr]||{}).tip||""}); }
+  const weak=skills.filter(x=>x.t>=2 && x.pct<0.75).slice(0,2);
+  weak.forEach(x=>{ items.push({cls:"warn",t:"Focus skill: "+x.s+" ("+x.c+"/"+x.t+")",b:SKILL_TIP[x.s]||""}); });
+  if(items.length===0){ items.push({cls:"good",t:"Solid all round",b:"No single weak area stands out. Keep practising mixed papers to hold the standard."}); }
+  items.forEach(it=>{ fBox.insertAdjacentHTML("beforeend",'<div class="fitem '+it.cls+'"><div class="ft">'+it.t+'</div><div class="fb">'+it.b+'</div></div>'); });
+
+  const rb=$("reviewBox"); rb.innerHTML="";
+  const wrong=Q.filter(q=>answers[q.n]!==q.ans);
+  if(wrong.length===0){
+    rb.innerHTML='<div class="no-errors">Every question correct. Nothing to review.</div>';
+  } else {
+    rb.insertAdjacentHTML("beforeend",'<div class="rev-nums">Review: '+wrong.map(q=>q.n).join(", ")+'</div>');
+    wrong.forEach(q=>{
+      const yours=answers[q.n]||null; const cat=errorCategory(q,yours);
+      rb.insertAdjacentHTML("beforeend",
+        '<div class="rev-row"><span class="rev-n">Q'+q.n+'</span>'+
+        '<span class="chip skill">'+SKILL_OF[q.n]+'</span>'+(cat?'<span class="chip err">'+cat+'</span>':'')+
+        '<span class="rev-ans">You: <b class="no">'+(yours||"none")+'</b> &nbsp;Correct: <b class="ok">'+q.ans+'</b></span></div>');
+    });
+  }
+
+  finished=true;
+  $("finishBtn").textContent="Results";
+  showResults();
+
+  /* ===== Send results to the portal backend ===== */
+  const urlParams = new URLSearchParams(window.location.search);
+  const studentKey = urlParams.get('student') || ($("nameInput").value||"").trim() || "unknown";
+  const paperId    = urlParams.get('paper')   || "reading-mock-2";
+  const wrongJson = Q.filter(q => answers[q.n] !== q.ans).map(q => ({ q:q.n, picked:answers[q.n]||null, correct:q.ans, skill:SKILL_OF[q.n] }));
+  callBackend("submitReading", {
+    nameKey: studentKey, paperId: paperId, score: score, outOf: Q.length,
+    timeUsedSec: Math.max(used,0), perSkillJson: skillStat, answersJson: answers, wrongJson: wrongJson
+  }).then(()=>console.log("Saved")).catch(err=>console.error("Save failed:", err));
+}
+
+function textFor(q,letter){ const o=q.opts.find(o=>o.l===letter); return o?o.t:""; }
+$("backToDashBtn").onclick=()=>{
+  const k=new URLSearchParams(window.location.search).get('student');
+  window.location.href = "index.html" + (k ? ("?student="+encodeURIComponent(k)+"&done=reading") : "");
+};
+$("restartBtn").onclick=()=>location.reload();
+
+document.addEventListener("keydown",e=>{
+  if(!started) return;
+  if(!$("resultsOverlay").classList.contains("hidden")) return;
+  if(!$("confirmOverlay").classList.contains("hidden")) return;
+  if(e.key==="ArrowRight"){ if(cur<Q.length-1){cur++;renderQuestion();} }
+  else if(e.key==="ArrowLeft"){ if(cur>0){cur--;renderQuestion();} }
+  else {
+    if(finished) return;
+    const k=e.key.toUpperCase(); const q=Q[cur];
+    if(q.opts.some(o=>o.l===k)){ answers[q.n]=k; renderQuestion(); renderNav(); updateProgress(); }
+  }
+});
+</script>
+</body>
+</html>
