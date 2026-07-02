@@ -203,6 +203,15 @@ textarea{min-height:340px;line-height:1.7;font-family:var(--read);font-size:17px
 .prompt li{margin:0 0 8px}
 .prompt li:last-child{margin-bottom:0}
 
+/* ---------- planning scratch box (private, never counted, never submitted) ---------- */
+.plan{margin:0 0 18px}
+.plan .planlabel{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;font-weight:600;color:var(--muted);margin:0 0 7px;line-height:1.5}
+.plan .planlabel .tag{flex:none;background:var(--gold-soft);color:var(--gold-deep);font-size:10px;font-weight:800;padding:3px 10px;border-radius:999px;border:1px solid #e7d6ab;text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
+#wPlan{min-height:120px;background:linear-gradient(180deg,#fffdf7,#fbf8ef);border:1.5px dashed #e2d9c3;
+  font-family:var(--read);font-size:16px;line-height:1.7;color:#3c382f}
+#wPlan:focus{border-style:solid;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,137,47,.16)}
+#wPlan::placeholder{color:#b3a888}
+
 /* ---------- admin ---------- */
 .acard{border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:22px;
   background:linear-gradient(180deg,#fdfefe,#f8fafd)}
@@ -388,6 +397,10 @@ mark.cmark::after{content:counter(cm);font-family:var(--sans);font-size:9px;font
       <h1 id="wTitle">Writing task</h1>
       <div class="prompt" id="wPrompt"></div>
       <div id="revContext" class="hidden"></div>
+      <div class="plan">
+        <div class="planlabel"><span class="tag">Planning</span> Just for you. This box is private, it is never sent to your tutor and it does not add to your word count.</div>
+        <textarea id="wPlan" placeholder="Plan your ideas here first. Jot a structure, brainstorm words, sketch your opening. This space is only for you." spellcheck="false"></textarea>
+      </div>
       <textarea id="wText" placeholder="Start writing here. Your work saves as you type." spellcheck="false"></textarea>
       <div class="row" style="margin-top:14px"><button class="btn" id="wSubmit">Submit to tutor</button></div>
       <div id="wMsg"></div>
@@ -535,7 +548,7 @@ function clearSession(){ lsDel(SESSION_KEY); }
 /* ===== draft autosave: keep the essay safe across refresh / back ===== */
 function draftKey(){ return "noof_draft_"+(student?student.nameKey:"")+"_"+(activePrompt?activePrompt.promptId:""); }
 function saveDraft(){ if(!student||!activePrompt||wSubmitted) return;
-  lsSet(draftKey(), JSON.stringify({text:$("wText").value, left:wLeft})); }
+  lsSet(draftKey(), JSON.stringify({text:$("wText").value, plan:$("wPlan").value, left:wLeft})); }
 function loadDraft(){ const r=lsGet(draftKey()); if(!r) return null; try{ return JSON.parse(r); }catch(e){ return null; } }
 function clearDraft(){ lsDel(draftKey()); }
 
@@ -774,15 +787,19 @@ function openWriting(p){
   $("wCat").textContent=p.category||"Writing task";
   $("wTitle").textContent=p.title; $("wPrompt").innerHTML=renderPrompt(p.text);
   $("wText").value=""; $("wText").readOnly=false; $("wText").style.opacity="1"; $("wCount").textContent="0";
+  $("wPlan").value=""; $("wPlan").readOnly=false; $("wPlan").style.opacity="1";
   $("wSubmit").disabled=false; $("wSubmit").textContent="Submit to tutor";
   wSubmitted=false; wStarted=false; clearMsg($("wMsg"));
   const dr=loadDraft();
-  if(dr && dr.text && dr.text.trim()){
-    $("wText").value=dr.text;
-    $("wCount").textContent=dr.text.trim().split(/\s+/).filter(Boolean).length;
-    if(typeof dr.left==="number") wLeft=dr.left;
-    wStarted=true; startWTimer();
-    msg($("wMsg"),"info","We restored your saved draft and your timer carried on from where you left off.");
+  if(dr){
+    if(dr.plan) $("wPlan").value=dr.plan;
+    if(dr.text) $("wText").value=dr.text;
+    $("wCount").textContent=$("wText").value.trim().split(/\s+/).filter(Boolean).length;
+    if($("wText").value.trim() || $("wPlan").value.trim()){
+      if(typeof dr.left==="number") wLeft=dr.left;
+      wStarted=true; startWTimer();
+      msg($("wMsg"),"info","We restored your saved draft and your timer carried on from where you left off.");
+    }
   }
   renderClock();
   navPush("writing");
@@ -818,11 +835,13 @@ function openRevision(task){
   $("revContext").classList.remove("hidden");
   // editable starting from their original text, or a saved revision draft
   $("wText").readOnly=false; $("wText").style.opacity="1";
+  $("wPlan").readOnly=false; $("wPlan").style.opacity="1";
   $("wSubmit").disabled=false; $("wSubmit").textContent="Submit revision";
   wSubmitted=false; wStarted=false; clearMsg($("wMsg"));
   const dr=loadDraft();
   const base=(dr&&dr.text!=null)?dr.text:(item?item.responseText:"");
   $("wText").value=base||"";
+  $("wPlan").value=(dr&&dr.plan)?dr.plan:"";
   $("wCount").textContent=(base||"").trim().split(/\s+/).filter(Boolean).length;
   if(dr&&dr.text&&dr.text.trim()) msg($("wMsg"),"info","We restored your saved revision.");
   navPush("writing");
@@ -830,11 +849,17 @@ function openRevision(task){
 }
 function lockWriting(){
   $("wText").readOnly=true; $("wText").style.opacity="0.7";
+  $("wPlan").readOnly=true; $("wPlan").style.opacity="0.7";
   $("wSubmit").disabled=true; $("wSubmit").textContent="Submitted";
 }
 $("writingBack").onclick=()=>{ saveDraft(); history.back(); };
 $("wText").addEventListener("input",()=>{
   $("wCount").textContent=$("wText").value.trim().split(/\s+/).filter(Boolean).length;
+  if(!revMode && !wStarted){ wStarted=true; startWTimer(); }
+  saveDraft();
+});
+/* planning box: never counted, never submitted. It still starts the timer, since planning is part of the task time. */
+$("wPlan").addEventListener("input",()=>{
   if(!revMode && !wStarted){ wStarted=true; startWTimer(); }
   saveDraft();
 });
@@ -871,7 +896,7 @@ async function submitWriting(auto){
   }
 }
 $("wSubmit").onclick=()=>submitWriting(false);
-window.addEventListener("beforeunload",e=>{ if(!wSubmitted && $("wText").value.trim() && !$("vWriting").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; } });
+window.addEventListener("beforeunload",e=>{ if(!wSubmitted && ($("wText").value.trim()||$("wPlan").value.trim()) && !$("vWriting").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; } });
 
 $("toAdmin").onclick=()=>{ clearMsg($("adminMsg")); $("adminConsole").classList.add("hidden"); navPush("admin"); showView("vAdmin"); };
 $("adminBack").onclick=()=>{ history.back(); };
