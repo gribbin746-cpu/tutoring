@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selective High School Placement Test (Practice): Reading 3</title>
+<style>
+:root{
+  --navy:#002664; --navy2:#06376b; --blue:#1a73c0; --blue-soft:#e8f1fb;
+  --bg:#eceff3; --panel:#ffffff; --border:#d3d9e1; --line:#e6eaef;
+  --ink:#1b1e23; --muted:#5c6672; --correct:#1d7a3a; --correct-bg:#e7f4ec;
+  --wrong:#c0392b; --wrong-bg:#fbeceb; --flag:#d9822b; --flag-bg:#fcefe0;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45}
+button{font-family:inherit}
+.hidden{display:none!important}
+header{height:54px;background:var(--navy);color:#fff;display:flex;align-items:center;
+  justify-content:space-between;padding:0 16px;position:fixed;top:0;left:0;right:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand .mark{width:24px;height:24px;flex:0 0 auto;color:#fff;opacity:.95}
+.brand .mark svg{width:24px;height:24px;display:block}
+.brand .ttl{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand .pill{background:rgba(255,255,255,.16);padding:2px 9px;border-radius:999px;font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;flex:0 0 auto}
+.hright{display:flex;align-items:center;gap:12px}
+.timer{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);padding:6px 12px;
+  border-radius:8px;font-variant-numeric:tabular-nums;font-weight:600;font-size:15px}
+.timer.warn{background:#7a1f1a;color:#ffd9d4}
+.timer svg{width:15px;height:15px}
+.btn{border:0;border-radius:8px;padding:9px 16px;font-weight:600;font-size:14px;cursor:pointer}
+.btn-finish{background:#fff;color:var(--navy)}
+.btn-finish:hover{background:#eaf0f8}
+.progbar{position:fixed;top:54px;left:0;right:0;height:3px;background:var(--line);z-index:19}
+.progbar>i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+main{position:fixed;top:57px;bottom:64px;left:0;right:0;display:flex}
+.pane{height:100%;overflow:auto;background:var(--panel)}
+.stim{flex:1 1 56%;border-right:1px solid var(--border);padding:26px 30px}
+.qpane{flex:1 1 44%;padding:22px 28px}
+.stim h2{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+.stim .extract-head{font-family:var(--serif);font-style:italic;font-weight:700;font-size:16px;margin:20px 0 8px}
+.stim p{font-family:var(--serif);font-size:16px;line-height:1.62;margin:0 0 13px;color:#23272d}
+.ex-block{margin:0 0 18px;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.ex-block .lbl{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--blue);margin:0 0 4px}
+.qtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.qnum{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.flagbtn{display:flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;
+  color:var(--muted);border-radius:7px;padding:6px 11px;font-size:13px;font-weight:600;cursor:pointer}
+.flagbtn svg{width:13px;height:13px}
+.flagbtn.on{background:var(--flag-bg);border-color:var(--flag);color:#9a5713}
+.qstem{font-size:16.5px;font-weight:600;line-height:1.5;margin:10px 0 16px}
+.qstem .qq{font-style:italic;font-weight:600}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;
+  border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;margin:0 0 10px;cursor:pointer;
+  font-size:15px;line-height:1.45;color:var(--ink);transition:border-color .12s,background .12s}
+.opt:hover{border-color:#9db8d6;background:#fafcff}
+.opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid #b6c0cc;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .badge{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt:focus-visible{outline:3px solid #9bc2ec;outline-offset:2px}
+.opt .otext{padding-top:2px}
+footer{height:64px;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;padding:0 16px;z-index:20}
+.nav-side{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.navwrap{flex:1 1 auto;overflow-x:auto;display:flex;gap:6px;padding:4px 2px;justify-content:center}
+.navbtn{position:relative;flex:0 0 auto;width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);
+  background:#fff;color:var(--ink);font-size:13px;font-weight:600;cursor:pointer}
+.navbtn.answered{background:var(--navy);border-color:var(--navy);color:#fff}
+.navbtn.current{outline:3px solid #9bc2ec;outline-offset:1px;border-color:var(--blue)}
+.navbtn.flagged::after{content:"";position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;
+  background:var(--flag);border:1.5px solid #fff}
+.btn-nav{border:1px solid var(--border);background:#fff;border-radius:8px;padding:9px 15px;font-weight:600;
+  font-size:14px;cursor:pointer;color:var(--ink)}
+.btn-nav:hover:not(:disabled){background:#f1f4f8}
+.btn-nav:disabled{opacity:.4;cursor:default}
+.btn-nav.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn-nav.primary:hover{background:var(--navy2)}
+.overlay{position:fixed;inset:0;background:rgba(12,20,33,.55);z-index:40;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:14px;max-width:680px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.card .cap{background:var(--navy);color:#fff;padding:22px 28px}
+.card .cap h1{margin:0 0 4px;font-size:21px}
+.card .cap p{margin:0;opacity:.85;font-size:14px}
+.card .body{padding:24px 28px}
+.card .body h3{margin:18px 0 8px;font-size:14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.card ul{margin:0 0 4px;padding-left:20px}
+.card li{margin:0 0 7px;font-size:14.5px}
+.field{display:flex;gap:10px;align-items:center;margin:16px 0 4px}
+.field input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;font-family:inherit}
+.start-actions{display:flex;justify-content:flex-end;gap:10px;padding:18px 28px 24px}
+.btn-primary{background:var(--navy);color:#fff;border:0;border-radius:9px;padding:12px 22px;font-weight:700;font-size:15px;cursor:pointer}
+.btn-primary:hover{background:var(--navy2)}
+.btn-ghost{background:#fff;border:1px solid var(--border);border-radius:9px;padding:12px 20px;font-weight:600;font-size:15px;cursor:pointer}
+.scorerow{display:flex;gap:18px;align-items:center;margin:4px 0 18px}
+.scorebig{font-size:46px;font-weight:800;color:var(--navy);line-height:1}
+.scorebig small{font-size:20px;color:var(--muted);font-weight:600}
+.scorepct{font-size:15px;color:var(--muted)}
+.brk{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-size:14.5px;margin:0 0 8px}
+.brk .b-lbl{color:var(--muted)}
+.brk .b-val{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.results-actions{display:flex;gap:10px;justify-content:flex-end;padding:6px 28px 24px}
+.skillrow{display:grid;grid-template-columns:175px 1fr 62px;gap:10px;align-items:center;margin:0 0 9px}
+.skillrow .sl{font-size:13.5px;color:#2b323b}
+.skilltrack{height:11px;background:#eef1f5;border-radius:6px;overflow:hidden}
+.skillfill{height:100%;border-radius:6px;transition:width .4s}
+.skillrow .sv{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.skillrow .sv b{color:#2b323b}
+.autopsy{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.donut-wrap{position:relative;width:150px;height:150px;flex:0 0 auto}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-center .dn{font-size:26px;font-weight:800;color:var(--navy);line-height:1}
+.donut-center .dl{font-size:11px;color:var(--muted);letter-spacing:.03em}
+.legend{flex:1 1 200px;min-width:200px}
+.legend .lg{display:flex;align-items:center;gap:9px;margin:0 0 7px;font-size:13.5px}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto}
+.legend .lc{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;color:#2b323b}
+.no-errors{background:var(--correct-bg);color:var(--correct);border-radius:10px;padding:14px 16px;font-weight:600;font-size:14.5px}
+.focus{display:flex;flex-direction:column;gap:9px}
+.focus .fitem{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:9px;padding:11px 13px;background:#fbfcfe}
+.focus .fitem.warn{border-left-color:var(--flag)}
+.focus .fitem.good{border-left-color:var(--correct);background:var(--correct-bg)}
+.focus .ft{font-weight:700;font-size:14px;margin-bottom:2px}
+.focus .fb{font-size:13.5px;color:#3a434e}
+.chip{font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.01em}
+.chip.skill{background:#eef2f7;color:#41506a}
+.chip.err{background:var(--wrong-bg);color:var(--wrong)}
+.rev-nums{font-size:13.5px;color:#2b323b;background:#f3f6fa;border-radius:8px;padding:9px 12px;margin:0 0 12px}
+.rev-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--line);
+  border-left:4px solid var(--wrong);border-radius:9px;padding:9px 12px;margin:0 0 8px}
+.rev-row .rev-n{font-weight:800;color:var(--navy);font-size:14px;min-width:34px}
+.rev-row .rev-ans{margin-left:auto;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rev-row .rev-ans b.no{color:var(--wrong)}
+.rev-row .rev-ans b.ok{color:var(--correct)}
+@media (max-width:880px){
+  main{flex-direction:column;bottom:96px}
+  .stim{flex:0 0 auto;max-height:42vh;border-right:0;border-bottom:1px solid var(--border)}
+  .qpane{flex:1 1 auto}
+  footer{height:auto;flex-wrap:wrap;padding:8px 10px;gap:8px}
+  .navwrap{order:3;width:100%;justify-content:flex-start}
+  .brand .ttl{max-width:44vw}
+  .skillrow{grid-template-columns:130px 1fr 58px}
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="startOverlay">
+  <div class="card">
+    <div class="cap">
+      <h1>Selective High School Placement Test</h1>
+      <p>Reading &middot; Practice paper 3 &middot; 45 minutes &middot; 38 questions</p>
+    </div>
+    <div class="body">
+      <p>Every question in this paper asks you to compare texts. Two sets give you a pair of extracts to weigh against each other. Two sets give you four extracts on one theme, and you decide which extract each statement fits. For every question, choose the one answer that is best.</p>
+      <h3>How it works</h3>
+      <ul>
+        <li>Read the texts on the left carefully. In this paper the answers are close, so a quick skim will not be enough.</li>
+        <li>Use <b>Next</b> and <b>Previous</b>, or the number buttons at the bottom, to move around.</li>
+        <li><b>Flag</b> a question to come back to it. You can change any answer before you finish.</li>
+        <li>The timer runs for 45 minutes. The paper submits itself when time runs out.</li>
+        <li>You will not lose marks for a wrong answer, so attempt all 38.</li>
+      </ul>
+      <div class="field">
+        <input id="nameInput" type="text" placeholder="Name (optional)" autocomplete="off">
+      </div>
+    </div>
+    <div class="start-actions">
+      <button class="btn-primary" id="beginBtn">Begin test</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="confirmOverlay">
+  <div class="card" style="max-width:460px">
+    <div class="cap"><h1>Finish the test?</h1><p id="confirmSub">You have answered all questions.</p></div>
+    <div class="start-actions">
+      <button class="btn-ghost" id="keepGoingBtn">Keep working</button>
+      <button class="btn-primary" id="confirmFinishBtn">Finish and mark</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="resultsOverlay">
+  <div class="card">
+    <div class="cap"><h1>Your results</h1><p id="resultsWho">Reading practice paper</p></div>
+    <div class="body">
+      <div class="scorerow">
+        <div class="scorebig" id="scoreBig">0<small>/38</small></div>
+        <div><div class="scorepct" id="scorePct"></div><div class="scorepct" id="scoreTime"></div></div>
+      </div>
+      <h3>By section</h3>
+      <div class="brk" id="brkBox"></div>
+      <h3>Skill mastery</h3>
+      <div id="skillBox"></div>
+      <h3>Error autopsy</h3>
+      <div id="autopsyBox"></div>
+      <h3>What to work on next</h3>
+      <div id="focusBox"></div>
+      <h3>Questions to review</h3>
+      <div id="reviewBox"></div>
+    </div>
+   <div class="results-actions">
+      <button class="btn-ghost" id="restartBtn">Restart test</button>
+      <button class="btn-primary" id="backToDashBtn">Back to dashboard</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="brand">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.6 5.2 8.4 4.5 5.5 4.5C4.7 4.5 4 5.2 4 6v11.5c0 .6.5 1 1.1 1c2.7-.2 4.8.5 6.9 2c2.1-1.5 4.2-2.2 6.9-2c.6 0 1.1-.4 1.1-1V6c0-.8-.7-1.5-1.5-1.5c-2.9 0-5.1.7-6.5 2z"/><path d="M12 6.5v12"/></svg></span>
+    <div class="ttl">Selective High School Placement Test</div>
+    <div class="pill">Reading</div>
+  </div>
+  <div class="hright">
+    <div class="timer" id="timer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg>
+      <span id="timeText">45:00</span>
+    </div>
+    <button class="btn btn-finish" id="finishBtn">Finish</button>
+  </div>
+</header>
+<div class="progbar"><i id="progFill"></i></div>
+
+<main>
+  <section class="pane stim" id="stim"></section>
+  <section class="pane qpane" id="qpane">
+    <div class="qtop">
+      <div class="qnum" id="qnum">Question 1 of 38</div>
+      <button class="flagbtn" id="flagBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg>
+        <span>Flag</span>
+      </button>
+    </div>
+    <div class="qstem" id="qstem"></div>
+    <div id="opts"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="nav-side"><button class="btn-nav" id="prevBtn">Previous</button></div>
+  <div class="navwrap" id="navwrap"></div>
+  <div class="nav-side"><button class="btn-nav primary" id="nextBtn">Next</button></div>
+</footer>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
+async function callBackend(action, payload={}){
+  const reqBody=JSON.stringify({action, payload});
+  const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:reqBody,redirect:"follow"});
+  const parsed=await res.json();
+  if(!parsed.success) throw new Error(parsed.error);
+  return parsed.data;
+}
+
+/* ---------------- stimulus content ---------------- */
+const STIM = {
+pair1:`<h2>Read the two extracts on the theme of solitude, then answer questions 1 to 9</h2>
+<div class="extract-head">Extract A</div>
+<p>I go to the hut at the top of the paddock when I need to hear myself think, and I have never been able to explain this to people who do not already understand it. They assume I am unhappy, or hiding, or that something has gone wrong at home, when the truth is closer to the opposite. I go there because I like the people in my life too much to keep meeting them as the tired and half present version of myself I become when I never stop. A week alone, and I come back able to listen again.</p>
+<p>I will not pretend it is always gentle. There is a particular hour, usually the second or third evening, when the quiet stops feeling like a gift and starts feeling like a punishment, and I have learned that the only thing to do is wait it out, the way you wait out weather. If I stayed too long the hour would come more often and stay longer, and I know people for whom it never lifted, who went looking for solitude and found only themselves, endlessly, with no way back. So I set a date to return before I ever leave. Solitude has always seemed to me a thing you visit, not a place you can safely live.</p>
+<div class="extract-head">Extract B</div>
+<p>For eleven months I ran a weather station on an island that had no one else on it, and I want to say at the outset that I did not choose this out of any love of my own company. I took the job because it paid well and I was young and I had a wrong idea of what I would be like when there was no one to perform for. What I found was that I was a great deal duller than I had hoped, and that this was the most useful thing the island ever taught me.</p>
+<p>On the mainland I had always been quick, the one with the answer, and it took months of talking to no one to notice how much of that had been for an audience. Alone, I stopped finishing my own jokes. I did the readings, I mended what broke, I watched the same sea do slightly different things, and somewhere in there a kind of steadiness arrived that I have never entirely lost. I am wary now of people who speak of solitude as though it were a spa. It is not restful. It shows you who you are when no one is keeping score, and that is rarely the person you had advertised.</p>`,
+
+sleep:`<h2>Read the four extracts on the theme of sleep, then answer questions 10 to 19</h2>
+<div class="ex-block"><div class="lbl">Extract A</div><p>For a long time sleep looked like a nightly shutdown, a period when very little of interest was going on. That picture has been overturned. While the body lies still, the brain runs through some of its busiest work of the day, replaying the hours just gone and deciding what to keep. Studies in which people learn a task and are then either allowed to sleep or kept awake show the sleepers remembering far more the next morning, as though the night had quietly filed everything away. More recent work suggests the sleeping brain also flushes out waste that builds up while we are awake, opening channels between its cells and washing them through. Three in the morning may be one of the busiest hours the brain keeps.</p></div>
+<div class="ex-block"><div class="lbl">Extract B</div><p>Before cheap lighting, people did not expect to sleep in a single unbroken block. Diaries, court records and doctors' notes from a few centuries ago describe a first sleep and a second sleep, with an hour or two of waking in between that nobody found alarming. In that quiet gap people prayed, tended the fire, visited neighbours or simply lay talking in the dark. The whole arrangement seems to have faded within a generation or two of the arrival of bright artificial light in homes and streets, which pushed bedtimes later and squeezed the night into one continuous stretch. What we now think of as the natural way to sleep may be a fairly recent invention, and the wakeful hour that troubles so many people may be an old habit the body has not entirely forgotten.</p></div>
+<div class="ex-block"><div class="lbl">Extract C</div><p>There is a specific loneliness to being awake at three in the morning when everyone you love is asleep. For years I fought it. I lay rigid, doing sums about how many hours I had left and how ruined the next day would be, which is of course the surest way to stay awake ever devised. Nothing worked until I stopped trying to make it work. One bad winter I gave up, got up, made tea in the cold kitchen and read until my eyes went heavy on their own, and something in me unclenched. The wakefulness did not go away, but it stopped being a battle I was losing. I still wake in the small hours more than I would like. I no longer treat it as a disaster, and, strangely, that alone has given me back most of the sleep I thought I had lost.</p></div>
+<div class="ex-block"><div class="lbl">Extract D</div><p>We have built a culture that treats sleep as a confession of weakness. The people we are taught to admire boast about how little of it they need, as though rest were a tax paid only by the lazy, and the phrase about sleeping when you are dead is repeated as if it were wisdom rather than a good way of getting there sooner. The trouble is that the bill for lost sleep does not arrive at once. It is paid slowly, in worse decisions, shorter tempers, weaker immune systems and a fog that the coffee never quite lifts, and because the cost is spread out and invisible we go on ignoring it. A tired society mistakes its exhaustion for dedication. Until that changes, telling people simply to sleep more will keep sounding, absurdly, like advice to slack off.</p></div>`,
+
+pair2:`<h2>Read the two extracts on the value of doing difficult things, then answer questions 20 to 28</h2>
+<div class="extract-head">Extract A</div>
+<p>A great deal of effort now goes into removing effort from our lives, and on the whole we treat this as obvious progress. The stairs give way to the escalator, the letter to the message, the long argument to the quick verdict, and each time we congratulate ourselves on the time we have saved, without asking what the time was for. I am not against convenience. I have benefited from it as much as anyone, and I would not give up the machine that washes my clothes to prove a point. What worries me is subtler than that. It is that we are slowly forgetting that some things are worth doing because they are hard, and that the difficulty of them is a large part of what makes them worth doing. When a child is handed the answer, the small unglamorous pleasure of arriving at it has been taken away. We are handing each other the answer to almost everything now, and we call it kindness.</p>
+<div class="extract-head">Extract B</div>
+<p>I spent the two years after school learning to lay stone with a man who did not believe in praise. For the first six months I was, by his account, useless, and by my own account worse than that, and there were mornings I sat in the van outside the yard and seriously considered driving it home. What kept me was nothing noble. It was that I could see, very slowly, that I was getting better, and that the getting better could only happen by turning up and failing at the same wall a hundred times until my hands knew something my head still did not. Nobody could have told me the thing I learned in those two years, and I have tried to tell it since and failed. It has to be paid for in the currency of doing it badly for a long time. When I finish a wall now I do not feel clever. I feel like someone who was allowed to stay long enough to be shown how, and that, it turns out, is a better feeling than clever.</p>`,
+
+walk:`<h2>Read the four extracts on the theme of walking, then answer questions 29 to 38</h2>
+<div class="ex-block"><div class="lbl">Extract A</div><p>Something about walking loosens the mind. Researchers who set people creative problems and then compared those who sat with those who walked found the walkers producing markedly more, and more original, ideas, an effect that lasted even after they sat back down. Nobody is quite sure why. It may be the extra blood the moving body sends to the brain, or the steady rhythm of the stride, or simply that a walking mind is pointed outward and off the leash. Whatever the cause, the pace of an ordinary walk seems to match the pace at which useful thinking happens, fast enough to keep the mind moving and slow enough to let it wander. Writers and thinkers have always known this in their feet. It is pleasant to find the laboratories catching up.</p></div>
+<div class="ex-block"><div class="lbl">Extract B</div><p>To walk a city slowly, with no destination, was once considered a serious way of understanding it. The old idea of the stroller was of someone who read the streets the way others read books, alert to the faces in a crowd, the light on a wall, the small dramas of a market, gathering the character of a place by moving gently through it. Pilgrims walked for other reasons, but they too treated the road itself as part of the meaning, not merely the distance between a start and an end. In both cases walking was an act of attention, a way of letting a place reveal itself at the speed of a footstep. Much of that has been lost now that we pass through cities sealed in metal boxes, seeing them as a smear through glass.</p></div>
+<div class="ex-block"><div class="lbl">Extract C</div><p>When my father died I could not sit still, and so I walked. The same loop every evening, out past the oval and along the creek and back, until my legs were tired enough to let the rest of me rest. I was not walking anywhere. I was walking so that my body would have something to do while my mind did the far harder work it could not seem to do sitting down. Grief and walking turned out to suit each other, both of them a matter of putting one foot in front of the other with no clear end in sight. Months of that same route wore a kind of groove in me. I know it now in the dark, every root and turn, and on bad days it is still the one thing that reliably helps, the plain animal comfort of a familiar path walked slowly at dusk.</p></div>
+<div class="ex-block"><div class="lbl">Extract D</div><p>For most of the last century we designed our towns around the car and, without quite meaning to, designed the walker out of them. Streets became roads, shops moved to the edges where only a driver could reach them, and distances that a person could once have covered on foot were quietly stretched beyond walking. The costs have been slow to show and heavy to bear. Bodies built to move spend their days sitting, first in the car and then at the desk, and the illnesses that follow fill the hospitals. Neighbours who once met on the footpath now pass each other at speed, strangers behind glass, and something like community thins out with every road we widen. A place you can walk is not a luxury. It is closer to a basic condition of a healthy and a friendly life.</p></div>`
+};
+const MATCH_OPTS=[{l:"A",t:`Extract A`},{l:"B",t:`Extract B`},{l:"C",t:`Extract C`},{l:"D",t:`Extract D`}];
+function ab(a,b,c,d){return [{l:"A",t:a},{l:"B",t:b},{l:"C",t:c},{l:"D",t:d}];}
+
+/* ---------------- questions ---------------- */
+const Q = [
+{n:1,sec:"Set 1: Solitude",stim:"pair1",stem:`Both writers agree that solitude:`,
+ opts:ab(`is most valuable when it is chosen rather than forced upon a person.`,`is best understood as a restful escape from the demands of others.`,`changed them in a way that lasted beyond the time they spent alone.`,`becomes dangerous only for people who are already unhappy.`),ans:"C",
+ exp:`Both describe a lasting change. A is contradicted by B (imposed yet valued); B and D are reversed or overstated.`},
+{n:2,sec:"Set 1: Solitude",stim:"pair1",stem:`The main difference between the two writers is that:`,
+ opts:ab(`the first writer chooses solitude, while the second had it forced on him.`,`only the first writer believes that solitude can eventually become harmful.`,`only the second writer was truly changed by the experience of being alone.`,`the first writer clearly enjoys solitude, while the second gained nothing at all.`),ans:"A",
+ exp:`Chosen versus imposed is the clean structural difference. Both note a cost and both were changed.`},
+{n:3,sec:"Set 1: Solitude",stim:"pair1",stem:`Compared with the first extract, the second extract is:`,
+ opts:ab(`more lyrical and admiring in the way it describes being alone.`,`more openly resentful that the solitude ever came to an end.`,`more concerned with giving the reader practical advice.`,`plainer in style and more wary of romantic views of solitude.`),ans:"D",
+ exp:`The second is dry and suspicious of those who treat solitude as a spa. The first is the lyrical one.`},
+{n:4,sec:"Set 1: Solitude",stim:"pair1",stem:`How do the two writers regard the people they usually live among?`,
+ opts:ab(`Both see other people mainly as a distraction from doing serious thinking.`,`The first values returning to them; the second learned he had been performing for them.`,`Both quietly resent the demands that other people place upon them daily.`,`The first badly misses people while away; the second is glad to be rid of them.`),ans:"B",
+ exp:`The first goes away for their sake; the second realised his cleverness had been for an audience.`},
+{n:5,sec:"Set 1: Solitude",stim:"pair1",stem:`The danger each writer associates with solitude is:`,
+ opts:ab(`for the first, that coming back to people will always feel much harder; for the second, that he might lose his quick wit for good.`,`for the first, that other people will badly misunderstand her; for the second, that the steadiness will fade once he leaves the island.`,`for the first, staying too long and being unable to return; for the second, losing a comforting self image.`,`for the first, that the long quiet will slowly become boring; for the second, that he will grow to prefer being alone.`),ans:"C",
+ exp:`First: people for whom solitude never lifted, no way back. Second: it shows who you are, rarely the advertised self.`},
+{n:6,sec:"Set 1: Solitude",stim:"pair1",stem:`The first extract mainly aims to, and the second mainly aims to:`,
+ opts:ab(`explain the writer's own habit; testify to what being alone revealed.`,`persuade the reader to try solitude; warn the reader against it.`,`describe a beautiful place; complain about a difficult job.`,`defend a lifestyle choice; give the reader instructions for coping alone.`),ans:"A",
+ exp:`The first explains a personal practice; the second testifies to what solitude exposed.`},
+{n:7,sec:"Set 1: Solitude",stim:"pair1",stem:`Which idea would both writers most likely accept?`,
+ opts:ab(`Time alone is wasted unless it produces something useful.`,`Solitude is only safe if you have planned when to return.`,`The best company is no company at all.`,`You see yourself more honestly when no one else is watching.`),ans:"D",
+ exp:`First: hear myself think. Second: who you are when no one is keeping score. C is only the first writer's view.`},
+{n:8,sec:"Set 1: Solitude",stim:"pair1",stem:`Each writer uses a comparison. The first compares the hard part of solitude to something, and the second compares people who idealise solitude to those who treat it as something. The two comparisons are:`,
+ opts:ab(`a punishment; a job.`,`weather; a spa.`,`a visit; a performance.`,`an audience; a wound.`),ans:"B",
+ exp:`The first waits out the hard hour like weather; the second mocks those who treat solitude as a spa.`},
+{n:9,sec:"Set 1: Solitude",stim:"pair1",stem:`Taken together, the two extracts suggest that:`,
+ opts:ab(`solitude is something that every single person ought to build into their life.`,`solitude tends to be more dangerous than it is ever truly rewarding.`,`solitude can be reached by different paths and still teach you something true.`,`only writers and deep thinkers have any genuine use for being alone.`),ans:"C",
+ exp:`One chose it, one had it imposed, and both learned something true about themselves.`},
+
+{n:10,sec:"Set 2: Sleep",stim:"sleep",stem:`Which extract describes how the brain clears waste while we sleep?`,opts:MATCH_OPTS,ans:"A",exp:`A: the sleeping brain flushes out waste, opening channels between cells.`},
+{n:11,sec:"Set 2: Sleep",stim:"sleep",stem:`Which extract explains an older pattern of sleeping in two separate stretches?`,opts:MATCH_OPTS,ans:"B",exp:`B: a first sleep and a second sleep.`},
+{n:12,sec:"Set 2: Sleep",stim:"sleep",stem:`Which extract treats a sleepless night as a lonely, personal ordeal?`,opts:MATCH_OPTS,ans:"C",exp:`C: the specific loneliness of being awake at three in the morning.`},
+{n:13,sec:"Set 2: Sleep",stim:"sleep",stem:`Which extract argues that modern culture wrongly treats sleep as laziness?`,opts:MATCH_OPTS,ans:"D",exp:`D: sleep treated as a confession of weakness.`},
+{n:14,sec:"Set 2: Sleep",stim:"sleep",stem:`Which extract reports research connecting sleep with forming memories?`,opts:MATCH_OPTS,ans:"A",exp:`A: sleepers remember far more the next morning than those kept awake.`},
+{n:15,sec:"Set 2: Sleep",stim:"sleep",stem:`Which extract blames artificial light for changing the way we sleep?`,opts:MATCH_OPTS,ans:"B",exp:`B: bright artificial light squeezed the night into one stretch.`},
+{n:16,sec:"Set 2: Sleep",stim:"sleep",stem:`Which extract finds relief by giving up the struggle to fall asleep?`,opts:MATCH_OPTS,ans:"C",exp:`C: nothing worked until the writer stopped trying to make it work.`},
+{n:17,sec:"Set 2: Sleep",stim:"sleep",stem:`Which extract warns that the cost of losing sleep is easy to overlook?`,opts:MATCH_OPTS,ans:"D",exp:`D: the bill is paid slowly and invisibly, so we ignore it.`},
+{n:18,sec:"Set 2: Sleep",stim:"sleep",stem:`Which extract presents lying awake in the night as once being entirely normal?`,opts:MATCH_OPTS,ans:"B",exp:`B: the waking gap nobody found alarming. Tempts C, but C is a modern ordeal.`},
+{n:19,sec:"Set 2: Sleep",stim:"sleep",stem:`Which extract suggests that being alert in the small hours has a biological basis?`,opts:MATCH_OPTS,ans:"A",exp:`A: three in the morning may be one of the busiest hours the brain keeps.`},
+
+{n:20,sec:"Set 3: Difficulty",stim:"pair2",stem:`Both writers would agree that:`,
+ opts:ab(`the effort a task demands can be part of what makes it worthwhile.`,`difficulty can be worth enduring when the reward at the end is large enough.`,`modern life may have made people lazier than they tended to be before.`,`hard work can be meaningful once another person recognises what it cost.`),ans:"A",
+ exp:`First: difficulty is part of what makes things worth doing. Second: getting better only through failing.`},
+{n:21,sec:"Set 3: Difficulty",stim:"pair2",stem:`The clearest difference between the two extracts is that:`,
+ opts:ab(`only the first writer believes that difficulty has any real value.`,`only the second writer enjoyed the hard task that he describes.`,`the first writes about society, the second about his own life.`,`the first praises convenience, while the second strongly condemns it.`),ans:"C",
+ exp:`General argument versus personal experience. Both value difficulty.`},
+{n:22,sec:"Set 3: Difficulty",stim:"pair2",stem:`Compared with the second extract, the first is:`,
+ opts:ab(`warmer and more affectionate about one particular remembered season.`,`more humble about the sharp limits of the writer's own ability.`,`more amused by the writer's own early and repeated failures.`,`more anxious about a change taking place in society.`),ans:"D",
+ exp:`The first worries about a social trend. A, B and C describe the second writer.`},
+{n:23,sec:"Set 3: Difficulty",stim:"pair2",stem:`Each writer names a reward that comes from difficulty. For the first and the second, these are:`,
+ opts:ab(`more free time for the first; his teacher's admiration for the second.`,`arriving at the answer yourself for the first; being shown how for the second.`,`the pride of being right for the first; a steady income for the second.`,`proof of intelligence for the first; independence from others for the second.`),ans:"B",
+ exp:`First: the pleasure of arriving at an answer. Second: the feeling of having been shown how.`},
+{n:24,sec:"Set 3: Difficulty",stim:"pair2",stem:`The first extract is mainly written to, and the second to:`,
+ opts:ab(`argue a general point; share what one experience taught.`,`warn the reader; boast about an achievement.`,`entertain the reader; give clear instructions.`,`complain about the modern world; apologise for an old failure.`),ans:"A",
+ exp:`General argument versus a lesson drawn from lived experience.`},
+{n:25,sec:"Set 3: Difficulty",stim:"pair2",stem:`Which idea is present in the first extract but not the second?`,
+ opts:ab(`that getting good at something takes a long time.`,`that failure is a necessary part of learning.`,`that difficulty can be genuinely rewarding.`,`that society as a whole is losing something valuable.`),ans:"D",
+ exp:`The social worry is the first writer's alone. A and B belong to the second; C is shared.`},
+{n:26,sec:"Set 3: Difficulty",stim:"pair2",stem:`Both writers suggest that a certain kind of knowledge cannot simply be handed over. Which statement captures how?`,
+ opts:ab(`Both describe teachers who flatly refused to explain anything to anyone.`,`The first hands the reader instructions, while the second withholds them.`,`Each shows that some knowledge can only be reached by doing it.`,`Both insist that written knowledge can never really be trusted at all.`),ans:"C",
+ exp:`First: a handed answer robs the child. Second: the lesson could only be paid for by doing.`},
+{n:27,sec:"Set 3: Difficulty",stim:"pair2",stem:`On the subject of convenience and ease, the two extracts:`,
+ opts:ab(`take opposite sides on ease, one firmly for it and one against.`,`share a wariness of ease, though only the first addresses it directly.`,`agree completely that all convenience is harmful to us.`,`both avoid the question of convenience entirely.`),ans:"B",
+ exp:`The first is directly wary of ease; the second lives out that wariness without naming it. The first even praises the washing machine, so "all convenience is harmful" is wrong.`},
+{n:28,sec:"Set 3: Difficulty",stim:"pair2",stem:`Read together, the two extracts most strongly suggest that:`,
+ opts:ab(`people today would be much better off giving up modern conveniences.`,`only hard physical work, like the careful laying of heavy stone, is truly worthwhile.`,`children should be taught practical trades instead of academic subjects.`,`the cost of a thing is tied to the value we find in it.`),ans:"D",
+ exp:`Difficulty and worth are bound together. The others overstate or invent claims.`},
+
+{n:29,sec:"Set 4: Walking",stim:"walk",stem:`Which extract reports research on how walking affects creative thinking?`,opts:MATCH_OPTS,ans:"A",exp:`A: walkers produced more and more original ideas than sitters.`},
+{n:30,sec:"Set 4: Walking",stim:"walk",stem:`Which extract describes walking as a historic art of noticing a city?`,opts:MATCH_OPTS,ans:"B",exp:`B: the stroller who read the streets like books.`},
+{n:31,sec:"Set 4: Walking",stim:"walk",stem:`Which extract recalls using a daily walk to steady the mind?`,opts:MATCH_OPTS,ans:"C",exp:`C: the same loop every evening after the father's death.`},
+{n:32,sec:"Set 4: Walking",stim:"walk",stem:`Which extract argues that modern cities have designed walking out of daily life?`,opts:MATCH_OPTS,ans:"D",exp:`D: towns built around the car, the walker designed out.`},
+{n:33,sec:"Set 4: Walking",stim:"walk",stem:`Which extract links the rhythm of walking to the rhythm of thought?`,opts:MATCH_OPTS,ans:"A",exp:`A: the pace of a walk matches the pace of useful thinking.`},
+{n:34,sec:"Set 4: Walking",stim:"walk",stem:`Which extract presents walking as the way earlier generations understood a place?`,opts:MATCH_OPTS,ans:"B",exp:`B: walking as an act of attention, the stroller and the pilgrim.`},
+{n:35,sec:"Set 4: Walking",stim:"walk",stem:`Which extract treats a familiar route as a comfort in a hard time?`,opts:MATCH_OPTS,ans:"C",exp:`C: the plain animal comfort of a familiar path at dusk.`},
+{n:36,sec:"Set 4: Walking",stim:"walk",stem:`Which extract warns of the health cost of building towns around cars?`,opts:MATCH_OPTS,ans:"D",exp:`D: bodies built to move sit all day, and the illnesses fill the hospitals.`},
+{n:37,sec:"Set 4: Walking",stim:"walk",stem:`Which extract suggests that walking changes what the mind is able to do?`,opts:MATCH_OPTS,ans:"A",exp:`A: walking makes the mind more creative, an effect that lasts.`},
+{n:38,sec:"Set 4: Walking",stim:"walk",stem:`Which extract connects walking with a sense of belonging to a community?`,opts:MATCH_OPTS,ans:"D",exp:`D: neighbours who once met on the footpath, community thinning with every widened road.`}
+];
+
+/* ---------------- diagnostic tagging ---------------- */
+const SKILL_OF={
+ 1:"Synthesis across texts",2:"Synthesis across texts",3:"Tone & attitude",4:"Inference",
+ 5:"Inference",6:"Purpose & viewpoint",7:"Synthesis across texts",8:"Effect of language",9:"Synthesis across texts",
+ 10:"Synthesis across texts",11:"Synthesis across texts",12:"Synthesis across texts",13:"Synthesis across texts",
+ 14:"Synthesis across texts",15:"Synthesis across texts",16:"Synthesis across texts",17:"Synthesis across texts",
+ 18:"Synthesis across texts",19:"Synthesis across texts",
+ 20:"Synthesis across texts",21:"Synthesis across texts",22:"Tone & attitude",23:"Inference",
+ 24:"Purpose & viewpoint",25:"Synthesis across texts",26:"Synthesis across texts",27:"Synthesis across texts",28:"Synthesis across texts",
+ 29:"Synthesis across texts",30:"Synthesis across texts",31:"Synthesis across texts",32:"Synthesis across texts",
+ 33:"Synthesis across texts",34:"Synthesis across texts",35:"Synthesis across texts",36:"Synthesis across texts",
+ 37:"Synthesis across texts",38:"Synthesis across texts"
+};
+const TRAP_OF={
+ 1:{A:"Half-right",B:"Reversal",D:"Overstatement"},
+ 2:{B:"Half-right",C:"Reversal",D:"Reversal"},
+ 3:{A:"Reversal",B:"Half-right",C:"Half-right"},
+ 4:{A:"Overstatement",C:"Reversal",D:"Half-right"},
+ 5:{A:"Half-right",B:"Reversal",D:"Half-right"},
+ 6:{B:"Half-right",C:"Literal trap",D:"Half-right"},
+ 7:{A:"Overstatement",B:"Half-right",C:"Overstatement"},
+ 8:{A:"Literal trap",C:"Literal trap",D:"Literal trap"},
+ 9:{A:"Overstatement",B:"Half-right",D:"Overstatement"},
+ 20:{B:"Half-right",C:"Overstatement",D:"Reversal"},
+ 21:{A:"Reversal",B:"Half-right",D:"Half-right"},
+ 22:{A:"Reversal",B:"Reversal",C:"Reversal"},
+ 23:{A:"Reversal",C:"Half-right",D:"Reversal"},
+ 24:{B:"Half-right",C:"Literal trap",D:"Half-right"},
+ 25:{A:"Half-right",B:"Half-right",C:"Half-right"},
+ 26:{A:"Overstatement",B:"Reversal",D:"Overstatement"},
+ 27:{A:"Reversal",C:"Overstatement",D:"Reversal"},
+ 28:{A:"Overstatement",B:"Overstatement",C:"Half-right"}
+};
+function errorCategory(q,picked){
+  if(picked==null || picked===q.ans) return null;
+  if(TRAP_OF[q.n]) return TRAP_OF[q.n][picked] || "Logic / locating";
+  return "Logic / locating";
+}
+const ERRORS={
+ "Half-right":{c:"#2f7ec4",tip:"You picked a detail that is true of one extract, but the question was about both, or about the other one. Re-check which text the claim actually fits."},
+ "Literal trap":{c:"#7a5bb5",tip:"You matched a word on the surface and missed the meaning. Ask what the line is doing, not just which words it repeats."},
+ "Overstatement":{c:"#b5562b",tip:"You chose an option pushed too far. Watch for all, only, never, everyone; the extracts rarely commit that hard."},
+ "Reversal":{c:"#c0392b",tip:"You picked a claim that swaps the two writers around, or reverses what one of them said. Check the option agrees with the text."},
+ "Popular misreading":{c:"#d98324",tip:"You picked the obvious reading. In a hard comparison the obvious answer is often the trap; look for the complication."},
+ "Logic / locating":{c:"#2a9d6f",tip:"On the four-extract sets you matched the topic, not the precise idea. Two extracts often touch the same subject; only one fits the exact wording of the question."}
+};
+const SKILL_TIP={
+ "Main idea & theme":"Ask what the whole text is really about, not one striking detail.",
+ "Purpose & viewpoint":"Ask why each writer wrote this and what they want the reader to think or feel.",
+ "Tone & attitude":"Name the feeling in each extract with one word you can point to in the text.",
+ "Inference":"Answer only from what the text supports, and check the claim against both extracts.",
+ "Effect of language":"Ask what a phrase or image is doing, not just what it literally says.",
+ "Text structure":"Track how each text changes from start to finish, and find the turn.",
+ "Cohesion & sentence logic":"For each gap, read the sentence before and after, and match the link, not the keyword.",
+ "Synthesis across texts":"Match the exact idea asked for, not the shared topic, and check every extract before choosing.",
+ "Vocabulary in context":"Work out the word's meaning from the sentence around it, not a memorised definition."
+};
+
+/* ---------------- state ---------------- */
+let cur=0;
+const answers={};
+const flags=new Set();
+let secondsLeft=45*60;
+let timerId=null, started=false, currentStim=null, finished=false;
+const $=id=>document.getElementById(id);
+
+function renderStim(q){
+  if(currentStim!==q.stim){ $("stim").innerHTML=STIM[q.stim]; $("stim").scrollTop=0; currentStim=q.stim; }
+}
+function stemHTML(s){ return s.replace(/"([^"]+)"/g, '<span class="qq">&ldquo;$1&rdquo;</span>'); }
+function renderQuestion(){
+  const q=Q[cur];
+  renderStim(q);
+  $("qnum").textContent="Question "+q.n+" of "+Q.length;
+  $("qstem").innerHTML=stemHTML(q.stem);
+  const wrap=$("opts"); wrap.innerHTML="";
+  q.opts.forEach(o=>{
+    const b=document.createElement("button");
+    b.className="opt"+(answers[q.n]===o.l?" sel":"");
+    b.setAttribute("role","radio");
+    b.setAttribute("aria-checked",answers[q.n]===o.l?"true":"false");
+    b.innerHTML='<span class="badge">'+o.l+'</span><span class="otext">'+o.t+'</span>';
+    b.onclick=()=>{ if(finished) return; answers[q.n]=o.l; renderQuestion(); renderNav(); updateProgress(); };
+    wrap.appendChild(b);
+  });
+  $("flagBtn").classList.toggle("on",flags.has(q.n));
+  $("prevBtn").disabled = cur===0;
+  $("nextBtn").textContent = cur===Q.length-1 ? "Review" : "Next";
+  renderNav();
+}
+function renderNav(){
+  const w=$("navwrap"); w.innerHTML="";
+  Q.forEach((q,i)=>{
+    const b=document.createElement("button");
+    b.className="navbtn"+(answers[q.n]?" answered":"")+(i===cur?" current":"")+(flags.has(q.n)?" flagged":"");
+    b.textContent=q.n;
+    b.title="Question "+q.n+(answers[q.n]?" (answered)":"")+(flags.has(q.n)?" (flagged)":"");
+    b.onclick=()=>{ cur=i; renderQuestion(); };
+    w.appendChild(b);
+  });
+}
+function updateProgress(){ $("progFill").style.width=(Object.keys(answers).length/Q.length*100)+"%"; }
+$("prevBtn").onclick=()=>{ if(cur>0){cur--;renderQuestion();} };
+$("nextBtn").onclick=()=>{ if(cur<Q.length-1){cur++;renderQuestion();} else openConfirm(); };
+$("flagBtn").onclick=()=>{ const n=Q[cur].n; flags.has(n)?flags.delete(n):flags.add(n); renderQuestion(); };
+function fmt(s){const m=Math.floor(s/60),x=s%60;return m+":"+String(x).padStart(2,"0");}
+function tick(){
+  secondsLeft--;
+  $("timeText").textContent=fmt(Math.max(secondsLeft,0));
+  if(secondsLeft<=300) $("timer").classList.add("warn");
+  if(secondsLeft<=0){ clearInterval(timerId); finish(); }
+}
+$("beginBtn").onclick=()=>{
+  $("startOverlay").classList.add("hidden"); started=true;
+  renderQuestion(); updateProgress(); timerId=setInterval(tick,1000);
+};
+function openConfirm(){
+  const unanswered=Q.length-Object.keys(answers).length;
+  $("confirmSub").textContent = unanswered===0
+    ? "You have answered all "+Q.length+" questions."
+    : "You still have "+unanswered+" question"+(unanswered>1?"s":"")+" unanswered.";
+  $("confirmOverlay").classList.remove("hidden");
+}
+function showResults(){ $("resultsOverlay").classList.remove("hidden"); $("resultsOverlay").querySelector(".card").scrollTop=0; }
+$("finishBtn").onclick=()=>{ finished ? showResults() : openConfirm(); };
+$("keepGoingBtn").onclick=()=>$("confirmOverlay").classList.add("hidden");
+$("confirmFinishBtn").onclick=()=>{ $("confirmOverlay").classList.add("hidden"); finish(); };
+
+function finish(){
+  if(timerId) clearInterval(timerId);
+  let score=0; const bySec={}; const skillStat={}; const errCount={};
+  Q.forEach(q=>{
+    bySec[q.sec]=bySec[q.sec]||{c:0,t:0}; bySec[q.sec].t++;
+    const sk=SKILL_OF[q.n]; skillStat[sk]=skillStat[sk]||{c:0,t:0}; skillStat[sk].t++;
+    const ok=answers[q.n]===q.ans;
+    if(ok){ score++; bySec[q.sec].c++; skillStat[sk].c++; }
+    else { const cat=errorCategory(q,answers[q.n]); errCount[cat]=(errCount[cat]||0)+1; }
+  });
+  const totalWrong=Q.length-score;
+  const name=($("nameInput").value||"").trim();
+  $("resultsWho").textContent = (name?name+": ":"")+"Reading practice paper";
+  $("scoreBig").innerHTML=score+'<small>/'+Q.length+'</small>';
+  $("scorePct").textContent=Math.round(score/Q.length*100)+"% correct";
+  const used=45*60-secondsLeft;
+  $("scoreTime").textContent="Time used: "+fmt(Math.max(used,0));
+  const bb=$("brkBox"); bb.innerHTML="";
+  Object.keys(bySec).forEach(s=>{ bb.insertAdjacentHTML("beforeend",'<div class="b-lbl">'+s+'</div><div class="b-val">'+bySec[s].c+" / "+bySec[s].t+'</div>'); });
+  const skBox=$("skillBox"); skBox.innerHTML="";
+  const skills=Object.keys(skillStat).map(s=>({s, ...skillStat[s], pct:skillStat[s].c/skillStat[s].t})).sort((a,b)=>a.pct-b.pct || b.t-a.t);
+  skills.forEach(x=>{
+    const col = x.pct>=0.8?"var(--correct)" : x.pct>=0.5?"#c9871f" : "var(--wrong)";
+    skBox.insertAdjacentHTML("beforeend",'<div class="skillrow"><div class="sl">'+x.s+'</div><div class="skilltrack"><div class="skillfill" style="width:'+Math.round(x.pct*100)+'%;background:'+col+'"></div></div><div class="sv"><b>'+x.c+'/'+x.t+'</b> &middot; '+Math.round(x.pct*100)+'%</div></div>');
+  });
+  const apBox=$("autopsyBox"); apBox.innerHTML="";
+  if(totalWrong===0){ apBox.innerHTML='<div class="no-errors">No errors to autopsy. Clean sweep.</div>'; }
+  else {
+    const slices=Object.keys(errCount).map(k=>({label:k,value:errCount[k],color:(ERRORS[k]||{}).c||"#888"})).sort((a,b)=>b.value-a.value);
+    const r=58, w=20, C=2*Math.PI*r, cx=75, cy=75; let off=0, circles="";
+    slices.forEach(s=>{ const len=s.value/totalWrong*C; circles+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+s.color+'" stroke-width="'+w+'" stroke-dasharray="'+len+' '+(C-len)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 '+cx+' '+cy+')"></circle>'; off+=len; });
+    let legend=""; slices.forEach(s=>{ legend+='<div class="lg"><span class="sw" style="background:'+s.color+'"></span>'+s.label+'<span class="lc">'+s.value+'</span></div>'; });
+    apBox.innerHTML='<div class="autopsy"><div class="donut-wrap"><svg viewBox="0 0 150 150" width="150" height="150">'+circles+'</svg><div class="donut-center"><span class="dn">'+totalWrong+'</span><span class="dl">'+(totalWrong===1?"error":"errors")+'</span></div></div><div class="legend">'+legend+'</div></div>';
+  }
+  const fBox=$("focusBox"); fBox.innerHTML=""; const items=[];
+  if(score>=Q.length-1){ items.push({cls:"good",t:"Excellent control",b:"Almost nothing to fix on this paper. To keep stretching, redo it under a tighter clock."}); }
+  const topErr=Object.keys(errCount).sort((a,b)=>errCount[b]-errCount[a])[0];
+  if(topErr){ items.push({cls:"",t:"Biggest leak: "+topErr+" ("+errCount[topErr]+" of "+totalWrong+" "+(totalWrong===1?"error":"errors")+")",b:(ERRORS[topErr]||{}).tip||""}); }
+  const weak=skills.filter(x=>x.t>=2 && x.pct<0.75).slice(0,2);
+  weak.forEach(x=>{ items.push({cls:"warn",t:"Focus skill: "+x.s+" ("+x.c+"/"+x.t+")",b:SKILL_TIP[x.s]||""}); });
+  if(items.length===0){ items.push({cls:"good",t:"Solid all round",b:"No single weak area stands out. Keep practising mixed papers."}); }
+  items.forEach(it=>{ fBox.insertAdjacentHTML("beforeend",'<div class="fitem '+it.cls+'"><div class="ft">'+it.t+'</div><div class="fb">'+it.b+'</div></div>'); });
+  const rb=$("reviewBox"); rb.innerHTML="";
+  const wrong=Q.filter(q=>answers[q.n]!==q.ans);
+  if(wrong.length===0){ rb.innerHTML='<div class="no-errors">Every question correct. Nothing to review.</div>'; }
+  else {
+    rb.insertAdjacentHTML("beforeend",'<div class="rev-nums">Review: '+wrong.map(q=>q.n).join(", ")+'</div>');
+    wrong.forEach(q=>{
+      const yours=answers[q.n]||null; const cat=errorCategory(q,yours);
+      rb.insertAdjacentHTML("beforeend",'<div class="rev-row"><span class="rev-n">Q'+q.n+'</span><span class="chip skill">'+SKILL_OF[q.n]+'</span>'+(cat?'<span class="chip err">'+cat+'</span>':'')+'<span class="rev-ans">You: <b class="no">'+(yours||"none")+'</b> &nbsp;Correct: <b class="ok">'+q.ans+'</b></span></div>');
+    });
+  }
+  finished=true; $("finishBtn").textContent="Results"; showResults();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const studentKey = urlParams.get('student') || ($("nameInput").value||"").trim() || "unknown";
+  const paperId    = urlParams.get('paper')   || "reading-mock-3";
+  const wrongJson = Q.filter(q => answers[q.n] !== q.ans).map(q => ({ q:q.n, picked:answers[q.n]||null, correct:q.ans, skill:SKILL_OF[q.n] }));
+  callBackend("submitReading", { nameKey: studentKey, paperId: paperId, score: score, outOf: Q.length, timeUsedSec: Math.max(used,0), perSkillJson: skillStat, answersJson: answers, wrongJson: wrongJson })
+    .then(()=>console.log("Saved")).catch(err=>console.error("Save failed:", err));
+}
+$("backToDashBtn").onclick=()=>{
+  const k=new URLSearchParams(window.location.search).get('student');
+  window.location.href = "index.html" + (k ? ("?student="+encodeURIComponent(k)+"&done=reading") : "");
+};
+$("restartBtn").onclick=()=>location.reload();
+document.addEventListener("keydown",e=>{
+  if(!started) return;
+  if(!$("resultsOverlay").classList.contains("hidden")) return;
+  if(!$("confirmOverlay").classList.contains("hidden")) return;
+  if(e.key==="ArrowRight"){ if(cur<Q.length-1){cur++;renderQuestion();} }
+  else if(e.key==="ArrowLeft"){ if(cur>0){cur--;renderQuestion();} }
+  else { if(finished) return; const k=e.key.toUpperCase(); const q=Q[cur]; if(q.opts.some(o=>o.l===k)){ answers[q.n]=k; renderQuestion(); renderNav(); updateProgress(); } }
+});
+</script>
+</body>
+</html>
