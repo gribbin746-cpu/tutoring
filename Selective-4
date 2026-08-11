@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selective High School Placement Test (Practice): Reading 4</title>
+<style>
+:root{
+  --navy:#002664; --navy2:#06376b; --blue:#1a73c0; --blue-soft:#e8f1fb;
+  --bg:#eceff3; --panel:#ffffff; --border:#d3d9e1; --line:#e6eaef;
+  --ink:#1b1e23; --muted:#5c6672; --correct:#1d7a3a; --correct-bg:#e7f4ec;
+  --wrong:#c0392b; --wrong-bg:#fbeceb; --flag:#d9822b; --flag-bg:#fcefe0;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45}
+button{font-family:inherit}
+.hidden{display:none!important}
+header{height:54px;background:var(--navy);color:#fff;display:flex;align-items:center;
+  justify-content:space-between;padding:0 16px;position:fixed;top:0;left:0;right:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand .mark{width:24px;height:24px;flex:0 0 auto;color:#fff;opacity:.95}
+.brand .mark svg{width:24px;height:24px;display:block}
+.brand .ttl{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand .pill{background:rgba(255,255,255,.16);padding:2px 9px;border-radius:999px;font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;flex:0 0 auto}
+.hright{display:flex;align-items:center;gap:12px}
+.timer{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);padding:6px 12px;
+  border-radius:8px;font-variant-numeric:tabular-nums;font-weight:600;font-size:15px}
+.timer.warn{background:#7a1f1a;color:#ffd9d4}
+.timer svg{width:15px;height:15px}
+.btn{border:0;border-radius:8px;padding:9px 16px;font-weight:600;font-size:14px;cursor:pointer}
+.btn-finish{background:#fff;color:var(--navy)}
+.btn-finish:hover{background:#eaf0f8}
+.progbar{position:fixed;top:54px;left:0;right:0;height:3px;background:var(--line);z-index:19}
+.progbar>i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+main{position:fixed;top:57px;bottom:64px;left:0;right:0;display:flex}
+.pane{height:100%;overflow:auto;background:var(--panel)}
+.stim{flex:1 1 56%;border-right:1px solid var(--border);padding:26px 30px}
+.qpane{flex:1 1 44%;padding:22px 28px}
+.stim h2{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 14px}
+.stim .extract-head{font-family:var(--serif);font-style:italic;font-weight:700;font-size:16px;margin:20px 0 8px}
+.stim .work-title{font-family:var(--serif);font-weight:700;font-size:20px;margin:2px 0 12px}
+.stim p,.stim .stanza{font-family:var(--serif);font-size:16px;line-height:1.62;margin:0 0 13px;color:#23272d}
+.stanza{white-space:pre-line}
+.gap{display:inline-block;min-width:30px;text-align:center;border-bottom:2px solid #b9c2cd;
+  color:var(--muted);font-family:var(--sans);font-size:13px;font-weight:700;padding:0 4px;border-radius:3px}
+.gap.active{background:#fff3cf;border-bottom-color:var(--flag);color:#7a4d12}
+.ex-block{margin:0 0 18px;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.ex-block .lbl{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--blue);margin:0 0 4px}
+.qtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.qnum{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.flagbtn{display:flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;
+  color:var(--muted);border-radius:7px;padding:6px 11px;font-size:13px;font-weight:600;cursor:pointer}
+.flagbtn svg{width:13px;height:13px}
+.flagbtn.on{background:var(--flag-bg);border-color:var(--flag);color:#9a5713}
+.qstem{font-size:16.5px;font-weight:600;line-height:1.5;margin:10px 0 16px}
+.qstem .qq{font-style:italic;font-weight:600}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;
+  border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;margin:0 0 10px;cursor:pointer;
+  font-size:15px;line-height:1.45;color:var(--ink);transition:border-color .12s,background .12s}
+.opt:hover{border-color:#9db8d6;background:#fafcff}
+.opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid #b6c0cc;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .badge{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt:focus-visible{outline:3px solid #9bc2ec;outline-offset:2px}
+.opt .otext{padding-top:2px}
+footer{height:64px;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;padding:0 16px;z-index:20}
+.nav-side{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.navwrap{flex:1 1 auto;overflow-x:auto;display:flex;gap:6px;padding:4px 2px;justify-content:center}
+.navbtn{position:relative;flex:0 0 auto;width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);
+  background:#fff;color:var(--ink);font-size:13px;font-weight:600;cursor:pointer}
+.navbtn.answered{background:var(--navy);border-color:var(--navy);color:#fff}
+.navbtn.current{outline:3px solid #9bc2ec;outline-offset:1px;border-color:var(--blue)}
+.navbtn.flagged::after{content:"";position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;
+  background:var(--flag);border:1.5px solid #fff}
+.btn-nav{border:1px solid var(--border);background:#fff;border-radius:8px;padding:9px 15px;font-weight:600;
+  font-size:14px;cursor:pointer;color:var(--ink)}
+.btn-nav:hover:not(:disabled){background:#f1f4f8}
+.btn-nav:disabled{opacity:.4;cursor:default}
+.btn-nav.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn-nav.primary:hover{background:var(--navy2)}
+.overlay{position:fixed;inset:0;background:rgba(12,20,33,.55);z-index:40;display:flex;
+  align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:14px;max-width:680px;width:100%;max-height:90vh;overflow:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.card .cap{background:var(--navy);color:#fff;padding:22px 28px}
+.card .cap h1{margin:0 0 4px;font-size:21px}
+.card .cap p{margin:0;opacity:.85;font-size:14px}
+.card .body{padding:24px 28px}
+.card .body h3{margin:18px 0 8px;font-size:14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.card ul{margin:0 0 4px;padding-left:20px}
+.card li{margin:0 0 7px;font-size:14.5px}
+.field{display:flex;gap:10px;align-items:center;margin:16px 0 4px}
+.field input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;font-family:inherit}
+.start-actions{display:flex;justify-content:flex-end;gap:10px;padding:18px 28px 24px}
+.btn-primary{background:var(--navy);color:#fff;border:0;border-radius:9px;padding:12px 22px;font-weight:700;font-size:15px;cursor:pointer}
+.btn-primary:hover{background:var(--navy2)}
+.btn-ghost{background:#fff;border:1px solid var(--border);border-radius:9px;padding:12px 20px;font-weight:600;font-size:15px;cursor:pointer}
+.scorerow{display:flex;gap:18px;align-items:center;margin:4px 0 18px}
+.scorebig{font-size:46px;font-weight:800;color:var(--navy);line-height:1}
+.scorebig small{font-size:20px;color:var(--muted);font-weight:600}
+.scorepct{font-size:15px;color:var(--muted)}
+.brk{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-size:14.5px;margin:0 0 8px}
+.brk .b-lbl{color:var(--muted)}
+.brk .b-val{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.results-actions{display:flex;gap:10px;justify-content:flex-end;padding:6px 28px 24px}
+.skillrow{display:grid;grid-template-columns:175px 1fr 62px;gap:10px;align-items:center;margin:0 0 9px}
+.skillrow .sl{font-size:13.5px;color:#2b323b}
+.skilltrack{height:11px;background:#eef1f5;border-radius:6px;overflow:hidden}
+.skillfill{height:100%;border-radius:6px;transition:width .4s}
+.skillrow .sv{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.skillrow .sv b{color:#2b323b}
+.autopsy{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.donut-wrap{position:relative;width:150px;height:150px;flex:0 0 auto}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-center .dn{font-size:26px;font-weight:800;color:var(--navy);line-height:1}
+.donut-center .dl{font-size:11px;color:var(--muted);letter-spacing:.03em}
+.legend{flex:1 1 200px;min-width:200px}
+.legend .lg{display:flex;align-items:center;gap:9px;margin:0 0 7px;font-size:13.5px}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto}
+.legend .lc{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;color:#2b323b}
+.no-errors{background:var(--correct-bg);color:var(--correct);border-radius:10px;padding:14px 16px;font-weight:600;font-size:14.5px}
+.focus{display:flex;flex-direction:column;gap:9px}
+.focus .fitem{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:9px;padding:11px 13px;background:#fbfcfe}
+.focus .fitem.warn{border-left-color:var(--flag)}
+.focus .fitem.good{border-left-color:var(--correct);background:var(--correct-bg)}
+.focus .ft{font-weight:700;font-size:14px;margin-bottom:2px}
+.focus .fb{font-size:13.5px;color:#3a434e}
+.chip{font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.01em}
+.chip.skill{background:#eef2f7;color:#41506a}
+.chip.err{background:var(--wrong-bg);color:var(--wrong)}
+.rev-nums{font-size:13.5px;color:#2b323b;background:#f3f6fa;border-radius:8px;padding:9px 12px;margin:0 0 12px}
+.rev-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--line);
+  border-left:4px solid var(--wrong);border-radius:9px;padding:9px 12px;margin:0 0 8px}
+.rev-row .rev-n{font-weight:800;color:var(--navy);font-size:14px;min-width:34px}
+.rev-row .rev-ans{margin-left:auto;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rev-row .rev-ans b.no{color:var(--wrong)}
+.rev-row .rev-ans b.ok{color:var(--correct)}
+.rev-outcome{width:100%;padding-left:42px;font-size:12.5px;color:var(--muted)}
+@media (max-width:880px){
+  main{flex-direction:column;bottom:96px}
+  .stim{flex:0 0 auto;max-height:42vh;border-right:0;border-bottom:1px solid var(--border)}
+  .qpane{flex:1 1 auto}
+  footer{height:auto;flex-wrap:wrap;padding:8px 10px;gap:8px}
+  .navwrap{order:3;width:100%;justify-content:flex-start}
+  .brand .ttl{max-width:44vw}
+  .skillrow{grid-template-columns:130px 1fr 58px}
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="startOverlay">
+  <div class="card">
+    <div class="cap">
+      <h1>Selective High School Placement Test</h1>
+      <p>Reading &middot; Practice paper 4 &middot; 45 minutes &middot; 38 questions</p>
+    </div>
+    <div class="body">
+      <p>This paper has five parts: two short fiction extracts, a poem, a sentence gap text, four extracts on a single theme, and a vocabulary cloze. For each question, choose the one answer you think is best.</p>
+      <h3>How it works</h3>
+      <ul>
+        <li>Read the text on the left and answer the question on the right.</li>
+        <li>Use <b>Next</b> and <b>Previous</b>, or the number buttons at the bottom, to move around.</li>
+        <li><b>Flag</b> a question to come back to it. You can change any answer before you finish.</li>
+        <li>The timer runs for 45 minutes. The paper submits itself when time runs out.</li>
+        <li>You will not lose marks for a wrong answer, so attempt all 38.</li>
+      </ul>
+      <div class="field">
+        <input id="nameInput" type="text" placeholder="Name (optional)" autocomplete="off">
+      </div>
+    </div>
+    <div class="start-actions">
+      <button class="btn-primary" id="beginBtn">Begin test</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="confirmOverlay">
+  <div class="card" style="max-width:460px">
+    <div class="cap"><h1>Finish the test?</h1><p id="confirmSub">You have answered all questions.</p></div>
+    <div class="start-actions">
+      <button class="btn-ghost" id="keepGoingBtn">Keep working</button>
+      <button class="btn-primary" id="confirmFinishBtn">Finish and mark</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="resultsOverlay">
+  <div class="card">
+    <div class="cap"><h1>Your results</h1><p id="resultsWho">Reading practice paper</p></div>
+    <div class="body">
+      <div class="scorerow">
+        <div class="scorebig" id="scoreBig">0<small>/38</small></div>
+        <div>
+          <div class="scorepct" id="scorePct"></div>
+          <div class="scorepct" id="scoreTime"></div>
+        </div>
+      </div>
+      <h3>By section</h3>
+      <div class="brk" id="brkBox"></div>
+      <h3>Skill mastery</h3>
+      <div id="skillBox"></div>
+      <h3>Error autopsy</h3>
+      <div id="autopsyBox"></div>
+      <h3>What to work on next</h3>
+      <div id="focusBox"></div>
+      <h3>Questions to review</h3>
+      <div id="reviewBox"></div>
+    </div>
+   <div class="results-actions">
+      <button class="btn-ghost" id="restartBtn">Restart test</button>
+      <button class="btn-primary" id="backToDashBtn">Back to dashboard</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="brand">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.6 5.2 8.4 4.5 5.5 4.5C4.7 4.5 4 5.2 4 6v11.5c0 .6.5 1 1.1 1c2.7-.2 4.8.5 6.9 2c2.1-1.5 4.2-2.2 6.9-2c.6 0 1.1-.4 1.1-1V6c0-.8-.7-1.5-1.5-1.5c-2.9 0-5.1.7-6.5 2z"/><path d="M12 6.5v12"/></svg></span>
+    <div class="ttl">Selective High School Placement Test</div>
+    <div class="pill">Reading</div>
+  </div>
+  <div class="hright">
+    <div class="timer" id="timer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg>
+      <span id="timeText">45:00</span>
+    </div>
+    <button class="btn btn-finish" id="finishBtn">Finish</button>
+  </div>
+</header>
+<div class="progbar"><i id="progFill"></i></div>
+
+<main>
+  <section class="pane stim" id="stim"></section>
+  <section class="pane qpane" id="qpane">
+    <div class="qtop">
+      <div class="qnum" id="qnum">Question 1 of 38</div>
+      <button class="flagbtn" id="flagBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg>
+        <span>Flag</span>
+      </button>
+    </div>
+    <div class="qstem" id="qstem"></div>
+    <div id="opts"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="nav-side"><button class="btn-nav" id="prevBtn">Previous</button></div>
+  <div class="navwrap" id="navwrap"></div>
+  <div class="nav-side"><button class="btn-nav primary" id="nextBtn">Next</button></div>
+</footer>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
+async function callBackend(action, payload={}){
+  const reqBody=JSON.stringify({action, payload});
+  const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:reqBody,redirect:"follow"});
+  const parsed=await res.json();
+  if(!parsed.success) throw new Error(parsed.error);
+  return parsed.data;
+}
+
+/* ---------------- stimulus content ---------------- */
+const STIM = {
+ fiction:`<h2>Read the two extracts, then answer questions 1 to 8</h2>
+<div class="extract-head">Extract A: from The Envelope</div>
+<p>Mina saw the envelope fall from the man’s coat as he turned away from the fruit stall. It landed flat beneath a crate of apricots. For a moment no one else noticed. Her mother was arranging bunches of parsley at their own stall, with the electricity bill folded in her apron pocket and the worry of it showing around her mouth.</p>
+<p>Mina picked up the envelope. Through the thin paper she could see the blue edge of banknotes. She called after the man, but the crowd had already folded around him. Her fingers closed. She could say she had seen nothing. Even thinking it made her face hot.</p>
+<p>Then she ran. She found him beside the car park, searching one pocket and then another. He took the envelope, tore it open and counted the notes before he looked at her. Only when the number satisfied him did he say, &ldquo;You’re an honest kid,&rdquo; in the same tone he might have used to notice the weather. Then he drove away.</p>
+<p>When Mina returned, her mother was still arranging the parsley. The bill was still unpaid, and Mina had not been thanked properly or rewarded at all. Nothing had improved. Yet as she stepped back behind the stall, she felt strangely lighter, as though she had put down something heavier than money.</p>
+<div class="extract-head">Extract B: from Forty Two Years Late</div>
+<p>I found the book while packing for my third move. It was wedged beneath two winter coats, a library copy of <i>Birds at the Breakwater</i>, stamped with a return date in 1984. I had borrowed it when I was eleven, spilled cordial across one page and hidden it rather than confess. After a month, returning it felt embarrassing. After a year, it felt impossible. The shame grew while the offence stayed exactly the same size.</p>
+<p>The old library had since been replaced by a bright building with glass doors. I carried the book to the desk. The librarian turned it over, scanned the faded label and told me there was no record of it anywhere. &ldquo;You may as well keep it,&rdquo; she said.</p>
+<p>Keeping it was the problem. While she helped another visitor, I found the nature shelf and slid the dark spine between two clean new books. No bell rang. No record corrected itself. The return mattered to no one in the room except me, which was perhaps why I had waited so long to make it.</p>`,
+ poem:`<h2>Read the poem, then answer questions 9 to 14</h2>
+<div class="work-title">The Gate</div>
+<div class="stanza">Every spring he carried the oil can
+to the gate beside the road,
+though no cattle used that paddock now
+and grass had swallowed half the track.</div>
+<div class="stanza">He worked each hinge until it yielded
+without complaint. &ldquo;A gate should open,&rdquo;
+he would say, as if the world
+might judge a farm by its welcome.</div>
+<div class="stanza">After he died, the gate began
+to find its voice again. All winter
+it called across the empty field
+whenever wind leaned on the bars.</div>
+<div class="stanza">I took the oil can from the shed,
+then set it back. Some things grow quiet
+when they are mended. I left the gate
+to tell the road that he had gone.</div>`,
+ cloze:`<h2>Read the text, then answer questions 15 to 20. Choose the sentence (A to G) that fits each gap. One sentence is not needed.</h2>
+<div class="work-title">The Tree That Returned</div>
+<p>In September 1994, ranger David Noble was exploring a remote canyon in Wollemi National Park when he noticed a group of unfamiliar trees. Their bark was covered in strange rounded bumps, while their leaves resembled dark green ferns. <span class="gap" data-g="15">15</span> He collected a fallen branch and took it to botanists in Sydney.</p>
+<p>The leaves looked remarkably like fossils from plants believed to have vanished long ago. <span class="gap" data-g="16">16</span> The tree was placed in its own genus and named <i>Wollemia nobilis</i>, honouring both the park and the ranger who found it.</p>
+<p>Excitement about the discovery created a new danger. Fewer than one hundred mature trees survived in the wild, all within a very small area. <span class="gap" data-g="17">17</span> Officials kept the exact location secret and required researchers to clean their equipment before entering the canyon.</p>
+<p>Protection inside the canyon was not enough. <span class="gap" data-g="18">18</span> Botanists learned to grow new trees from seeds and cuttings. Plants were later sent to gardens in Australia and overseas, spreading the risk across many locations.</p>
+<p>The value of that planning became clear when the Black Summer fires reached Wollemi National Park. <span class="gap" data-g="19">19</span> Fire crews worked to protect the wild trees, and the population survived, but the danger exposed how easily one hidden population could be lost.</p>
+<p>Today, Wollemi pines grow in botanic gardens across several continents. <span class="gap" data-g="20">20</span> The species survived unseen in one canyon for an extraordinary length of time. Its future may depend on no longer keeping every tree in the same place.</p>`,
+ matching:`<h2>Read the four extracts on the theme of repair, then answer questions 21 to 30</h2>
+<div class="ex-block"><div class="lbl">Extract A</div><p>When I repair a cracked bowl, the owner often asks whether I can make the break disappear. Sometimes I can, but an invisible repair is not always the most honest one. A fine seam records both the accident and the decision not to discard the bowl. If every mark is concealed, the object pretends it has no past. A visible repair allows use and history to remain together. Damage alone does not make an object beautiful. The care that follows can give the damage meaning. Some bowls become more valued after repair, not because they broke, but because someone chose them twice.</p></div>
+<div class="ex-block"><div class="lbl">Extract B</div><p>On the first Saturday, the community hall tables were crowded with lamps, toys, radios and people who did not know how to mend them. Visitors came for working objects but stayed to learn. A retired electrician guided a teenager through the loose wiring in a desk lamp. A child watched her father open a jammed fan, then held the screws in careful order. The repair cafe was not a free service where experts vanished behind a door. Owners watched, asked questions and took part. Success was measured not only by the objects revived, but by the knowledge that left the room. The next month, the teenager returned to help someone else.</p></div>
+<div class="ex-block"><div class="lbl">Extract C</div><p>The battery in my phone is failing, but it sits behind adhesive and screws made for tools I do not own. The manufacturer calls the device mine until I try to open it. Then parts become unavailable, instructions disappear and software refuses to recognise a replacement. Repair has been turned into a form of permission. This design makes an owner depend on the company long after the sale, while each replacement creates another profit. Before accepting that a product cannot be fixed, ask whether repair is truly impossible or whether someone has simply blocked the door.</p></div>
+<div class="ex-block"><div class="lbl">Extract D</div><p>My father’s coat hangs behind the laundry door. Its lining is torn and the cuffs have worn smooth, but each winter I resew the loose corner of its pocket. A practical friend once asked why I bothered when no one would wear it again. I am not trying to return the coat to service. Each stitch repeats a small movement I watched my father make at the kitchen table, guiding the needle with hands that seemed too large for such work. When the thread holds, the memory feels less likely to spill out. The coat remains useless as clothing and necessary as an object.</p></div>`,
+ wordcloze:`<h2>Read the passage, then answer questions 31 to 38. For each gap, choose the word that best fits.</h2>
+<div class="work-title">The Clock Tower</div>
+<p>At first, the silence of the town clock was merely a <span class="gap" data-g="31">31</span>, noticed by bakers arriving before dawn and children on their way to school. By noon, however, it had become a public inconvenience. Mara climbed the narrow stairs and <span class="gap" data-g="32">32</span> herself through the hatch into the clock room. The gears were not damaged, only <span class="gap" data-g="33">33</span> by the twigs of a starling’s nest. Removing them would <span class="gap" data-g="34">34</span> the clock immediately, but three pale eggs rested at the centre. The quickest solution now seemed <span class="gap" data-g="35">35</span>. Mara fixed a painted notice to the tower door: Time will resume when the chicks can fly. Some shopkeepers were <span class="gap" data-g="36">36</span>, but children gathered each morning to listen for the birds. When the nest was finally empty, Mara cleared the straw and set the mechanism <span class="gap" data-g="37">37</span> again. The bell struck three minutes late, an error the waiting crowd greeted with <span class="gap" data-g="38">38</span>.</p>`
+};
+
+const CLOZE_OPTS = [
+ {l:"A",t:`The resemblance showed that a lineage known only from ancient fossils had survived.`},
+ {l:"B",t:`For a time, decades of careful protection seemed likely to be undone within days.`},
+ {l:"C",t:`A single infected boot or careless collector could damage a population this small.`},
+ {l:"D",t:`Artists and writers also began using the rare tree as a symbol of survival.`},
+ {l:"E",t:`At first, however, he did not realise that the find would rewrite botanical history.`},
+ {l:"F",t:`Their separation is deliberate, since one disaster cannot reach every collection at once.`},
+ {l:"G",t:`Conservationists therefore needed living reserves far from the vulnerable wild grove itself.`}
+];
+const MATCH_OPTS = [{l:"A",t:`Extract A`},{l:"B",t:`Extract B`},{l:"C",t:`Extract C`},{l:"D",t:`Extract D`}];
+function ab(a,b,c,d){return [{l:"A",t:a},{l:"B",t:b},{l:"C",t:c},{l:"D",t:d}];}
+
+/* ---------------- questions ---------------- */
+const Q = [
+{n:1,sec:"Part 1: Fiction",stim:"fiction",stem:`Both extracts mainly focus on:`,
+ opts:ab(`a young person being punished after taking something.`,`an act of return that brings little outward reward.`,`an owner carefully searching for a valuable missing possession.`,`a stranger changing another person’s financial luck.`),ans:"B",
+ exp:`Both returners act without receiving meaningful recognition or reward.`},
+{n:2,sec:"Part 1: Fiction",stim:"fiction",stem:`Mina’s fingers closing around the envelope mainly suggests that she:`,
+ opts:ab(`was checking whether the envelope had been sealed.`,`feared the notes might fall while she was running.`,`briefly considered keeping money she badly needed.`,`wanted to hide the find from nearby stallholders.`),ans:"C",
+ exp:`Her family’s unpaid bill makes the brief temptation clear, but she rejects it.`},
+{n:3,sec:"Part 1: Fiction",stim:"fiction",stem:`The man counts the notes before looking at Mina. This detail suggests that he:`,
+ opts:ab(`suspected Mina had removed some of the money.`,`valued the recovered cash more than her honesty.`,`was too shocked to remember where he was.`,`intended to reward her after checking the amount.`),ans:"B",
+ exp:`His first concern is the amount. His later praise is distant and automatic.`},
+{n:4,sec:"Part 1: Fiction",stim:"fiction",stem:`Why does Mina feel “lighter” even though the bill remains unpaid?`,
+ opts:ab(`Running through the market on foot had exhausted her.`,`The envelope held less money than she expected.`,`Returning it removed the burden of a dishonest choice.`,`The man had secretly paid her family’s bill.`),ans:"C",
+ exp:`Her relief is moral rather than financial.`},
+{n:5,sec:"Part 1: Fiction",stim:"fiction",stem:`Why had the narrator hidden the library book beneath the winter coats?`,
+ opts:ab(`The narrator hoped to sell it if it became valuable.`,`The narrator wanted to protect it during the move.`,`The narrator planned to finish it before returning it.`,`The narrator felt ashamed and postponed admitting the mistake.`),ans:"D",
+ exp:`A small childhood mistake became harder to confess as time passed.`},
+{n:6,sec:"Part 1: Fiction",stim:"fiction",stem:`Why does the narrator return the book after the librarian says it can be kept?`,
+ opts:ab(`The narrator rejects the idea that the practical obligation has ended.`,`The narrator doubts that the librarian has understood the title.`,`The narrator wants readers to believe the old book is new.`,`The narrator fears a charge if the cover is scanned.`),ans:"A",
+ exp:`The record is gone, but the narrator still needs to correct the old choice.`},
+{n:7,sec:"Part 1: Fiction",stim:"fiction",stem:`Both endings suggest that:`,
+ opts:ab(`the owners are deeply changed by each return.`,`the returners receive money for their honesty.`,`conscience can matter more than recognition.`,`possessions always preserve childhood memories.`),ans:"C",
+ exp:`Each return matters most to the person making it.`},
+{n:8,sec:"Part 1: Fiction",stim:"fiction",stem:`The two extracts are most clearly different in that:`,
+ opts:ab(`Extract A tests honesty under immediate need, while Extract B examines delayed guilt.`,`Extract A concerns a family possession, while Extract B concerns money found outdoors.`,`Extract A ends with public praise, while Extract B ends with quiet disappointment.`,`Extract A is an adult memory, while Extract B follows a child in the moment.`),ans:"A",
+ exp:`Mina decides while her family needs money. The narrator corrects a choice after decades.`},
+{n:9,sec:"Part 2: Poem",stim:"poem",stem:`The poem is mainly concerned with:`,
+ opts:ab(`teaching an old farm gate to move silently again.`,`the way an ordinary task becomes bound to memory.`,`a conflict over whether the paddock should still be used.`,`the farm falling into neglect after its owner dies.`),ans:"B",
+ exp:`Oiling the gate begins as routine care and becomes central to remembering the grandfather.`},
+{n:10,sec:"Part 2: Poem",stim:"poem",stem:`The words “as if the world might judge a farm by its welcome” suggest the grandfather:`,
+ opts:ab(`feared visitors would complain about the broken gate.`,`cared more about appearances than about useful work.`,`expected cattle to return to the paddock each spring.`,`believed careful work mattered even when no one noticed.`),ans:"D",
+ exp:`He maintains the unused gate because care has value beyond immediate usefulness.`},
+{n:11,sec:"Part 2: Poem",stim:"poem",stem:`Saying that the gate began “to find its voice again” mainly:`,
+ opts:ab(`turns its squeak into a sound of mourning.`,`shows relief that it is no longer maintained.`,`proves the wind is damaging the empty farm.`,`suggests the grandfather’s spirit is opening it.`),ans:"A",
+ exp:`The gate’s returning squeak becomes an audible sign of loss.`},
+{n:12,sec:"Part 2: Poem",stim:"poem",stem:`The speaker takes the oil can from the shed, then sets it back. This action shows that the speaker:`,
+ opts:ab(`has forgotten his grandfather’s method for repairing the hinge.`,`plans to leave the farm and never return again.`,`chooses to preserve the sound rather than silence it.`,`discovers that the old oil can has become completely unusable.`),ans:"C",
+ exp:`The speaker could mend the gate but deliberately leaves its voice unchanged.`},
+{n:13,sec:"Part 2: Poem",stim:"poem",stem:`The overall tone of the poem is best described as:`,
+ opts:ab(`bitter resentment at an unwanted inheritance.`,`restrained sorrow shaped by quiet affection.`,`nervous fear of a neglected property.`,`cheerful pride in a family tradition.`),ans:"B",
+ exp:`The grief is controlled and expressed through a modest, familiar object.`},
+{n:14,sec:"Part 2: Poem",stim:"poem",stem:`The final lines imply that leaving the gate unmended:`,
+ opts:ab(`warns travellers to avoid the empty farm.`,`carries news of the death to distant relatives.`,`helps passing people recognise the property.`,`keeps the grandfather’s absence audible.`),ans:"D",
+ exp:`The squeak tells the road that he is gone, preserving the sound of his absence.`},
+{n:15,sec:"Part 3: Sentence gap",stim:"cloze",gap:15,stem:`Choose the sentence that best fits Gap 15.`,
+ opts:CLOZE_OPTS,ans:"E",
+ exp:`It contrasts Noble’s first uncertainty with the importance later recognised by botanists.`},
+{n:16,sec:"Part 3: Sentence gap",stim:"cloze",gap:16,stem:`Choose the sentence that best fits Gap 16.`,
+ opts:CLOZE_OPTS,ans:"A",
+ exp:`The fossil resemblance explains why the living trees were scientifically extraordinary.`},
+{n:17,sec:"Part 3: Sentence gap",stim:"cloze",gap:17,stem:`Choose the sentence that best fits Gap 17.`,
+ opts:CLOZE_OPTS,ans:"C",
+ exp:`It explains why secrecy and clean equipment were necessary for such a small population.`},
+{n:18,sec:"Part 3: Sentence gap",stim:"cloze",gap:18,stem:`Choose the sentence that best fits Gap 18.`,
+ opts:CLOZE_OPTS,ans:"G",
+ exp:`The need for distant reserves leads directly to growing and distributing new trees.`},
+{n:19,sec:"Part 3: Sentence gap",stim:"cloze",gap:19,stem:`Choose the sentence that best fits Gap 19.`,
+ opts:CLOZE_OPTS,ans:"B",
+ exp:`It captures the sudden threat before the following sentence describes the response.`},
+{n:20,sec:"Part 3: Sentence gap",stim:"cloze",gap:20,stem:`Choose the sentence that best fits Gap 20.`,
+ opts:CLOZE_OPTS,ans:"F",
+ exp:`It explains why collections on several continents protect the species more effectively.`},
+{n:21,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract argues that a good repair need not conceal the damage?`,
+ opts:MATCH_OPTS,ans:"A",
+ exp:`Extract A treats the visible seam as part of the bowl’s honest history.`},
+{n:22,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract expects owners to take part rather than simply hand over an object?`,
+ opts:MATCH_OPTS,ans:"B",
+ exp:`Extract B says owners watch, ask questions and participate in the repair.`},
+{n:23,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract says ownership can still leave someone dependent on a manufacturer?`,
+ opts:MATCH_OPTS,ans:"C",
+ exp:`Extract C describes parts, tools and software being controlled after the sale.`},
+{n:24,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract describes repairing something that will never serve its original purpose again?`,
+ opts:MATCH_OPTS,ans:"D",
+ exp:`Extract D repairs a coat that will never again be worn.`},
+{n:25,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract says later care can give earlier damage meaning?`,
+ opts:MATCH_OPTS,ans:"A",
+ exp:`Extract A distinguishes damage itself from the care shown after it.`},
+{n:26,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract measures success partly by knowledge carried away?`,
+ opts:MATCH_OPTS,ans:"B",
+ exp:`Extract B values the repair skills that leave the hall with participants.`},
+{n:27,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract asks who benefits when replacement becomes easier than repair?`,
+ opts:MATCH_OPTS,ans:"C",
+ exp:`Extract C links blocked repairs with continuing company profit.`},
+{n:28,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract uses repair to repeat an action once performed by a parent?`,
+ opts:MATCH_OPTS,ans:"D",
+ exp:`Extract D repeats the father’s careful movement with a needle.`},
+{n:29,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract criticises barriers to repair rather than a lack of technical possibility?`,
+ opts:MATCH_OPTS,ans:"C",
+ exp:`Extract C asks whether repair is impossible or has merely been blocked.`},
+{n:30,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract gives an example of a learner returning later to help someone else?`,
+ opts:MATCH_OPTS,ans:"B",
+ exp:`Extract B ends with the teenager returning to share the skill.`},
+{n:31,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:31,stem:`Choose the best word for Gap 31.`,
+ opts:ab(`curiosity`,`ceremony`,`certainty`,`victory`),ans:"A",
+ exp:`A silent clock first attracts interest, so curiosity fits the change to inconvenience.`},
+{n:32,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:32,stem:`Choose the best word for Gap 32.`,
+ opts:ab(`positioned`,`squeezed`,`observed`,`prepared`),ans:"B",
+ exp:`Squeezed herself through describes moving through a narrow hatch.`},
+{n:33,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:33,stem:`Choose the best word for Gap 33.`,
+ opts:ab(`polished`,`balanced`,`decorated`,`obstructed`),ans:"D",
+ exp:`The twigs block the gears without damaging them, so obstructed is precise.`},
+{n:34,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:34,stem:`Choose the best word for Gap 34.`,
+ opts:ab(`restore`,`replace`,`divide`,`measure`),ans:"A",
+ exp:`Removing the obstruction would restore the clock to working order.`},
+{n:35,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:35,stem:`Choose the best word for Gap 35.`,
+ opts:ab(`thoughtful`,`harmless`,`ruthless`,`uncertain`),ans:"C",
+ exp:`Destroying the eggs would solve the problem quickly but without mercy.`},
+{n:36,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:36,stem:`Choose the best word for Gap 36.`,
+ opts:ab(`delighted`,`impatient`,`grateful`,`doubtful`),ans:"B",
+ exp:`Shopkeepers inconvenienced by the stopped clock would most naturally be impatient.`},
+{n:37,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:37,stem:`Choose the best word for Gap 37.`,
+ opts:ab(`waiting`,`leaning`,`fading`,`turning`),ans:"D",
+ exp:`Set the mechanism turning again is the natural grammatical and logical fit.`},
+{n:38,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:38,stem:`Choose the best word for Gap 38.`,
+ opts:ab(`applause`,`suspicion`,`silence`,`concern`),ans:"A",
+ exp:`The crowd celebrates both the birds and the clock’s return with applause.`}
+];
+/* ---------------- diagnostic tagging ---------------- */
+const SKILL_OF={
+ 1:"Synthesis across texts",2:"Inference",3:"Inference",4:"Inference",
+ 5:"Inference",6:"Inference",7:"Synthesis across texts",8:"Text structure",
+ 9:"Main idea & theme",10:"Effect of language",11:"Effect of language",12:"Text structure",
+ 13:"Tone & attitude",14:"Inference",
+ 15:"Cohesion & sentence logic",16:"Cohesion & sentence logic",17:"Cohesion & sentence logic",
+ 18:"Cohesion & sentence logic",19:"Cohesion & sentence logic",20:"Cohesion & sentence logic",
+ 21:"Synthesis across texts",22:"Synthesis across texts",23:"Synthesis across texts",
+ 24:"Synthesis across texts",25:"Synthesis across texts",26:"Synthesis across texts",
+ 27:"Synthesis across texts",28:"Synthesis across texts",29:"Synthesis across texts",30:"Synthesis across texts",
+ 31:"Vocabulary in context",32:"Cohesion & sentence logic",33:"Vocabulary in context",34:"Vocabulary in context",
+ 35:"Vocabulary in context",36:"Vocabulary in context",37:"Cohesion & sentence logic",38:"Vocabulary in context"
+};
+const OUTCOME_OF={
+ 1:"Identifies the shared central idea across paired fiction extracts.",
+ 2:"Infers temptation from a gesture and its financial context.",
+ 3:"Infers character priorities from the order of actions.",
+ 4:"Explains a figurative description using the character's moral choice.",
+ 5:"Locates the cause of a character's long delay.",
+ 6:"Distinguishes a moral need from a practical obligation.",
+ 7:"Synthesises the common implication of two endings.",
+ 8:"Distinguishes the central conflict and time scale of paired extracts.",
+ 9:"Identifies the main theme carried by a recurring object.",
+ 10:"Explains what figurative phrasing reveals about a character's values.",
+ 11:"Explains how personification changes an ordinary sound.",
+ 12:"Tracks the decision revealed by a change in action.",
+ 13:"Identifies tone from restrained language and subject matter.",
+ 14:"Infers the meaning of the poem's final image.",
+ 15:"Uses contrast to connect a discovery with its later significance.",
+ 16:"Links fossil evidence to the scientific conclusion that follows.",
+ 17:"Links population size and risk to the protective action that follows.",
+ 18:"Recognises a cause and effect transition into conservation outside the wild.",
+ 19:"Places a threat statement between the arrival of fire and the response.",
+ 20:"Connects geographic separation with protection from a single disaster.",
+ 21:"Matches a paraphrase about visible damage to the correct extract.",
+ 22:"Matches participation in repair to the correct extract.",
+ 23:"Matches restricted ownership to the correct extract.",
+ 24:"Matches memory driven repair to the correct extract.",
+ 25:"Distinguishes damage itself from the care that follows it.",
+ 26:"Matches shared knowledge as a measure of success.",
+ 27:"Locates the commercial incentive behind blocked repair.",
+ 28:"Matches a repeated family action to the correct extract.",
+ 29:"Distinguishes technical impossibility from deliberate restriction.",
+ 30:"Locates evidence that learning has been passed onwards.",
+ 31:"Selects a noun that fits the passage's shift from interest to inconvenience.",
+ 32:"Selects the verb that fits movement through a narrow space.",
+ 33:"Selects the precise word for blocked but undamaged gears.",
+ 34:"Uses context to select the verb meaning return to working order.",
+ 35:"Selects an evaluative word that captures efficient but cruel action.",
+ 36:"Infers an attitude from inconvenience and delay.",
+ 37:"Completes a natural verb pattern using grammar and context.",
+ 38:"Selects the response that matches the crowd's celebratory mood."
+};
+const TRAP_OF={
+ 1:{A:"Half-right",C:"Detail for main idea",D:"Unsupported inference"},
+ 2:{A:"Literal trap",B:"Half-right",D:"Unsupported inference"},
+ 3:{A:"Unsupported inference",C:"Overstatement",D:"Unsupported inference"},
+ 4:{A:"Literal trap",B:"Unsupported inference",D:"Unsupported inference"},
+ 5:{A:"Unsupported inference",B:"Keyword trap",C:"Half-right"},
+ 6:{B:"Unsupported inference",C:"Overstatement",D:"Unsupported inference"},
+ 7:{A:"Overstatement",B:"Reversal",D:"Overstatement"},
+ 8:{B:"Reversal",C:"Reversal",D:"Reversal"},
+ 9:{A:"Literal trap",C:"Detail for main idea",D:"Half-right"},
+ 10:{A:"Unsupported inference",B:"Reversal",C:"Literal trap"},
+ 11:{B:"Reversal",C:"Literal trap",D:"Unsupported inference"},
+ 12:{A:"Unsupported inference",B:"Overstatement",D:"Literal trap"},
+ 13:{A:"Tone misread",C:"Tone misread",D:"Tone misread"},
+ 14:{A:"Literal trap",B:"Overstatement",C:"Unsupported inference"},
+ 31:{B:"Keyword trap",C:"Reversal",D:"Unsupported inference"},
+ 32:{A:"Vocabulary fit",C:"Vocabulary fit",D:"Vocabulary fit"},
+ 33:{A:"Reversal",B:"Half-right",C:"Keyword trap"},
+ 34:{B:"Half-right",C:"Vocabulary fit",D:"Vocabulary fit"},
+ 35:{A:"Reversal",B:"Reversal",D:"Unsupported inference"},
+ 36:{A:"Reversal",C:"Reversal",D:"Half-right"},
+ 37:{A:"Reversal",B:"Literal trap",C:"Reversal"},
+ 38:{B:"Unsupported inference",C:"Reversal",D:"Half-right"}
+};
+function errorCategory(q,picked){
+  if(picked==null || picked===q.ans) return null;
+  if(TRAP_OF[q.n]) return TRAP_OF[q.n][picked] || "Unsupported inference";
+  if(q.stim==="cloze") return "Sequence / cohesion";
+  if(q.stim==="matching") return "Idea matching";
+  if(q.stim==="wordcloze") return "Vocabulary fit";
+  return "Unsupported inference";
+}
+const ERRORS={
+ "Half-right":{c:"#2f7ec4",tip:"You picked a true detail that did not answer the exact question. Re-read the stem and ask what is actually being asked before choosing."},
+ "Literal trap":{c:"#7a5bb5",tip:"You answered the surface meaning and missed what the line implies. Ask what it suggests, not just what it says."},
+ "Overstatement":{c:"#b5562b",tip:"You chose an option pushed too far. Watch for always, never, all, cruel; the text rarely commits that hard."},
+ "Reversal":{c:"#c0392b",tip:"You picked the opposite of the text, worded to sound familiar. Check the option actually agrees with the passage."},
+ "Unsupported inference":{c:"#d98324",tip:"The option sounds possible, but the text does not provide enough evidence. Prove every part of the answer from the passage."},
+ "Detail for main idea":{c:"#4d7c8a",tip:"You chose a real detail when the question asked for the whole text. Test the option against every paragraph or extract."},
+ "Keyword trap":{c:"#8b5f9e",tip:"A familiar word pulled you toward the wrong answer. Match the full idea and sentence function, not one repeated word."},
+ "Tone misread":{c:"#a65a64",tip:"You misread the writer's emotional stance. Name the tone, then prove it with two separate words or images."},
+ "Vocabulary fit":{c:"#6b7280",tip:"The word does not fit the grammar, collocation or exact context. Read the completed sentence aloud and test all three."},
+ "Sequence / cohesion":{c:"#2a9d6f",tip:"The sentence does not link both sides of the gap. Check reference words, chronology and cause before choosing."},
+ "Idea matching":{c:"#287271",tip:"You matched the shared topic instead of the exact claim. Reduce each extract to a short fingerprint and compare those."}
+};
+const SKILL_TIP={
+ "Main idea & theme":"Ask what the whole text is really about, not one striking detail.",
+ "Purpose & viewpoint":"Ask why the writer wrote this and what they think of the subject.",
+ "Tone & attitude":"Name the feeling with one word you can point to in the text.",
+ "Inference":"Answer only from what the text supports; never add outside knowledge.",
+ "Effect of language":"Ask what a phrase or image does, not just what it literally says.",
+ "Text structure":"Track how the text changes from start to finish, and find the turn.",
+ "Cohesion & sentence logic":"For each gap, read the sentence before and after, and match the link, not the keyword.",
+ "Synthesis across texts":"Match the exact idea asked for, not the shared topic, and check every extract.",
+ "Vocabulary in context":"Work out the word's meaning from the sentence around it, not a memorised definition."
+};
+
+/* ---------------- state ---------------- */
+let cur=0;
+const answers={};
+const flags=new Set();
+let secondsLeft=45*60;
+let timerId=null, started=false, currentStim=null, finished=false;
+const $=id=>document.getElementById(id);
+
+/* ---------------- rendering ---------------- */
+function renderStim(q){
+  if(currentStim!==q.stim){
+    $("stim").innerHTML=STIM[q.stim];
+    $("stim").scrollTop=0;
+    currentStim=q.stim;
+  }
+  if(q.stim==="cloze" || q.stim==="wordcloze"){
+    document.querySelectorAll("#stim .gap").forEach(g=>{
+      g.classList.toggle("active", Number(g.dataset.g)===q.gap);
+    });
+  }
+}
+function stemHTML(s){ return s.replace(/"([^"]+)"/g, '<span class="qq">&ldquo;$1&rdquo;</span>'); }
+function renderQuestion(){
+  const q=Q[cur];
+  renderStim(q);
+  $("qnum").textContent="Question "+q.n+" of "+Q.length;
+  $("qstem").innerHTML=stemHTML(q.stem);
+  const wrap=$("opts"); wrap.innerHTML="";
+  q.opts.forEach(o=>{
+    const b=document.createElement("button");
+    b.className="opt"+(answers[q.n]===o.l?" sel":"");
+    b.setAttribute("role","radio");
+    b.setAttribute("aria-checked",answers[q.n]===o.l?"true":"false");
+    b.innerHTML='<span class="badge">'+o.l+'</span><span class="otext">'+o.t+'</span>';
+    b.onclick=()=>{ if(finished) return; answers[q.n]=o.l; renderQuestion(); renderNav(); updateProgress(); };
+    wrap.appendChild(b);
+  });
+  $("flagBtn").classList.toggle("on",flags.has(q.n));
+  $("prevBtn").disabled = cur===0;
+  $("nextBtn").textContent = cur===Q.length-1 ? "Review" : "Next";
+  renderNav();
+}
+function renderNav(){
+  const w=$("navwrap"); w.innerHTML="";
+  Q.forEach((q,i)=>{
+    const b=document.createElement("button");
+    b.className="navbtn"+(answers[q.n]?" answered":"")+(i===cur?" current":"")+(flags.has(q.n)?" flagged":"");
+    b.textContent=q.n;
+    b.title="Question "+q.n+(answers[q.n]?" (answered)":"")+(flags.has(q.n)?" (flagged)":"");
+    b.onclick=()=>{ cur=i; renderQuestion(); };
+    w.appendChild(b);
+  });
+}
+function updateProgress(){ $("progFill").style.width=(Object.keys(answers).length/Q.length*100)+"%"; }
+
+/* ---------------- navigation ---------------- */
+$("prevBtn").onclick=()=>{ if(cur>0){cur--;renderQuestion();} };
+$("nextBtn").onclick=()=>{ if(cur<Q.length-1){cur++;renderQuestion();} else openConfirm(); };
+$("flagBtn").onclick=()=>{ const n=Q[cur].n; flags.has(n)?flags.delete(n):flags.add(n); renderQuestion(); };
+
+/* ---------------- timer ---------------- */
+function fmt(s){const m=Math.floor(s/60),x=s%60;return m+":"+String(x).padStart(2,"0");}
+function tick(){
+  secondsLeft--;
+  $("timeText").textContent=fmt(Math.max(secondsLeft,0));
+  if(secondsLeft<=300) $("timer").classList.add("warn");
+  if(secondsLeft<=0){ clearInterval(timerId); finish(); }
+}
+
+/* ---------------- start / finish ---------------- */
+$("beginBtn").onclick=()=>{
+  $("startOverlay").classList.add("hidden");
+  started=true;
+  renderQuestion(); updateProgress();
+  timerId=setInterval(tick,1000);
+};
+function openConfirm(){
+  const unanswered=Q.length-Object.keys(answers).length;
+  $("confirmSub").textContent = unanswered===0
+    ? "You have answered all "+Q.length+" questions."
+    : "You still have "+unanswered+" question"+(unanswered>1?"s":"")+" unanswered.";
+  $("confirmOverlay").classList.remove("hidden");
+}
+function showResults(){
+  $("resultsOverlay").classList.remove("hidden");
+  $("resultsOverlay").querySelector(".card").scrollTop=0;
+}
+$("finishBtn").onclick=()=>{ finished ? showResults() : openConfirm(); };
+$("keepGoingBtn").onclick=()=>$("confirmOverlay").classList.add("hidden");
+$("confirmFinishBtn").onclick=()=>{ $("confirmOverlay").classList.add("hidden"); finish(); };
+
+function finish(){
+  if(timerId) clearInterval(timerId);
+  let score=0; const bySec={}; const skillStat={}; const errCount={};
+  Q.forEach(q=>{
+    bySec[q.sec]=bySec[q.sec]||{c:0,t:0}; bySec[q.sec].t++;
+    const sk=SKILL_OF[q.n];
+    skillStat[sk]=skillStat[sk]||{c:0,t:0}; skillStat[sk].t++;
+    const ok=answers[q.n]===q.ans;
+    if(ok){ score++; bySec[q.sec].c++; skillStat[sk].c++; }
+    else { const cat=errorCategory(q,answers[q.n]); errCount[cat]=(errCount[cat]||0)+1; }
+  });
+  const totalWrong=Q.length-score;
+  const name=($("nameInput").value||"").trim();
+  $("resultsWho").textContent = (name?name+": ":"")+"Reading practice paper";
+  $("scoreBig").innerHTML=score+'<small>/'+Q.length+'</small>';
+  $("scorePct").textContent=Math.round(score/Q.length*100)+"% correct";
+  const used=45*60-secondsLeft;
+  $("scoreTime").textContent="Time used: "+fmt(Math.max(used,0));
+
+  const bb=$("brkBox"); bb.innerHTML="";
+  Object.keys(bySec).forEach(s=>{
+    bb.insertAdjacentHTML("beforeend",'<div class="b-lbl">'+s+'</div><div class="b-val">'+bySec[s].c+" / "+bySec[s].t+'</div>');
+  });
+
+  const skBox=$("skillBox"); skBox.innerHTML="";
+  const skills=Object.keys(skillStat).map(s=>({s, ...skillStat[s], pct:skillStat[s].c/skillStat[s].t}))
+                     .sort((a,b)=>a.pct-b.pct || b.t-a.t);
+  skills.forEach(x=>{
+    const col = x.pct>=0.8?"var(--correct)" : x.pct>=0.5?"#c9871f" : "var(--wrong)";
+    skBox.insertAdjacentHTML("beforeend",
+      '<div class="skillrow"><div class="sl">'+x.s+'</div>'+
+      '<div class="skilltrack"><div class="skillfill" style="width:'+Math.round(x.pct*100)+'%;background:'+col+'"></div></div>'+
+      '<div class="sv"><b>'+x.c+'/'+x.t+'</b> &middot; '+Math.round(x.pct*100)+'%</div></div>');
+  });
+
+  const apBox=$("autopsyBox"); apBox.innerHTML="";
+  if(totalWrong===0){
+    apBox.innerHTML='<div class="no-errors">No errors to autopsy. Clean sweep.</div>';
+  } else {
+    const slices=Object.keys(errCount).map(k=>({label:k,value:errCount[k],color:(ERRORS[k]||{}).c||"#888"})).sort((a,b)=>b.value-a.value);
+    const r=58, w=20, C=2*Math.PI*r, cx=75, cy=75; let off=0, circles="";
+    slices.forEach(s=>{
+      const len=s.value/totalWrong*C;
+      circles+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+s.color+'" stroke-width="'+w+'" stroke-dasharray="'+len+' '+(C-len)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 '+cx+' '+cy+')"></circle>';
+      off+=len;
+    });
+    let legend=""; slices.forEach(s=>{ legend+='<div class="lg"><span class="sw" style="background:'+s.color+'"></span>'+s.label+'<span class="lc">'+s.value+'</span></div>'; });
+    apBox.innerHTML='<div class="autopsy"><div class="donut-wrap"><svg viewBox="0 0 150 150" width="150" height="150">'+circles+
+      '</svg><div class="donut-center"><span class="dn">'+totalWrong+'</span><span class="dl">'+(totalWrong===1?"error":"errors")+'</span></div></div><div class="legend">'+legend+'</div></div>';
+  }
+
+  const fBox=$("focusBox"); fBox.innerHTML=""; const items=[];
+  if(score>=Q.length-1){ items.push({cls:"good",t:"Excellent control",b:"Almost nothing to fix on this paper. To keep stretching, redo it under a tighter clock or move to a harder set."}); }
+  const topErr=Object.keys(errCount).sort((a,b)=>errCount[b]-errCount[a])[0];
+  if(topErr){ items.push({cls:"",t:"Biggest leak: "+topErr+" ("+errCount[topErr]+" of "+totalWrong+" "+(totalWrong===1?"error":"errors")+")",b:(ERRORS[topErr]||{}).tip||""}); }
+  const weak=skills.filter(x=>x.t>=2 && x.pct<0.75).slice(0,2);
+  weak.forEach(x=>{ items.push({cls:"warn",t:"Focus skill: "+x.s+" ("+x.c+"/"+x.t+")",b:SKILL_TIP[x.s]||""}); });
+  if(items.length===0){ items.push({cls:"good",t:"Solid all round",b:"No single weak area stands out. Keep practising mixed papers to hold the standard."}); }
+  items.forEach(it=>{ fBox.insertAdjacentHTML("beforeend",'<div class="fitem '+it.cls+'"><div class="ft">'+it.t+'</div><div class="fb">'+it.b+'</div></div>'); });
+
+  const rb=$("reviewBox"); rb.innerHTML="";
+  const wrong=Q.filter(q=>answers[q.n]!==q.ans);
+  if(wrong.length===0){
+    rb.innerHTML='<div class="no-errors">Every question correct. Nothing to review.</div>';
+  } else {
+    rb.insertAdjacentHTML("beforeend",'<div class="rev-nums">Review: '+wrong.map(q=>q.n).join(", ")+'</div>');
+    wrong.forEach(q=>{
+      const yours=answers[q.n]||null; const cat=errorCategory(q,yours);
+      rb.insertAdjacentHTML("beforeend",
+        '<div class="rev-row"><span class="rev-n">Q'+q.n+'</span>'+
+        '<span class="chip skill">'+SKILL_OF[q.n]+'</span>'+(cat?'<span class="chip err">'+cat+'</span>':'')+
+        '<span class="rev-ans">You: <b class="no">'+(yours||"none")+'</b> &nbsp;Correct: <b class="ok">'+q.ans+'</b></span>'+
+        '<div class="rev-outcome">Outcome: '+OUTCOME_OF[q.n]+' '+q.exp+'</div></div>');
+    });
+  }
+
+  finished=true;
+  $("finishBtn").textContent="Results";
+  showResults();
+
+  /* ===== Send results to the portal backend ===== */
+  const urlParams = new URLSearchParams(window.location.search);
+  const studentKey = urlParams.get('student') || ($("nameInput").value||"").trim() || "unknown";
+  const paperId    = urlParams.get('paper')   || "reading-mock-4";
+  const wrongJson = Q.filter(q => answers[q.n] !== q.ans).map(q => ({
+    q:q.n, picked:answers[q.n]||null, correct:q.ans, skill:SKILL_OF[q.n],
+    outcome:OUTCOME_OF[q.n], issue:errorCategory(q,answers[q.n]), explanation:q.exp
+  }));
+  callBackend("submitReading", {
+    nameKey: studentKey, paperId: paperId, score: score, outOf: Q.length,
+    timeUsedSec: Math.max(used,0), perSkillJson: skillStat, answersJson: answers, wrongJson: wrongJson
+  }).then(()=>console.log("Saved")).catch(err=>console.error("Save failed:", err));
+}
+
+function textFor(q,letter){ const o=q.opts.find(o=>o.l===letter); return o?o.t:""; }
+$("backToDashBtn").onclick=()=>{
+  const k=new URLSearchParams(window.location.search).get('student');
+  window.location.href = "index.html" + (k ? ("?student="+encodeURIComponent(k)+"&done=reading") : "");
+};
+$("restartBtn").onclick=()=>location.reload();
+
+document.addEventListener("keydown",e=>{
+  if(!started) return;
+  if(!$("resultsOverlay").classList.contains("hidden")) return;
+  if(!$("confirmOverlay").classList.contains("hidden")) return;
+  if(e.key==="ArrowRight"){ if(cur<Q.length-1){cur++;renderQuestion();} }
+  else if(e.key==="ArrowLeft"){ if(cur>0){cur--;renderQuestion();} }
+  else {
+    if(finished) return;
+    const k=e.key.toUpperCase(); const q=Q[cur];
+    if(q.opts.some(o=>o.l===k)){ answers[q.n]=k; renderQuestion(); renderNav(); updateProgress(); }
+  }
+});
+</script>
+</body>
+</html>
