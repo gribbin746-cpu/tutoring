@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selective High School Placement Test (Practice): Reading 5</title>
+<style>
+:root{
+  --navy:#002664; --navy2:#06376b; --blue:#1a73c0; --blue-soft:#e8f1fb;
+  --bg:#eceff3; --panel:#ffffff; --border:#d3d9e1; --line:#e6eaef;
+  --ink:#1b1e23; --muted:#5c6672; --correct:#1d7a3a; --correct-bg:#e7f4ec;
+  --wrong:#c0392b; --wrong-bg:#fbeceb; --flag:#d9822b; --flag-bg:#fcefe0;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45}
+button{font-family:inherit}
+.hidden{display:none!important}
+header{height:54px;background:var(--navy);color:#fff;display:flex;align-items:center;
+  justify-content:space-between;padding:0 16px;position:fixed;top:0;left:0;right:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand .mark{width:24px;height:24px;flex:0 0 auto;color:#fff;opacity:.95}
+.brand .mark svg{width:24px;height:24px;display:block}
+.brand .ttl{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand .pill{background:rgba(255,255,255,.16);padding:2px 9px;border-radius:999px;font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;flex:0 0 auto}
+.hright{display:flex;align-items:center;gap:12px}
+.timer{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);padding:6px 12px;
+  border-radius:8px;font-variant-numeric:tabular-nums;font-weight:600;font-size:15px}
+.timer.warn{background:#7a1f1a;color:#ffd9d4}
+.timer svg{width:15px;height:15px}
+.btn{border:0;border-radius:8px;padding:9px 16px;font-weight:600;font-size:14px;cursor:pointer}
+.btn-finish{background:#fff;color:var(--navy)}
+.btn-finish:hover{background:#eaf0f8}
+.progbar{position:fixed;top:54px;left:0;right:0;height:3px;background:var(--line);z-index:19}
+.progbar>i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+main{position:fixed;top:57px;bottom:64px;left:0;right:0;display:flex}
+.pane{height:100%;overflow:auto;background:var(--panel)}
+.stim{flex:1 1 56%;border-right:1px solid var(--border);padding:26px 30px}
+.qpane{flex:1 1 44%;padding:22px 28px}
+.stim h2{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 14px}
+.stim .extract-head{font-family:var(--serif);font-style:italic;font-weight:700;font-size:16px;margin:20px 0 8px}
+.stim .work-title{font-family:var(--serif);font-weight:700;font-size:20px;margin:2px 0 12px}
+.stim p,.stim .stanza{font-family:var(--serif);font-size:16px;line-height:1.62;margin:0 0 13px;color:#23272d}
+.stanza{white-space:pre-line}
+.gap{display:inline-block;min-width:30px;text-align:center;border-bottom:2px solid #b9c2cd;
+  color:var(--muted);font-family:var(--sans);font-size:13px;font-weight:700;padding:0 4px;border-radius:3px}
+.gap.active{background:#fff3cf;border-bottom-color:var(--flag);color:#7a4d12}
+.ex-block{margin:0 0 18px;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.ex-block .lbl{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--blue);margin:0 0 4px}
+.qtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.qnum{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.flagbtn{display:flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;
+  color:var(--muted);border-radius:7px;padding:6px 11px;font-size:13px;font-weight:600;cursor:pointer}
+.flagbtn svg{width:13px;height:13px}
+.flagbtn.on{background:var(--flag-bg);border-color:var(--flag);color:#9a5713}
+.qstem{font-size:16.5px;font-weight:600;line-height:1.5;margin:10px 0 16px}
+.qstem .qq{font-style:italic;font-weight:600}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;
+  border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;margin:0 0 10px;cursor:pointer;
+  font-size:15px;line-height:1.45;color:var(--ink);transition:border-color .12s,background .12s}
+.opt:hover{border-color:#9db8d6;background:#fafcff}
+.opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid #b6c0cc;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .badge{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt:focus-visible{outline:3px solid #9bc2ec;outline-offset:2px}
+.opt .otext{padding-top:2px}
+footer{height:64px;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;padding:0 16px;z-index:20}
+.nav-side{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.navwrap{flex:1 1 auto;overflow-x:auto;display:flex;gap:6px;padding:4px 2px;justify-content:center}
+.navbtn{position:relative;flex:0 0 auto;width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);
+  background:#fff;color:var(--ink);font-size:13px;font-weight:600;cursor:pointer}
+.navbtn.answered{background:var(--navy);border-color:var(--navy);color:#fff}
+.navbtn.current{outline:3px solid #9bc2ec;outline-offset:1px;border-color:var(--blue)}
+.navbtn.flagged::after{content:"";position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;
+  background:var(--flag);border:1.5px solid #fff}
+.btn-nav{border:1px solid var(--border);background:#fff;border-radius:8px;padding:9px 15px;font-weight:600;
+  font-size:14px;cursor:pointer;color:var(--ink)}
+.btn-nav:hover:not(:disabled){background:#f1f4f8}
+.btn-nav:disabled{opacity:.4;cursor:default}
+.btn-nav.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn-nav.primary:hover{background:var(--navy2)}
+.overlay{position:fixed;inset:0;background:rgba(12,20,33,.55);z-index:40;display:flex;
+  align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:14px;max-width:680px;width:100%;max-height:90vh;overflow:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.card .cap{background:var(--navy);color:#fff;padding:22px 28px}
+.card .cap h1{margin:0 0 4px;font-size:21px}
+.card .cap p{margin:0;opacity:.85;font-size:14px}
+.card .body{padding:24px 28px}
+.card .body h3{margin:18px 0 8px;font-size:14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.card ul{margin:0 0 4px;padding-left:20px}
+.card li{margin:0 0 7px;font-size:14.5px}
+.field{display:flex;gap:10px;align-items:center;margin:16px 0 4px}
+.field input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;font-family:inherit}
+.start-actions{display:flex;justify-content:flex-end;gap:10px;padding:18px 28px 24px}
+.btn-primary{background:var(--navy);color:#fff;border:0;border-radius:9px;padding:12px 22px;font-weight:700;font-size:15px;cursor:pointer}
+.btn-primary:hover{background:var(--navy2)}
+.btn-ghost{background:#fff;border:1px solid var(--border);border-radius:9px;padding:12px 20px;font-weight:600;font-size:15px;cursor:pointer}
+.scorerow{display:flex;gap:18px;align-items:center;margin:4px 0 18px}
+.scorebig{font-size:46px;font-weight:800;color:var(--navy);line-height:1}
+.scorebig small{font-size:20px;color:var(--muted);font-weight:600}
+.scorepct{font-size:15px;color:var(--muted)}
+.brk{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-size:14.5px;margin:0 0 8px}
+.brk .b-lbl{color:var(--muted)}
+.brk .b-val{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.results-actions{display:flex;gap:10px;justify-content:flex-end;padding:6px 28px 24px}
+.skillrow{display:grid;grid-template-columns:175px 1fr 62px;gap:10px;align-items:center;margin:0 0 9px}
+.skillrow .sl{font-size:13.5px;color:#2b323b}
+.skilltrack{height:11px;background:#eef1f5;border-radius:6px;overflow:hidden}
+.skillfill{height:100%;border-radius:6px;transition:width .4s}
+.skillrow .sv{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.skillrow .sv b{color:#2b323b}
+.autopsy{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.donut-wrap{position:relative;width:150px;height:150px;flex:0 0 auto}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-center .dn{font-size:26px;font-weight:800;color:var(--navy);line-height:1}
+.donut-center .dl{font-size:11px;color:var(--muted);letter-spacing:.03em}
+.legend{flex:1 1 200px;min-width:200px}
+.legend .lg{display:flex;align-items:center;gap:9px;margin:0 0 7px;font-size:13.5px}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto}
+.legend .lc{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;color:#2b323b}
+.no-errors{background:var(--correct-bg);color:var(--correct);border-radius:10px;padding:14px 16px;font-weight:600;font-size:14.5px}
+.focus{display:flex;flex-direction:column;gap:9px}
+.focus .fitem{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:9px;padding:11px 13px;background:#fbfcfe}
+.focus .fitem.warn{border-left-color:var(--flag)}
+.focus .fitem.good{border-left-color:var(--correct);background:var(--correct-bg)}
+.focus .ft{font-weight:700;font-size:14px;margin-bottom:2px}
+.focus .fb{font-size:13.5px;color:#3a434e}
+.chip{font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.01em}
+.chip.skill{background:#eef2f7;color:#41506a}
+.chip.err{background:var(--wrong-bg);color:var(--wrong)}
+.rev-nums{font-size:13.5px;color:#2b323b;background:#f3f6fa;border-radius:8px;padding:9px 12px;margin:0 0 12px}
+.rev-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--line);
+  border-left:4px solid var(--wrong);border-radius:9px;padding:9px 12px;margin:0 0 8px}
+.rev-row .rev-n{font-weight:800;color:var(--navy);font-size:14px;min-width:34px}
+.rev-row .rev-ans{margin-left:auto;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rev-row .rev-ans b.no{color:var(--wrong)}
+.rev-row .rev-ans b.ok{color:var(--correct)}
+.rev-explanation{width:100%;padding-left:42px;font-size:12.5px;color:var(--muted)}
+@media (max-width:880px){
+  main{flex-direction:column;bottom:96px}
+  .stim{flex:0 0 auto;max-height:42vh;border-right:0;border-bottom:1px solid var(--border)}
+  .qpane{flex:1 1 auto}
+  footer{height:auto;flex-wrap:wrap;padding:8px 10px;gap:8px}
+  .navwrap{order:3;width:100%;justify-content:flex-start}
+  .brand .ttl{max-width:44vw}
+  .skillrow{grid-template-columns:130px 1fr 58px}
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="startOverlay">
+  <div class="card">
+    <div class="cap">
+      <h1>Selective High School Placement Test</h1>
+      <p>Reading &middot; Advanced practice paper 5 &middot; 45 minutes &middot; 38 responses</p>
+    </div>
+    <div class="body">
+      <p>This is an advanced paper with five parts: paired fiction, a poem, a sentence gap text, four extracts on one theme, and a vocabulary cloze. For each question, choose the one answer best supported by the text.</p>
+      <h3>How it works</h3>
+      <ul>
+        <li>Read the text on the left and answer the question on the right.</li>
+        <li>Use <b>Next</b> and <b>Previous</b>, or the number buttons at the bottom, to move around.</li>
+        <li><b>Flag</b> a question to come back to it. You can change any answer before you finish.</li>
+        <li>The timer runs for 45 minutes. The paper submits itself when time runs out.</li>
+        <li>You will not lose marks for a wrong answer, so attempt all 38.</li>
+      </ul>
+      <div class="field">
+        <input id="nameInput" type="text" placeholder="Name (optional)" autocomplete="off">
+      </div>
+    </div>
+    <div class="start-actions">
+      <button class="btn-primary" id="beginBtn">Begin test</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="confirmOverlay">
+  <div class="card" style="max-width:460px">
+    <div class="cap"><h1>Finish the test?</h1><p id="confirmSub">You have answered all questions.</p></div>
+    <div class="start-actions">
+      <button class="btn-ghost" id="keepGoingBtn">Keep working</button>
+      <button class="btn-primary" id="confirmFinishBtn">Finish and mark</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="resultsOverlay">
+  <div class="card">
+    <div class="cap"><h1>Your results</h1><p id="resultsWho">Reading practice paper</p></div>
+    <div class="body">
+      <div class="scorerow">
+        <div class="scorebig" id="scoreBig">0<small>/38</small></div>
+        <div>
+          <div class="scorepct" id="scorePct"></div>
+          <div class="scorepct" id="scoreTime"></div>
+        </div>
+      </div>
+      <h3>By section</h3>
+      <div class="brk" id="brkBox"></div>
+      <h3>Skill mastery</h3>
+      <div id="skillBox"></div>
+      <h3>Error autopsy</h3>
+      <div id="autopsyBox"></div>
+      <h3>What to work on next</h3>
+      <div id="focusBox"></div>
+      <h3>Questions to review</h3>
+      <div id="reviewBox"></div>
+    </div>
+   <div class="results-actions">
+      <button class="btn-ghost" id="restartBtn">Restart test</button>
+      <button class="btn-primary" id="backToDashBtn">Back to dashboard</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="brand">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10.6 5.2 8.4 4.5 5.5 4.5C4.7 4.5 4 5.2 4 6v11.5c0 .6.5 1 1.1 1c2.7-.2 4.8.5 6.9 2c2.1-1.5 4.2-2.2 6.9-2c.6 0 1.1-.4 1.1-1V6c0-.8-.7-1.5-1.5-1.5c-2.9 0-5.1.7-6.5 2z"/><path d="M12 6.5v12"/></svg></span>
+    <div class="ttl">Selective High School Placement Test</div>
+    <div class="pill">Reading</div>
+  </div>
+  <div class="hright">
+    <div class="timer" id="timer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg>
+      <span id="timeText">45:00</span>
+    </div>
+    <button class="btn btn-finish" id="finishBtn">Finish</button>
+  </div>
+</header>
+<div class="progbar"><i id="progFill"></i></div>
+
+<main>
+  <section class="pane stim" id="stim"></section>
+  <section class="pane qpane" id="qpane">
+    <div class="qtop">
+      <div class="qnum" id="qnum">Question 1 of 38</div>
+      <button class="flagbtn" id="flagBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg>
+        <span>Flag</span>
+      </button>
+    </div>
+    <div class="qstem" id="qstem"></div>
+    <div id="opts"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="nav-side"><button class="btn-nav" id="prevBtn">Previous</button></div>
+  <div class="navwrap" id="navwrap"></div>
+  <div class="nav-side"><button class="btn-nav primary" id="nextBtn">Next</button></div>
+</footer>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
+async function callBackend(action, payload={}){
+  const reqBody=JSON.stringify({action, payload});
+  const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:reqBody,redirect:"follow"});
+  const parsed=await res.json();
+  if(!parsed.success) throw new Error(parsed.error);
+  return parsed.data;
+}
+
+/* ---------------- stimulus content ---------------- */
+const STIM = {
+ fiction:`<h2>Read the two extracts, then answer questions 1 to 8</h2>
+<div class="extract-head">Extract A: from The Last Word</div>
+<p>The new plaque was covered in navy cloth, though everyone already knew what it said. <i>Recovered for public use by Councillor Hart.</i> Sonia stood at the edge of the gathering with a copy of her grandfather’s survey notebook folded inside her coat. One page showed the same hillside path, down to the bend around the split boulder. The date at the top was 1956.</p>
+<p>Recovered was a slippery word. Hart might have been the first person to report the overgrown track to the council. He had certainly found the money to clear it. Sonia could interrupt his speech, but a copied page and a family story would let him call the matter a misunderstanding.</p>
+<p>When Hart invited questions, Sonia raised her hand. She asked why the oldest steps were worn at their inner edges, and why three stone markers stood beyond the route shown on the council map. Hart glanced towards the hill. He suggested that rain had shaped the steps and that the markers were recent. An elderly man near the front said the quarry workers had used them before the lower road existed. People who had been watching Hart began looking at the track.</p>
+<p>The cloth came away and the plaque remained unchanged. Sonia had not secured her grandfather’s name, and perhaps he had inherited the route from someone else. Still, Hart’s sentence no longer closed the story. An unsettled question seemed more honest than replacing one certain owner with another.</p>
+<div class="extract-head">Extract B: from The Silver Cup</div>
+<p>I entered the garden competition because my neighbour insisted. I had spent two years cutting back lantana, rebuilding the herb beds and coaxing the old pear tree into fruit. Yet the bones of the garden belonged to Mrs Dwyer, who had rented the cottage before me. She had laid the brick paths and directed rainwater through shallow stone channels. By the time I arrived, neglect had hidden most of her design, but it had not erased it.</p>
+<p>The judges praised my planning. At the ceremony, I thanked them and then described what Mrs Dwyer had made. The chairman smiled as though I had offered a charming historical detail. “We judge the garden before us,” he said, and handed me the cup.</p>
+<p>I took it to Mrs Dwyer at the nursing home. She refused to touch it. “I left you a wilderness,” she said. “You made it a garden again.” Her answer was generous and also incomplete. I had done real work, but not work that began with me.</p>
+<p>The cup now sits on my kitchen shelf with its engraved side turned towards the wall. I am not ashamed of winning it. Facing outwards, however, the inscription makes a complicated inheritance sound like a single afternoon’s victory.</p>`,
+ poem:`<h2>Read the poem, then answer questions 9 to 14</h2>
+<div class="work-title">Weather Glass</div>
+<div class="stanza">Each morning Mother tapped the glass
+that hung beside the pantry door.
+The needle travelled when it pleased
+and seldom kept its word till noon.</div>
+<div class="stanza">Still, rain rearranged the house:
+sheets came down, the hens stayed in,
+a saucepan waited under the leak.
+She read the dial, then made the day.</div>
+<div class="stanza">After she died, it promised fair
+through seven nights of hammering rain.
+I took it from its hook, surprised
+by the clean square left on the wall.</div>
+<div class="stanza">By dusk I had put it back.
+Now, leaving, I tap the wooden frame.
+I do not ask it for the weather.
+The small knock lets the morning in.</div>`,
+ cloze:`<h2>Read the text, then answer questions 15 to 20. Choose the sentence from A to G that fits each gap. One sentence is not needed.</h2>
+<div class="work-title">Making Room for a River</div>
+<p>For much of the last century, flood control often meant forcing rivers into narrow channels between high walls. Water was expected to pass through quickly, much as waste water moves through a drain. <span class="gap" data-g="15">15</span> A river does not end where one town’s levee ends.</p>
+<p>When a channel is narrowed, the same volume of water must move through less space. Its level may rise and its current may strengthen. <span class="gap" data-g="16">16</span> Protection in one place can therefore increase pressure elsewhere.</p>
+<p>Some engineers now give rivers access to selected parts of their former floodplains. Banks are lowered, side channels are reopened and buildings are moved from land most likely to flood. <span class="gap" data-g="17">17</span> Roads and homes remain protected while fields nearer the river take water during the highest flows.</p>
+<p>Such plans can be difficult for landholders, since land used for farming in dry years may be needed for water in wet ones. <span class="gap" data-g="18">18</span> Without that arrangement, the cost of protecting a town may fall unfairly on a few families.</p>
+<p>In one trial, grazing continued on the floodplain after new channels were dug. Walking paths crossed it and native grasses were planted beside the water. <span class="gap" data-g="19">19</span> Only during major floods did the area become part of the river’s temporary path.</p>
+<p>This approach changes the meaning of failure. A wall is judged successful when water stays out. <span class="gap" data-g="20">20</span> The difficult question is no longer whether flooding occurred, but whether it occurred in the place prepared to receive it.</p>`,
+ matching:`<h2>Read the four extracts about keeping records, then answer questions 21 to 30</h2>
+<div class="ex-block"><div class="lbl">Extract A</div><p>People sometimes treat a field notebook as a window through which the past can be viewed without distortion. It is closer to a frame. The observer decides where to stand, what to count and what not to mention. The record still has value, provided its method is clear. I write observations in ink and guesses in pencil. I measure before memory rounds a distance into “about twenty metres”. Most importantly, I record what I expected to find. An expectation left unstated can quietly disguise itself as an observation.</p></div>
+<div class="ex-block"><div class="lbl">Extract B</div><p>A nervous speaker often fills every pause, and an inexperienced interviewer is tempted to help. In oral history, that help can steal the answer. I ask a question, then wait. The silence may be the moment in which a tidy family story gives way to a difficult memory. When the interview is stored, I keep the recording as well as the transcript. A transcript preserves words, but not the laugh that weakens a boast or the long pause before a name. Voice is part of the evidence.</p></div>
+<div class="ex-block"><div class="lbl">Extract C</div><p>My most useful notebooks are also the dullest. Every Thursday for twenty seven years, I recorded the first flowering date of six plants near the creek. Most entries say nothing happened. Taken alone, each page is trivial. Together, the pages reveal that several species now flower earlier than they once did. A spectacular sighting may make a naturalist memorable, but repeated ordinary observations make change measurable. The record gained value because the routine continued long after its novelty had gone.</p></div>
+<div class="ex-block"><div class="lbl">Extract D</div><p>Saving a file is an event; preserving it is a practice. A hard drive may contain a million photographs, yet without dates, names and descriptions most will become unfindable. Even carefully labelled files depend on software and storage devices that will not last forever. Archives must copy material, check for damage and move it into usable formats. Digital abundance can create the appearance of safety while making neglect harder to notice. Evidence that cannot be found or opened has survived only in the narrowest sense.</p></div>`,
+ wordcloze:`<h2>Read the passage, then answer questions 31 to 38. For each gap, choose the word that best fits.</h2>
+<div class="work-title">The Night Survey</div>
+<p>At first, several residents regarded the ecologist’s proposal as <span class="gap" data-g="31">31</span>. She claimed that glare near the creek disrupted moths and prevented anyone from seeing whether dimmer streets would still feel safe. The council approved a <span class="gap" data-g="32">32</span> trial. Lamps in two streets were <span class="gap" data-g="33">33</span> to a lower setting, while a third street remained unchanged for comparison. Volunteers counted insects and asked residents to <span class="gap" data-g="34">34</span> between inconvenience caused by the dimmer light and anxiety they had expected to feel. After several weeks, even shopkeepers who had objected began to <span class="gap" data-g="35">35</span> that the footpaths remained usable. Their <span class="gap" data-g="36">36</span> had not vanished; a fallen branch that resembled a crouching dog briefly renewed them. Still, most supported a <span class="gap" data-g="37">37</span> extension through summer. When moth numbers rose only beside the dimmed streets, the ecologist was not fully <span class="gap" data-g="38">38</span>, since rainfall had also changed. The result was promising, but it was not yet proof.</p>`
+};
+const CLOZE_OPTS = [
+ {l:"A",t:`During ordinary seasons, much of this ground still supports grazing or recreation.`},
+ {l:"B",t:`A narrow channel may protect one reach while sending faster water towards the next.`},
+ {l:"C",t:`Restored wetlands can also attract birds that disappeared when the banks were cleared.`},
+ {l:"D",t:`The aim is controlled freedom, with chosen areas allowed to store excess water.`},
+ {l:"E",t:`In this kind of project, temporary flooding can be evidence of success.`},
+ {l:"F",t:`Treating a river like a drain, however, ignores what happens beyond each wall.`},
+ {l:"G",t:`Agreements and payments can make that sacrifice deliberate rather than accidental.`}
+];
+const MATCH_OPTS = [{l:"A",t:`Extract A`},{l:"B",t:`Extract B`},{l:"C",t:`Extract C`},{l:"D",t:`Extract D`}];
+function ab(a,b,c,d){return [{l:"A",t:a},{l:"B",t:b},{l:"C",t:c},{l:"D",t:d}];}
+
+/* ---------------- questions ---------------- */
+const Q = [
+{n:1,sec:"Part 1: Fiction",stim:"fiction",stem:`Both extracts are mainly concerned with:`,opts:ab(`public honours being awarded to people who did not earn them.`,`family memories becoming reliable only when objects confirm every detail.`,`recognition feeling uneasy when an achievement has more than one maker.`,`old places being protected from any further change or public attention.`),ans:"C",exp:`Both narrators question simple ownership of work that was inherited, continued or rediscovered.`},
+{n:2,sec:"Part 1: Fiction",stim:"fiction",stem:`Why does Sonia ask questions instead of directly accusing Councillor Hart?`,opts:ab(`She can create doubt without claiming more certainty than her evidence allows.`,`She wants to protect Hart from embarrassment during the formal public ceremony.`,`She expects the quarry worker to defend her grandfather without prompting.`,`She needs to learn whether the council copied the notebook’s measurements.`),ans:"A",exp:`Her evidence challenges Hart’s certainty but cannot prove that her grandfather created the route.`},
+{n:3,sec:"Part 1: Fiction",stim:"fiction",stem:`People begin looking at the track rather than at Hart. This suggests that they:`,opts:ab(`have lost interest because the official ceremony is almost finished.`,`believe the quarry worker should receive sole credit for the route.`,`are searching for the stone markers Sonia has recently placed there.`,`have begun testing Hart’s story against evidence in the landscape.`),ans:"D",exp:`Attention shifts from Hart’s confident account to physical details that may contradict it.`},
+{n:4,sec:"Part 1: Fiction",stim:"fiction",stem:`Why does Sonia prefer an “unsettled question” to a corrected label?`,opts:ab(`She believes her grandfather definitely created every part of the route.`,`Replacing one exclusive claim with another could repeat the original mistake.`,`She thinks a public plaque should record questions instead of historical facts.`,`Allowing disagreement will make the lookout route more widely discussed.`),ans:"B",exp:`She recognises that even her grandfather may have inherited the route from earlier users.`},
+{n:5,sec:"Part 1: Fiction",stim:"fiction",stem:`Why does the narrator still feel entitled to some recognition?`,opts:ab(`The narrator paid to rebuild several paths that Mrs Dwyer had removed.`,`Mrs Dwyer formally transferred ownership of the garden design to the narrator.`,`The narrator restored the garden through two years of substantial work.`,`The neighbour proved that the judges already knew the garden’s history.`),ans:"C",exp:`The narrator genuinely restored the neglected garden, even though the work had earlier foundations.`},
+{n:6,sec:"Part 1: Fiction",stim:"fiction",stem:`What is the main effect of the chairman’s reply at the ceremony?`,opts:ab(`It confirms that the judges knew about Mrs Dwyer before choosing a winner.`,`It reassures the narrator that gardening prizes usually reward shared effort.`,`It implies that Mrs Dwyer’s original design was too damaged to deserve credit.`,`It avoids the question of inherited work by judging only the present garden.`),ans:"D",exp:`The chairman treats history as an interesting detail rather than part of the achievement.`},
+{n:7,sec:"Part 1: Fiction",stim:"fiction",stem:`The extracts differ most clearly because:`,opts:ab(`Sonia loosens another person’s claim, while the narrator qualifies a claim already awarded.`,`Sonia has complete written proof, while the narrator relies entirely on family memory.`,`Sonia wants public praise, while the narrator refuses to accept any recognition.`,`Sonia changes an official record, while the narrator returns the cup to its maker.`),ans:"A",exp:`Sonia challenges Hart indirectly, while the narrator reflects on a prize already received.`},
+{n:8,sec:"Part 1: Fiction",stim:"fiction",stem:`In both extracts, the plaque and the cup represent:`,opts:ab(`proof that official judges usually ignore evidence placed before them.`,`public symbols that reduce complicated histories to simple ownership.`,`valuable objects whose importance disappears once their history is known.`,`rewards that matter chiefly because they can be displayed to strangers.`),ans:"B",exp:`Each object presents a single name or winner where the true history is shared and uncertain.`},
+{n:9,sec:"Part 2: Poem",stim:"poem",stem:`The poem mainly explores how:`,opts:ab(`an unreliable instrument can gradually become accurate through repeated and careful use.`,`weather quietly controls the habits of every person within a household.`,`grief makes the speaker doubt memories that once seemed dependable.`,`a practical ritual can retain meaning after its practical value is lost.`),ans:"D",exp:`The speaker continues the mother’s gesture without trusting the weather glass.`},
+{n:10,sec:"Part 2: Poem",stim:"poem",stem:`The needle “seldom kept its word” suggests that it:`,opts:ab(`was difficult for the mother to read before the middle of the day.`,`is personified as an unreliable source of promises about the weather.`,`changed only when someone tapped the glass beside the pantry door.`,`gave correct forecasts that the household regularly chose to ignore.`),ans:"B",exp:`The phrase gives the faulty needle the behaviour of someone who breaks promises.`},
+{n:11,sec:"Part 2: Poem",stim:"poem",stem:`What is the main purpose of listing the sheets, hens and saucepan?`,opts:ab(`To show that the house was poorly maintained throughout the mother’s life.`,`To explain why the speaker later distrusts every forecast of bad weather.`,`To show how a forecast shaped several ordinary decisions around the house.`,`To suggest that the mother enjoyed storms more than calm conditions.`),ans:"C",exp:`The list shows the practical adjustments that followed the mother’s reading of the dial.`},
+{n:12,sec:"Part 2: Poem",stim:"poem",stem:`The “clean square” left on the wall mainly emphasises:`,opts:ab(`how long the weather glass had occupied a familiar place in the home.`,`how carefully the speaker cleaned the room after the mother’s death.`,`how little damage the weather glass had suffered during the week of storms.`,`how strongly the speaker wanted to replace it with a reliable instrument.`),ans:"A",exp:`The unmarked patch reveals the object’s long and settled presence in the household.`},
+{n:13,sec:"Part 2: Poem",stim:"poem",stem:`The tone of the final stanza is best described as:`,opts:ab(`embarrassed because the speaker repeats a habit known to be irrational.`,`affectionate but unsentimental about the ritual the speaker has inherited.`,`triumphant because the speaker has finally understood the mother’s predictions.`,`resentful because the speaker must continue caring for a useless possession.`),ans:"B",exp:`The speaker admits the glass is useless while quietly valuing the inherited gesture.`},
+{n:14,sec:"Part 2: Poem",stim:"poem",stem:`“The small knock lets the morning in” most strongly implies that the tap:`,opts:ab(`causes enough vibration to make the needle respond to the weather.`,`wakes the rest of the household when the speaker prepares to leave.`,`gives the speaker’s day a familiar beginning associated with the mother.`,`reminds the speaker to open the pantry door and inspect the sky.`),ans:"C",exp:`The repeated sound continues the mother’s way of beginning each day.`},
+{n:15,sec:"Part 3: Sentence gap",stim:"cloze",gap:15,stem:`Choose the sentence that best fits Gap 15.`,opts:CLOZE_OPTS,ans:"F",exp:`It challenges the drain comparison and leads into the point that consequences continue downstream.`},
+{n:16,sec:"Part 3: Sentence gap",stim:"cloze",gap:16,stem:`Choose the sentence that best fits Gap 16.`,opts:CLOZE_OPTS,ans:"B",exp:`It links faster confined water with greater pressure on the next part of the river.`},
+{n:17,sec:"Part 3: Sentence gap",stim:"cloze",gap:17,stem:`Choose the sentence that best fits Gap 17.`,opts:CLOZE_OPTS,ans:"D",exp:`It defines the controlled purpose of giving selected land back to floodwater.`},
+{n:18,sec:"Part 3: Sentence gap",stim:"cloze",gap:18,stem:`Choose the sentence that best fits Gap 18.`,opts:CLOZE_OPTS,ans:"G",exp:`It explains how landholders can knowingly accept and be compensated for the burden.`},
+{n:19,sec:"Part 3: Sentence gap",stim:"cloze",gap:19,stem:`Choose the sentence that best fits Gap 19.`,opts:CLOZE_OPTS,ans:"A",exp:`It continues the examples of normal use before the contrast with major floods.`},
+{n:20,sec:"Part 3: Sentence gap",stim:"cloze",gap:20,stem:`Choose the sentence that best fits Gap 20.`,opts:CLOZE_OPTS,ans:"E",exp:`It contrasts the success of a dry wall with the intended flooding of prepared land.`},
+{n:21,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract warns that storing a vast quantity is not the same as preserving usable evidence?`,opts:MATCH_OPTS,ans:"D",exp:`Extract D explains that unlabelled or unreadable files can survive without remaining usable.`},
+{n:22,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract admits that choices made by the recorder shape a supposedly factual account?`,opts:MATCH_OPTS,ans:"A",exp:`Extract A compares a notebook to a frame because the observer selects what enters it.`},
+{n:23,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract says that a record gained value because the same task continued for many years?`,opts:MATCH_OPTS,ans:"C",exp:`Extract C finds a long trend only through twenty seven years of repeated entries.`},
+{n:24,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract suggests that silence can improve the quality of information collected?`,opts:MATCH_OPTS,ans:"B",exp:`Extract B says waiting may allow a polished story to give way to a difficult memory.`},
+{n:25,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract recommends measuring promptly before recollection makes uncertainty seem neater?`,opts:MATCH_OPTS,ans:"A",exp:`Extract A measures at once because memory later rounds the distance.`},
+{n:26,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract treats preservation as repeated work rather than a single act of saving?`,opts:MATCH_OPTS,ans:"D",exp:`Extract D requires archives to copy, check and update stored material over time.`},
+{n:27,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract argues that the manner of speaking forms part of the evidence?`,opts:MATCH_OPTS,ans:"B",exp:`Extract B preserves recordings because laughter and pauses alter the meaning of words.`},
+{n:28,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract values uneventful observations because they make gradual change detectable?`,opts:MATCH_OPTS,ans:"C",exp:`Extract C shows that ordinary repeated entries reveal a shift in flowering dates.`},
+{n:29,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract offers a method for separating what was noticed from what was merely supposed?`,opts:MATCH_OPTS,ans:"A",exp:`Extract A records observations and guesses differently and states expectations openly.`},
+{n:30,sec:"Part 4: Four extracts",stim:"matching",stem:`Which extract explains how poor description can make stored material effectively invisible?`,opts:MATCH_OPTS,ans:"D",exp:`Extract D says files without dates, names and descriptions become unfindable.`},
+{n:31,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:31,stem:`Choose the best word for Gap 31.`,opts:ab(`inevitable`,`generous`,`implausible`,`conventional`),ans:"C",exp:`The residents initially find the ecologist’s unusual claim difficult to believe.`},
+{n:32,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:32,stem:`Choose the best word for Gap 32.`,opts:ab(`informal`,`controlled`,`prolonged`,`concealed`),ans:"B",exp:`An unchanged comparison street makes this a controlled trial.`},
+{n:33,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:33,stem:`Choose the best word for Gap 33.`,opts:ab(`concealed`,`replaced`,`neglected`,`calibrated`),ans:"D",exp:`The lamps are deliberately adjusted to a measured lower setting.`},
+{n:34,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:34,stem:`Choose the best word for Gap 34.`,opts:ab(`distinguish`,`misinterpret`,`reconstruct`,`underestimate`),ans:"A",exp:`Residents are asked to tell actual inconvenience apart from expected anxiety.`},
+{n:35,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:35,stem:`Choose the best word for Gap 35.`,opts:ab(`announce`,`predict`,`concede`,`insist`),ans:"C",exp:`The objectors reluctantly admit that the paths remained usable.`},
+{n:36,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:36,stem:`Choose the best word for Gap 36.`,opts:ab(`misgivings`,`enjoyment`,`patience`,`confidence`),ans:"A",exp:`The mistaken sight of a dog renews their remaining doubts and anxieties.`},
+{n:37,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:37,stem:`Choose the best word for Gap 37.`,opts:ab(`ordinary`,`tentative`,`permanent`,`careless`),ans:"B",exp:`Support is cautious and temporary because the trial has not produced final proof.`},
+{n:38,sec:"Part 5: Vocabulary cloze",stim:"wordcloze",gap:38,stem:`Choose the best word for Gap 38.`,opts:ab(`overlooked`,`unsettled`,`completed`,`vindicated`),ans:"D",exp:`The result supports the ecologist but does not completely prove she was right.`}
+];
+/* ---------------- diagnostic tagging ---------------- */
+const SKILL_OF={
+ 1:"Synthesis across texts",2:"Purpose and viewpoint",3:"Inference",4:"Inference",5:"Inference",6:"Purpose and viewpoint",7:"Synthesis across texts",8:"Effect of language",
+ 9:"Main idea and theme",10:"Effect of language",11:"Text structure",12:"Inference",13:"Tone and attitude",14:"Effect of language",
+ 15:"Cohesion and sentence logic",16:"Cohesion and sentence logic",17:"Cohesion and sentence logic",18:"Cohesion and sentence logic",19:"Cohesion and sentence logic",20:"Cohesion and sentence logic",
+ 21:"Synthesis across texts",22:"Synthesis across texts",23:"Synthesis across texts",24:"Synthesis across texts",25:"Synthesis across texts",26:"Synthesis across texts",27:"Synthesis across texts",28:"Synthesis across texts",29:"Synthesis across texts",30:"Synthesis across texts",
+ 31:"Vocabulary in context",32:"Vocabulary in context",33:"Vocabulary in context",34:"Vocabulary in context",35:"Vocabulary in context",36:"Vocabulary in context",37:"Vocabulary in context",38:"Vocabulary in context"
+};
+const TRAP_OF={
+ 1:{A:"Overstatement",B:"Unsupported inference",D:"Overstatement"},2:{B:"Unsupported inference",C:"Assumed motive",D:"Unsupported inference"},
+ 3:{A:"Surface detail",B:"Overstatement",C:"Invented evidence"},4:{A:"Reversal",C:"Overgeneralisation",D:"Assumed purpose"},
+ 5:{A:"Invented evidence",B:"Invented evidence",D:"Invented evidence"},6:{A:"Invented evidence",B:"Reversal",C:"Assumed judgement"},
+ 7:{B:"Reversal",C:"Overstatement",D:"Reversal"},8:{A:"Overgeneralisation",C:"Reversal",D:"Surface detail"},
+ 9:{A:"Reversal",B:"Overstatement",C:"Unsupported inference"},10:{A:"Literal trap",C:"Invented cause",D:"Reversal"},
+ 11:{A:"Surface detail",B:"Unsupported inference",D:"Tone misread"},12:{B:"Invented action",C:"Surface detail",D:"Unsupported inference"},
+ 13:{A:"Tone misread",C:"Tone misread",D:"Tone misread"},14:{A:"Literal trap",B:"Invented action",D:"Surface detail"},
+ 31:{A:"Logic reversal",B:"Tone mismatch",D:"Context mismatch"},32:{A:"Precision error",C:"Unsupported duration",D:"Logic reversal"},
+ 33:{A:"Context mismatch",B:"Wrong action",C:"Logic reversal"},34:{B:"Logic reversal",C:"Context mismatch",D:"Precision error"},
+ 35:{A:"Tone mismatch",B:"Wrong time logic",D:"Logic reversal"},36:{B:"Tone mismatch",C:"Context mismatch",D:"Logic reversal"},
+ 37:{A:"Precision error",C:"Overstatement",D:"Tone mismatch"},38:{A:"Context mismatch",B:"Logic reversal",C:"Wrong action"}
+};
+function errorCategory(q,picked){
+  if(picked==null || picked===q.ans) return null;
+  if(TRAP_OF[q.n]) return TRAP_OF[q.n][picked] || "Unsupported inference";
+  if(q.stim==="cloze") return "Sequence and cohesion";
+  if(q.stim==="matching") return "Exact idea matching";
+  if(q.stim==="wordcloze") return "Vocabulary fit";
+  return "Unsupported inference";
+}
+const ERRORS={
+ "Literal trap":{c:"#7a5bb5",tip:"You stopped at the surface meaning. Ask what the image or action suggests in its full context."},
+ "Overstatement":{c:"#b5562b",tip:"The answer pushes the evidence further than the text permits. Check the strength and scope of every claim."},
+ "Overgeneralisation":{c:"#b5562b",tip:"A limited idea has been turned into a broad rule. Keep the claim within the text’s actual boundaries."},
+ "Reversal":{c:"#c0392b",tip:"The option echoes the text but reverses its meaning. Restate the relevant line in your own words."},
+ "Logic reversal":{c:"#c0392b",tip:"The word produces the opposite relationship from the one the passage requires."},
+ "Unsupported inference":{c:"#d98324",tip:"The option is possible, but the text does not supply enough evidence. Prove each part from the passage."},
+ "Assumed motive":{c:"#d98324",tip:"You supplied a possible reason rather than the reason supported by the text."},
+ "Invented motive":{c:"#d98324",tip:"The option creates a motive that is never established by the character’s words or actions."},
+ "Invented evidence":{c:"#a96a33",tip:"The answer adds a fact that is not in the passage. Familiar sounding detail is still unsupported detail."},
+ "Invented cause":{c:"#a96a33",tip:"The option supplies a cause the text never gives. Separate sequence from proof of cause."},
+ "Invented action":{c:"#a96a33",tip:"The option describes an event or action that does not occur in the text."},
+ "Assumed purpose":{c:"#8b5f9e",tip:"You guessed an effect the character wanted without evidence that it motivated the action."},
+ "Assumed judgement":{c:"#8b5f9e",tip:"The option turns a limited response into a judgement the speaker never actually makes."},
+ "Surface detail":{c:"#4d7c8a",tip:"You chose a nearby detail rather than its larger function or implication."},
+ "Tone misread":{c:"#a65a64",tip:"The emotional stance does not fit the language. Prove the tone with at least two details."},
+ "Tone mismatch":{c:"#a65a64",tip:"The word carries an attitude that conflicts with the surrounding sentence."},
+ "Context mismatch":{c:"#6b7280",tip:"The word is possible elsewhere, but it does not fit this sentence’s exact meaning."},
+ "Precision error":{c:"#6b7280",tip:"The word is related to the idea but is not precise enough for the relationship described."},
+ "Wrong action":{c:"#6b7280",tip:"The verb describes a different action from the one occurring in the passage."},
+ "Wrong time logic":{c:"#6b7280",tip:"The word does not fit the sequence or stage of the trial described."},
+ "Sequence and cohesion":{c:"#2a9d6f",tip:"The sentence fails to connect both sides of the gap. Check reference words, contrast, cause and sequence."},
+ "Exact idea matching":{c:"#287271",tip:"You matched the general topic rather than the precise claim. Reduce each extract to a short fingerprint first."},
+ "Vocabulary fit":{c:"#6b7280",tip:"The word does not fit the grammar, collocation or exact context. Test the completed sentence aloud."}
+};
+const SKILL_TIP={
+ "Main idea and theme":"Choose the idea that explains the whole text, including its ending.",
+ "Purpose and viewpoint":"Ask why the writer includes the detail and what position it reveals.",
+ "Tone and attitude":"Name the feeling, then prove it with at least two separate details.",
+ "Inference":"Use only what the text supports and distinguish possibility from proof.",
+ "Effect of language":"Explain what the phrase contributes in context, beyond its literal meaning.",
+ "Text structure":"Track how the idea changes between the opening, turning point and ending.",
+ "Cohesion and sentence logic":"Check both sides of the gap for reference, contrast, cause and sequence.",
+ "Synthesis across texts":"Match the exact claim, not the shared topic, and test it against every relevant extract.",
+ "Vocabulary in context":"Choose the word that fits meaning, grammar and tone at the same time."
+};
+/* ---------------- state ---------------- */
+let cur=0;
+const answers={};
+const flags=new Set();
+let secondsLeft=45*60;
+let timerId=null, started=false, currentStim=null, finished=false;
+const $=id=>document.getElementById(id);
+
+/* ---------------- rendering ---------------- */
+function renderStim(q){
+  if(currentStim!==q.stim){
+    $("stim").innerHTML=STIM[q.stim];
+    $("stim").scrollTop=0;
+    currentStim=q.stim;
+  }
+  if(q.stim==="cloze" || q.stim==="wordcloze"){
+    document.querySelectorAll("#stim .gap").forEach(g=>{
+      g.classList.toggle("active", Number(g.dataset.g)===q.gap);
+    });
+  }
+}
+function stemHTML(s){ return s.replace(/"([^"]+)"/g, '<span class="qq">&ldquo;$1&rdquo;</span>'); }
+function renderQuestion(){
+  const q=Q[cur];
+  renderStim(q);
+  $("qnum").textContent="Question "+q.n+" of "+Q.length;
+  $("qstem").innerHTML=stemHTML(q.stem);
+  const wrap=$("opts"); wrap.innerHTML="";
+  q.opts.forEach(o=>{
+    const b=document.createElement("button");
+    b.className="opt"+(answers[q.n]===o.l?" sel":"");
+    b.setAttribute("role","radio");
+    b.setAttribute("aria-checked",answers[q.n]===o.l?"true":"false");
+    b.innerHTML='<span class="badge">'+o.l+'</span><span class="otext">'+o.t+'</span>';
+    b.onclick=()=>{ if(finished) return; answers[q.n]=o.l; renderQuestion(); renderNav(); updateProgress(); };
+    wrap.appendChild(b);
+  });
+  $("flagBtn").classList.toggle("on",flags.has(q.n));
+  $("prevBtn").disabled = cur===0;
+  $("nextBtn").textContent = cur===Q.length-1 ? "Review" : "Next";
+  renderNav();
+}
+function renderNav(){
+  const w=$("navwrap"); w.innerHTML="";
+  Q.forEach((q,i)=>{
+    const b=document.createElement("button");
+    b.className="navbtn"+(answers[q.n]?" answered":"")+(i===cur?" current":"")+(flags.has(q.n)?" flagged":"");
+    b.textContent=q.n;
+    b.title="Question "+q.n+(answers[q.n]?" (answered)":"")+(flags.has(q.n)?" (flagged)":"");
+    b.onclick=()=>{ cur=i; renderQuestion(); };
+    w.appendChild(b);
+  });
+}
+function updateProgress(){ $("progFill").style.width=(Object.keys(answers).length/Q.length*100)+"%"; }
+
+/* ---------------- navigation ---------------- */
+$("prevBtn").onclick=()=>{ if(cur>0){cur--;renderQuestion();} };
+$("nextBtn").onclick=()=>{ if(cur<Q.length-1){cur++;renderQuestion();} else openConfirm(); };
+$("flagBtn").onclick=()=>{ const n=Q[cur].n; flags.has(n)?flags.delete(n):flags.add(n); renderQuestion(); };
+
+/* ---------------- timer ---------------- */
+function fmt(s){const m=Math.floor(s/60),x=s%60;return m+":"+String(x).padStart(2,"0");}
+function tick(){
+  secondsLeft--;
+  $("timeText").textContent=fmt(Math.max(secondsLeft,0));
+  if(secondsLeft<=300) $("timer").classList.add("warn");
+  if(secondsLeft<=0){ clearInterval(timerId); finish(); }
+}
+
+/* ---------------- start / finish ---------------- */
+$("beginBtn").onclick=()=>{
+  $("startOverlay").classList.add("hidden");
+  started=true;
+  renderQuestion(); updateProgress();
+  timerId=setInterval(tick,1000);
+};
+function openConfirm(){
+  const unanswered=Q.length-Object.keys(answers).length;
+  $("confirmSub").textContent = unanswered===0
+    ? "You have answered all "+Q.length+" questions."
+    : "You still have "+unanswered+" question"+(unanswered>1?"s":"")+" unanswered.";
+  $("confirmOverlay").classList.remove("hidden");
+}
+function showResults(){
+  $("resultsOverlay").classList.remove("hidden");
+  $("resultsOverlay").querySelector(".card").scrollTop=0;
+}
+$("finishBtn").onclick=()=>{ finished ? showResults() : openConfirm(); };
+$("keepGoingBtn").onclick=()=>$("confirmOverlay").classList.add("hidden");
+$("confirmFinishBtn").onclick=()=>{ $("confirmOverlay").classList.add("hidden"); finish(); };
+
+function finish(){
+  if(timerId) clearInterval(timerId);
+  let score=0; const bySec={}; const skillStat={}; const errCount={};
+  Q.forEach(q=>{
+    bySec[q.sec]=bySec[q.sec]||{c:0,t:0}; bySec[q.sec].t++;
+    const sk=SKILL_OF[q.n];
+    skillStat[sk]=skillStat[sk]||{c:0,t:0}; skillStat[sk].t++;
+    const ok=answers[q.n]===q.ans;
+    if(ok){ score++; bySec[q.sec].c++; skillStat[sk].c++; }
+    else { const cat=errorCategory(q,answers[q.n]); errCount[cat]=(errCount[cat]||0)+1; }
+  });
+  const totalWrong=Q.length-score;
+  const name=($("nameInput").value||"").trim();
+  $("resultsWho").textContent = (name?name+": ":"")+"Reading practice paper";
+  $("scoreBig").innerHTML=score+'<small>/'+Q.length+'</small>';
+  $("scorePct").textContent=Math.round(score/Q.length*100)+"% correct";
+  const used=45*60-secondsLeft;
+  $("scoreTime").textContent="Time used: "+fmt(Math.max(used,0));
+
+  const bb=$("brkBox"); bb.innerHTML="";
+  Object.keys(bySec).forEach(s=>{
+    bb.insertAdjacentHTML("beforeend",'<div class="b-lbl">'+s+'</div><div class="b-val">'+bySec[s].c+" / "+bySec[s].t+'</div>');
+  });
+
+  const skBox=$("skillBox"); skBox.innerHTML="";
+  const skills=Object.keys(skillStat).map(s=>({s, ...skillStat[s], pct:skillStat[s].c/skillStat[s].t}))
+                     .sort((a,b)=>a.pct-b.pct || b.t-a.t);
+  skills.forEach(x=>{
+    const col = x.pct>=0.8?"var(--correct)" : x.pct>=0.5?"#c9871f" : "var(--wrong)";
+    skBox.insertAdjacentHTML("beforeend",
+      '<div class="skillrow"><div class="sl">'+x.s+'</div>'+
+      '<div class="skilltrack"><div class="skillfill" style="width:'+Math.round(x.pct*100)+'%;background:'+col+'"></div></div>'+
+      '<div class="sv"><b>'+x.c+'/'+x.t+'</b> &middot; '+Math.round(x.pct*100)+'%</div></div>');
+  });
+
+  const apBox=$("autopsyBox"); apBox.innerHTML="";
+  if(totalWrong===0){
+    apBox.innerHTML='<div class="no-errors">No errors to autopsy. Clean sweep.</div>';
+  } else {
+    const slices=Object.keys(errCount).map(k=>({label:k,value:errCount[k],color:(ERRORS[k]||{}).c||"#888"})).sort((a,b)=>b.value-a.value);
+    const r=58, w=20, C=2*Math.PI*r, cx=75, cy=75; let off=0, circles="";
+    slices.forEach(s=>{
+      const len=s.value/totalWrong*C;
+      circles+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+s.color+'" stroke-width="'+w+'" stroke-dasharray="'+len+' '+(C-len)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 '+cx+' '+cy+')"></circle>';
+      off+=len;
+    });
+    let legend=""; slices.forEach(s=>{ legend+='<div class="lg"><span class="sw" style="background:'+s.color+'"></span>'+s.label+'<span class="lc">'+s.value+'</span></div>'; });
+    apBox.innerHTML='<div class="autopsy"><div class="donut-wrap"><svg viewBox="0 0 150 150" width="150" height="150">'+circles+
+      '</svg><div class="donut-center"><span class="dn">'+totalWrong+'</span><span class="dl">'+(totalWrong===1?"error":"errors")+'</span></div></div><div class="legend">'+legend+'</div></div>';
+  }
+
+  const fBox=$("focusBox"); fBox.innerHTML=""; const items=[];
+  if(score>=Q.length-1){ items.push({cls:"good",t:"Excellent control",b:"Almost nothing to fix on this paper. To keep stretching, redo it under a tighter clock or move to a harder set."}); }
+  const topErr=Object.keys(errCount).sort((a,b)=>errCount[b]-errCount[a])[0];
+  if(topErr){ items.push({cls:"",t:"Biggest leak: "+topErr+" ("+errCount[topErr]+" of "+totalWrong+" "+(totalWrong===1?"error":"errors")+")",b:(ERRORS[topErr]||{}).tip||""}); }
+  const weak=skills.filter(x=>x.t>=2 && x.pct<0.75).slice(0,2);
+  weak.forEach(x=>{ items.push({cls:"warn",t:"Focus skill: "+x.s+" ("+x.c+"/"+x.t+")",b:SKILL_TIP[x.s]||""}); });
+  if(items.length===0){ items.push({cls:"good",t:"Solid all round",b:"No single weak area stands out. Keep practising mixed papers to hold the standard."}); }
+  items.forEach(it=>{ fBox.insertAdjacentHTML("beforeend",'<div class="fitem '+it.cls+'"><div class="ft">'+it.t+'</div><div class="fb">'+it.b+'</div></div>'); });
+
+  const rb=$("reviewBox"); rb.innerHTML="";
+  const wrong=Q.filter(q=>answers[q.n]!==q.ans);
+  if(wrong.length===0){
+    rb.innerHTML='<div class="no-errors">Every question correct. Nothing to review.</div>';
+  } else {
+    rb.insertAdjacentHTML("beforeend",'<div class="rev-nums">Review: '+wrong.map(q=>q.n).join(", ")+'</div>');
+    wrong.forEach(q=>{
+      const yours=answers[q.n]||null; const cat=errorCategory(q,yours);
+      rb.insertAdjacentHTML("beforeend",
+        '<div class="rev-row"><span class="rev-n">Q'+q.n+'</span>'+
+        '<span class="chip skill">'+SKILL_OF[q.n]+'</span>'+(cat?'<span class="chip err">'+cat+'</span>':'')+
+        '<span class="rev-ans">You: <b class="no">'+(yours||"none")+'</b> &nbsp;Correct: <b class="ok">'+q.ans+'</b></span>'+
+        '<div class="rev-explanation">'+q.exp+'</div></div>');
+    });
+  }
+
+  finished=true;
+  $("finishBtn").textContent="Results";
+  showResults();
+
+  /* ===== Send results to the portal backend ===== */
+  const urlParams = new URLSearchParams(window.location.search);
+  const studentKey = urlParams.get('student') || ($("nameInput").value||"").trim() || "unknown";
+  const paperId    = urlParams.get('paper')   || "reading-mock-5";
+  const wrongJson = Q.filter(q => answers[q.n] !== q.ans).map(q => ({
+    q:q.n, picked:answers[q.n]||null, correct:q.ans, skill:SKILL_OF[q.n],
+    issue:errorCategory(q,answers[q.n]), explanation:q.exp
+  }));
+  callBackend("submitReading", {
+    nameKey: studentKey, paperId: paperId, score: score, outOf: Q.length,
+    timeUsedSec: Math.max(used,0), perSkillJson: skillStat, answersJson: answers, wrongJson: wrongJson
+  }).then(()=>console.log("Saved")).catch(err=>console.error("Save failed:", err));
+}
+
+function textFor(q,letter){ const o=q.opts.find(o=>o.l===letter); return o?o.t:""; }
+$("backToDashBtn").onclick=()=>{
+  const k=new URLSearchParams(window.location.search).get('student');
+  window.location.href = "index.html" + (k ? ("?student="+encodeURIComponent(k)+"&done=reading") : "");
+};
+$("restartBtn").onclick=()=>location.reload();
+
+document.addEventListener("keydown",e=>{
+  if(!started) return;
+  if(!$("resultsOverlay").classList.contains("hidden")) return;
+  if(!$("confirmOverlay").classList.contains("hidden")) return;
+  if(e.key==="ArrowRight"){ if(cur<Q.length-1){cur++;renderQuestion();} }
+  else if(e.key==="ArrowLeft"){ if(cur>0){cur--;renderQuestion();} }
+  else {
+    if(finished) return;
+    const k=e.key.toUpperCase(); const q=Q[cur];
+    if(q.opts.some(o=>o.l===k)){ answers[q.n]=k; renderQuestion(); renderNav(); updateProgress(); }
+  }
+});
+</script>
+</body>
+</html>

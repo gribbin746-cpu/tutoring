@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Selective Proofreading Practice 1</title>
+<style>
+:root{--navy:#002664;--navy2:#06376b;--blue:#1a73c0;--blueSoft:#e8f1fb;--bg:#eceff3;--panel:#fff;--border:#d3d9e1;--ink:#1b1e23;--muted:#5c6672;--good:#1d7a3a;--goodBg:#e7f4ec;--bad:#b8362b;--badBg:#fbeceb;--warn:#9a5713;--warnBg:#fcefe0;--serif:Georgia,"Times New Roman",serif;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.5}
+.hidden{display:none!important}button,input,textarea{font:inherit}
+header{height:58px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:10}
+.brand{font-weight:700}.brand small{font-weight:500;opacity:.78;margin-left:8px}.timer{font-weight:750;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.13);padding:7px 13px;border-radius:8px}.timer.warn{background:#7a1f1a;color:#ffe0dc}
+.wrap{max-width:1000px;margin:0 auto;padding:26px 18px 70px}.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:24px 26px;box-shadow:0 12px 30px -24px rgba(0,0,0,.5)}
+h1{font-size:25px;margin:0 0 7px;color:var(--navy)}p.sub{margin:0 0 18px;color:var(--muted)}
+.instructions{background:#f2f6fb;border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:13px 15px;margin:0 0 18px;font-size:14px}
+textarea{width:100%;min-height:460px;border:1.5px solid var(--border);border-radius:11px;padding:20px;font-family:var(--serif);font-size:17px;line-height:1.75;color:#20242a;background:#fff;resize:vertical}
+textarea:focus{outline:3px solid #a9cbed;border-color:var(--blue)}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}.btn{border:0;border-radius:9px;padding:11px 19px;font-weight:700;cursor:pointer}.primary{background:var(--navy);color:#fff}.primary:hover{background:var(--navy2)}.ghost{background:#fff;color:var(--navy);border:1px solid var(--border)}
+.save{font-size:13px;color:var(--muted);margin-right:auto;align-self:center}
+.overlay{position:fixed;inset:0;background:rgba(12,20,33,.58);display:flex;align-items:center;justify-content:center;padding:20px;z-index:30}.modal{width:min(720px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:15px;box-shadow:0 24px 70px rgba(0,0,0,.35)}.cap{background:var(--navy);color:#fff;padding:22px 27px}.cap h1{color:#fff;font-size:22px}.cap p{margin:4px 0 0;opacity:.84}.body{padding:24px 27px}.field{margin:16px 0}.field input{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px 12px}
+.score{font-size:48px;line-height:1;font-weight:850;color:var(--navy);margin:4px 0}.score small{font-size:20px;color:var(--muted)}h2{font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:24px 0 10px}
+.breakdown{display:grid;grid-template-columns:1fr auto;gap:8px 16px}.breakdown b{text-align:right}
+.miss{border:1px solid #efd1cd;border-left:4px solid var(--bad);background:#fffafa;border-radius:9px;padding:11px 13px;margin:0 0 9px}.miss strong{color:var(--bad)}.miss .why{font-size:13px;color:var(--muted);margin-top:3px}
+.clean{background:var(--goodBg);color:var(--good);border-radius:10px;padding:14px 16px;font-weight:700}
+.model{white-space:pre-wrap;font-family:var(--serif);font-size:15.5px;line-height:1.7;background:#f7f9fc;border:1px solid var(--border);border-radius:10px;padding:16px}
+@media(max-width:650px){.wrap{padding:16px 10px 50px}.card{padding:19px 16px}textarea{min-height:520px;padding:15px;font-size:16px}.brand small{display:none}}
+</style>
+</head>
+<body>
+<div class="overlay" id="startOverlay">
+  <div class="modal">
+    <div class="cap"><h1>Proofreading Practice 1</h1><p>Seven minutes, 19 corrections</p></div>
+    <div class="body">
+      <p>The passage contains 19 errors involving grammar, spelling, punctuation and word use. Correct the passage directly in the editing box.</p>
+      <div class="instructions">Do not rewrite sentences merely to improve their style. Fix genuine errors only. Browser spelling assistance is disabled. The task submits automatically when the timer reaches zero.</div>
+      <div class="field"><input id="nameInput" type="text" placeholder="Name (optional)" autocomplete="off"></div>
+      <div class="actions"><button class="btn primary" id="beginBtn">Begin exercise</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="resultsOverlay">
+  <div class="modal">
+    <div class="cap"><h1>Proofreading results</h1><p id="resultName">Practice 1</p></div>
+    <div class="body">
+      <div class="score" id="score">0<small>/19</small></div>
+      <div id="resultMeta" class="sub"></div>
+      <h2>Accuracy by skill</h2>
+      <div class="breakdown" id="breakdown"></div>
+      <h2>Corrections missed</h2>
+      <div id="missed"></div>
+      <h2>Corrected passage</h2>
+      <div class="model" id="model"></div>
+      <div class="actions"><button class="btn ghost" id="restartBtn">Try again</button><button class="btn primary" id="backBtn">Back to dashboard</button></div>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="brand">Selective Proofreading <small>Practice 1</small></div>
+  <div class="timer" id="timer">7:00</div>
+</header>
+
+<main class="wrap">
+  <section class="card">
+    <h1>The Signal Station</h1>
+    <p class="sub">Find and correct all 19 errors. There are no errors in the factual content.</p>
+    <div class="instructions"><b>Instructions:</b> Correct grammar, spelling, punctuation and word use. Some words that are often confused are already correct, so change only what you can justify.</div>
+    <textarea id="editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+    <div class="actions"><span class="save" id="saveText">Timer begins when you start.</span><button class="btn primary" id="submitBtn">Finish and mark</button></div>
+  </section>
+</main>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
+async function callBackend(action,payload={}){const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({action,payload}),redirect:"follow"});const parsed=await res.json();if(!parsed.success)throw new Error(parsed.error);return parsed.data}
+const FLAWED=`Last Saturday, every student in our class were invited to visit the old signal station. The building, which overlook the harbour, has been empty for nearly thirty years. When we arrived the guide unlocked a narrow door and warned us that some of the stair's were unsafe.
+
+Inside, dust covered the floor, however, the brass instruments were surprisingly clean. A volunteer named Priya explained that each of them had been carefully polish before the station reopened. She said the largest telescope was more heavier than it looked, and that moving it had took six people.
+
+On the top level, we found a logbook whose pages had became yellow. One entry described a storm in wich two fishing boats lost they're sails. According to the writer, neither boat were able to return until the wind had calmed. The account ended with the words “all crew safe” and gave no further details.
+
+Before leaving, our teacher asked us to write down one detail that had effected us. I chose the logbook because its damaged pages made the storm seem more real then any photograph. My friend Noah chose the telescope, which he said was “absolutely unique”. We both agreed that the station's history should be preserved for future generation's.
+
+At the end, Priya gave each student a leaflet about the stations future restoration. It listed repairs, safety checks and the maintainance of the sea wall. Although the project has already raised most of it's money, a further payment of ten thousand dollars are still needed.`;
+const MODEL=`Last Saturday, every student in our class was invited to visit the old signal station. The building, which overlooks the harbour, has been empty for nearly thirty years. When we arrived, the guide unlocked a narrow door and warned us that some of the stairs were unsafe.
+
+Inside, dust covered the floor; however, the brass instruments were surprisingly clean. A volunteer named Priya explained that each of them had been carefully polished before the station reopened. She said the largest telescope was heavier than it looked, and that moving it had taken six people.
+
+On the top level, we found a logbook whose pages had become yellow. One entry described a storm in which two fishing boats lost their sails. According to the writer, neither boat was able to return until the wind had calmed. The account ended with the words “all crew safe” and gave no further details.
+
+Before leaving, our teacher asked us to write down one detail that had affected us. I chose the logbook because its damaged pages made the storm seem more real than any photograph. My friend Noah chose the telescope, which he said was “absolutely unique”. We both agreed that the station's history should be preserved for future generations.
+
+At the end, Priya gave each student a leaflet about the station's future restoration. It listed repairs, safety checks and the maintenance of the sea wall. Although the project has already raised most of its money, a further payment of ten thousand dollars is still needed.`;
+const ISSUES=[
+ {id:1,skill:"Subject and verb agreement",issue:"Agreement with every",wrong:"every student were",correct:"every student was",check:t=>/\bevery student in our class was invited\b/i.test(t),why:"Every student is grammatically singular, so the singular verb is required."},
+ {id:2,skill:"Subject and verb agreement",issue:"Relative clause agreement",wrong:"which overlook",correct:"which overlooks",check:t=>/which overlooks the harbour/i.test(t),why:"Which refers to the singular noun building."},
+ {id:3,skill:"Punctuation",issue:"Introductory clause comma",wrong:"When we arrived the guide",correct:"When we arrived, the guide",check:t=>/when we arrived,\s*the guide/i.test(t),why:"A comma separates the introductory clause from the main clause."},
+ {id:4,skill:"Apostrophes",issue:"Plural mistaken for possession",wrong:"stair's",correct:"stairs",check:t=>/some of the stairs were unsafe/i.test(t),why:"Stairs is plural and does not show possession."},
+ {id:5,skill:"Punctuation",issue:"Comma splice",wrong:"floor, however, the brass",correct:"floor; however, the brass",check:t=>/(floor;\s*however,\s*the brass|floor\.\s*however,\s*the brass|floor,\s*but\s*the brass)/i.test(t),why:"However cannot join two complete sentences with commas alone."},
+ {id:6,skill:"Verb forms",issue:"Past participle after been",wrong:"been carefully polish",correct:"been carefully polished",check:t=>/been carefully polished before/i.test(t),why:"The passive construction requires the past participle polished."},
+ {id:7,skill:"Comparison",issue:"Double comparative",wrong:"more heavier",correct:"heavier",check:t=>/telescope was heavier than/i.test(t),why:"Heavier already expresses comparison, so more is unnecessary."},
+ {id:8,skill:"Verb forms",issue:"Past participle after had",wrong:"had took",correct:"had taken",check:t=>/moving it had taken six people/i.test(t),why:"Had must be followed by the past participle taken."},
+ {id:9,skill:"Verb forms",issue:"Past participle after had",wrong:"had became",correct:"had become",check:t=>/pages had become yellow/i.test(t),why:"The past participle of become is become."},
+ {id:10,skill:"Spelling",issue:"Misspelt relative pronoun",wrong:"wich",correct:"which",check:t=>/storm in which two fishing boats/i.test(t),why:"Which is the correct spelling."},
+ {id:11,skill:"Apostrophes",issue:"Possessive confused with contraction",wrong:"they're sails",correct:"their sails",check:t=>/lost their sails/i.test(t),why:"Their is possessive, while they're means they are."},
+ {id:12,skill:"Subject and verb agreement",issue:"Agreement after neither",wrong:"neither boat were",correct:"neither boat was",check:t=>/neither boat was able/i.test(t),why:"Neither boat is singular in this construction."},
+ {id:13,skill:"Word use",issue:"Affected confused with effected",wrong:"had effected us",correct:"had affected us",check:t=>/detail that had affected us/i.test(t),why:"Affected means influenced. Effected means caused something to happen."},
+ {id:14,skill:"Word use",issue:"Than confused with then",wrong:"more real then",correct:"more real than",check:t=>/more real than any photograph/i.test(t),why:"Than introduces a comparison."},
+ {id:15,skill:"Apostrophes",issue:"Plural mistaken for possession",wrong:"generation's",correct:"generations",check:t=>/future generations[.\s]/i.test(t),why:"Generations is plural and does not show possession."},
+ {id:16,skill:"Apostrophes",issue:"Missing possessive apostrophe",wrong:"the stations future",correct:"the station's future",check:t=>/the station['’]s future restoration/i.test(t),why:"The future belongs to the station, so a possessive apostrophe is needed."},
+ {id:17,skill:"Spelling",issue:"Misspelt noun",wrong:"maintainance",correct:"maintenance",check:t=>/the maintenance of the sea wall/i.test(t),why:"Maintenance is the correct spelling."},
+ {id:18,skill:"Apostrophes",issue:"Possessive confused with contraction",wrong:"it's money",correct:"its money",check:t=>/most of its money/i.test(t),why:"Its is possessive, while it's means it is or it has."},
+ {id:19,skill:"Subject and verb agreement",issue:"Agreement with a singular head noun",wrong:"a further payment ... are",correct:"a further payment ... is",check:t=>/a further payment of ten thousand dollars is still needed/i.test(t),why:"The head noun payment is singular, so the singular verb is required."}
+];
+const $=id=>document.getElementById(id);let left=7*60,timer=null,started=false,finished=false;
+$("editor").value=FLAWED;
+function fmt(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function tick(){left--; $("timer").textContent=fmt(Math.max(0,left));if(left<=60)$("timer").classList.add("warn");if(left<=0)finish()}
+$("beginBtn").onclick=()=>{$("startOverlay").classList.add("hidden");started=true;$("saveText").textContent="Work carefully. Changes are kept in this page until submission.";timer=setInterval(tick,1000);$("editor").focus()};
+$("submitBtn").onclick=()=>{if(started&&!finished)finish()};
+function finish(){
+ if(finished)return;finished=true;if(timer)clearInterval(timer);$("editor").readOnly=true;$("submitBtn").disabled=true;
+ const response=$("editor").value;const results=ISSUES.map(x=>({...x,ok:x.check(response)}));const score=results.filter(x=>x.ok).length;const missed=results.filter(x=>!x.ok);const used=7*60-left;
+ const stats={};results.forEach(x=>{stats[x.skill]=stats[x.skill]||{c:0,t:0};stats[x.skill].t++;if(x.ok)stats[x.skill].c++});
+ $("score").innerHTML=score+'<small>/'+ISSUES.length+'</small>';$("resultMeta").textContent=Math.round(score/ISSUES.length*100)+"% correct · Time used: "+fmt(Math.max(0,used));
+ const name=($("nameInput").value||"").trim();$("resultName").textContent=(name?name+": ":"")+"Proofreading Practice 1";
+ $("breakdown").innerHTML=Object.keys(stats).sort().map(k=>"<span>"+k+"</span><b>"+stats[k].c+" / "+stats[k].t+"</b>").join("");
+ $("missed").innerHTML=missed.length?missed.map(x=>'<div class="miss"><strong>'+x.wrong+' → '+x.correct+'</strong><div class="why">'+x.why+'</div></div>').join(""):'<div class="clean">All 19 corrections found.</div>';
+ $("model").textContent=MODEL;$("resultsOverlay").classList.remove("hidden");
+ const params=new URLSearchParams(location.search);const key=params.get("student")||name||"unknown";const paper=params.get("paper")||"proofreading-1";
+ callBackend("submitReading",{nameKey:key,paperId:paper,score,outOf:ISSUES.length}).catch(err=>console.error("Save failed:",err));
+}
+$("restartBtn").onclick=()=>location.reload();
+$("backBtn").onclick=()=>{const k=new URLSearchParams(location.search).get("student");location.href="index.html"+(k?"?student="+encodeURIComponent(k)+"&done=reading":"")};
+</script>
+</body>
+</html>
