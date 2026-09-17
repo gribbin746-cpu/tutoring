@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily vocabulary | Noof</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0a2a4e;--navy-deep:#06203f;--blue:#1f6fc9;--blue-soft:#e8f1fc;
+  --bg:#edf1f7;--panel:#fff;--border:#dce3ed;--line:#edf1f6;--ink:#16202c;--muted:#5c6878;
+  --ok:#157a3a;--ok-bg:#e7f5ed;--warn:#a96512;--warn-bg:#fbf0df;--err:#b62d23;--err-bg:#fbeae8;
+  --gold:#b0892f;--gold-soft:#f4ecd7;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;--read:"Newsreader",Georgia,"Times New Roman",serif;
+  --shadow:0 1px 2px rgba(10,37,64,.05),0 18px 40px -24px rgba(10,37,64,.3);--ring:0 0 0 3px rgba(31,111,201,.18)
+}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font-family:var(--sans);color:var(--ink);font-size:15px;line-height:1.55;background:radial-gradient(900px 480px at 50% -10%,#e5effc,transparent 65%),linear-gradient(180deg,#eef1f7,#e6ebf3);background-attachment:fixed}
+button{font-family:inherit;cursor:pointer}.hidden{display:none!important}
+header{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;color:#fff;background:linear-gradient(118deg,#06203f,#0a2f5c 55%,#11447f);box-shadow:0 6px 24px -10px rgba(6,32,63,.7);position:relative}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,rgba(176,137,47,.5),var(--gold),rgba(176,137,47,.5),transparent)}
+.brand{display:flex;align-items:center;gap:12px;font-family:var(--display);font-size:21px;font-weight:600}.logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(150deg,#1b5db0,#0a2f5c);border:1px solid rgba(255,255,255,.25)}
+.brand small{font-family:var(--sans);font-size:10px;text-transform:uppercase;letter-spacing:.17em;opacity:.68;margin-left:5px}.status{display:flex;align-items:center;gap:8px;font-size:12px}.dot{width:8px;height:8px;border-radius:50%;background:#8298b6}.dot.ok{background:#5fe08e}.dot.bad{background:#ff8377}
+.wrap{max-width:780px;margin:0 auto;padding:28px 16px 80px}.card{background:linear-gradient(180deg,#fff,#fcfdff);border:1px solid var(--border);border-radius:20px;padding:26px 28px;margin-bottom:18px;box-shadow:var(--shadow)}
+.eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);font-weight:800;margin:0 0 14px}.eyebrow::before{content:"";width:20px;height:2px;background:var(--gold)}
+h1,h2{font-family:var(--display);color:var(--navy-deep);letter-spacing:-.01em}h1{font-size:31px;line-height:1.1;margin:0 0 9px}h2{font-size:25px;margin:0 0 10px}p{margin:0}.sub{color:var(--muted)}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.spacer{flex:1}.btn{border:0;border-radius:12px;padding:11px 19px;font-weight:750;font-size:14px;color:#fff;background:linear-gradient(135deg,#13569f,#0a2f5c);box-shadow:0 8px 18px -11px rgba(10,47,92,.9);transition:transform .12s,filter .15s}.btn:hover{transform:translateY(-1px);filter:brightness(1.06)}.btn:disabled{opacity:.52;cursor:default;transform:none}.btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--border);box-shadow:none}.btn.again{background:linear-gradient(135deg,#cc4439,#9e241d)}.btn.nearly{background:linear-gradient(135deg,#d58a28,#a96512)}.btn.know{background:linear-gradient(135deg,#22904a,#116d34)}
+.progress{height:9px;border-radius:99px;background:#e7ecf3;overflow:hidden;margin-top:18px}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),#d5b55d);transition:width .25s}.progressmeta{display:flex;justify-content:space-between;margin-top:7px;color:var(--muted);font-size:12.5px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}.stat{background:#f7f9fc;border:1px solid var(--line);border-radius:13px;padding:13px 14px}.stat b{display:block;font-family:var(--display);font-size:25px;color:var(--navy);line-height:1}.stat span{display:block;margin-top:6px;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:750}
+.wordcard{padding-top:23px}.wordtop{display:flex;align-items:flex-start;gap:15px}.wordnum{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--gold-soft);color:#8f6d22;font-family:var(--display);font-size:18px;font-weight:600;flex:none}.word{font-family:var(--display);font-size:39px;line-height:1;color:var(--navy-deep);font-weight:600}.meta{color:var(--muted);font-size:13px;margin-top:6px}.streak{display:flex;gap:5px;margin-top:11px}.streak i{width:9px;height:9px;border-radius:50%;background:#dce2ea}.streak i.on{background:var(--gold);box-shadow:0 0 0 2px var(--gold-soft)}
+.recall{background:#f5f8fc;border-left:3px solid var(--blue);border-radius:0 12px 12px 0;padding:13px 15px;margin:23px 0 16px;color:#33445a;font-family:var(--read);font-size:17px}.answer{margin-top:18px;border-top:1px solid var(--line);padding-top:20px}.meaning{font-family:var(--read);font-size:22px;line-height:1.45;color:#202b38}.example{margin-top:16px;padding:13px 15px;background:#f7f9fd;border-radius:12px;font-family:var(--read);font-size:17px}.trap{margin-top:10px;color:var(--warn);font-size:13.5px}.ratings{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:19px}.ratings .btn{padding-left:8px;padding-right:8px}.hint{text-align:center;color:var(--muted);font-size:11.5px;margin-top:9px}
+.msg{border-radius:12px;padding:12px 15px;font-size:13.5px;margin-top:14px;border:1px solid}.msg.err{background:var(--err-bg);color:var(--err);border-color:#f0c5c0}.msg.ok{background:var(--ok-bg);color:var(--ok);border-color:#bfe3cb}.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:7px}@keyframes spin{to{transform:rotate(360deg)}}
+.complete{text-align:center;padding-top:35px;padding-bottom:35px}.seal{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;margin:0 auto 17px;background:var(--ok-bg);color:var(--ok);font-size:30px;border:1px solid #bfe3cb}.summarylist{display:flex;flex-direction:column;gap:8px;margin:20px auto 0;max-width:500px;text-align:left}.summaryrow{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:11px;padding:10px 12px;background:#fff}.summaryrow b{flex:1}.tag{font-size:11px;font-weight:750;padding:3px 9px;border-radius:99px}.tag.know{color:var(--ok);background:var(--ok-bg)}.tag.nearly{color:var(--warn);background:var(--warn-bg)}.tag.again{color:var(--err);background:var(--err-bg)}
+@media(max-width:600px){header{padding:0 15px}.brand small{display:none}.wrap{padding:20px 12px 65px}.card{padding:21px 18px;border-radius:17px}.stats{grid-template-columns:1fr 1fr}.stats .stat:last-child{grid-column:1/-1}.word{font-size:34px}.ratings{grid-template-columns:1fr}.ratings .btn{width:100%}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span class="logo">N</span><span>Noof <small>Daily vocabulary</small></span></div>
+  <div class="status"><span class="dot" id="connDot"></span><span id="connText">connecting</span></div>
+</header>
+<main class="wrap">
+  <section id="loading" class="card"><p><span class="spin"></span>Loading today's vocabulary...</p></section>
+  <section id="app" class="hidden">
+    <div class="card">
+      <div class="row"><div><p class="eyebrow" id="todayLabel">Daily practice</p><h1 id="greeting">Vocabulary</h1><p class="sub">Say the meaning before you reveal it. Be honest with the rating.</p></div><span class="spacer"></span><button class="btn ghost" id="backTop">Dashboard</button></div>
+      <div class="stats">
+        <div class="stat"><b id="masteredStat">0</b><span>Mastered</span></div>
+        <div class="stat"><b id="learningStat">0</b><span>In progress</span></div>
+        <div class="stat"><b id="remainingStat">0</b><span>Still unseen</span></div>
+      </div>
+      <div class="progress"><i id="progressBar"></i></div>
+      <div class="progressmeta"><span id="progressText">Word 1 of 8</span><span>3 confident recalls = mastered</span></div>
+    </div>
+
+    <div class="card wordcard" id="practiceCard">
+      <div class="wordtop"><div class="wordnum" id="wordNum">1</div><div><div class="word" id="wordText"></div><div class="meta" id="wordMeta"></div><div class="streak" id="wordStreak" aria-label="Mastery streak"></div></div></div>
+      <div class="recall">Before revealing the answer, explain this word aloud in your own words.</div>
+      <button class="btn" id="revealBtn">Reveal meaning</button>
+      <div class="answer hidden" id="answerBox">
+        <div class="meaning" id="meaningText"></div>
+        <div class="example" id="exampleText"></div>
+        <div class="trap" id="trapText"></div>
+        <div class="ratings">
+          <button class="btn again" data-rating="again">Again</button>
+          <button class="btn nearly" data-rating="nearly">Nearly</button>
+          <button class="btn know" data-rating="know">Know it</button>
+        </div>
+        <div class="hint">Use “Know it” only if your meaning was accurate before you revealed the answer.</div>
+      </div>
+    </div>
+    <div id="saveMsg"></div>
+  </section>
+
+  <section id="complete" class="card complete hidden">
+    <div class="seal">✓</div>
+    <p class="eyebrow" style="justify-content:center" id="completeEyebrow">Practice complete</p>
+    <h2 id="completeTitle">Done for today</h2>
+    <p class="sub" id="completeText"></p>
+    <div class="summarylist" id="summaryList"></div>
+    <div class="row" style="justify-content:center;margin-top:22px"><button class="btn" id="backBottom">Back to dashboard</button></div>
+  </section>
+
+  <section id="error" class="card hidden"><p class="eyebrow">Could not open practice</p><h2>Something went wrong</h2><div class="msg err" id="errorText"></div><div class="row" style="margin-top:16px"><button class="btn" onclick="location.reload()">Try again</button><button class="btn ghost" id="errorBack">Dashboard</button></div></section>
+</main>
+
+<script id="vocabularyData" type="application/json">
+{
+  "version": 1,
+  "dailyLimit": 8,
+  "masteryTarget": 3,
+  "words": [
+    {"id":"rectify","word":"rectify","partOfSpeech":"verb","plainMeaning":"to correct something that is wrong","example":"Which action would best rectify the error in the council's report?","contrast":"Not merely identify the error. Rectify means fix it.","category":"Question language","difficulty":2,"active":true},
+    {"id":"infer","word":"infer","partOfSpeech":"verb","plainMeaning":"to reach a conclusion using clues rather than a direct statement","example":"What can the reader infer about Mina from her decision to hide the letter?","contrast":"The answer is suggested by evidence, not stated word for word.","category":"Question language","difficulty":1,"active":true},
+    {"id":"imply","word":"imply","partOfSpeech":"verb","plainMeaning":"to suggest something without saying it directly","example":"The narrator's hesitation implies that he does not fully trust the guide.","contrast":"A writer implies; a reader infers.","category":"Question language","difficulty":1,"active":true},
+    {"id":"deduce","word":"deduce","partOfSpeech":"verb","plainMeaning":"to work out a conclusion from the available facts","example":"What can be deduced from the empty nest and the broken shell?","contrast":"Deduce requires reasoning from evidence, not guessing.","category":"Question language","difficulty":2,"active":true},
+    {"id":"evaluate","word":"evaluate","partOfSpeech":"verb","plainMeaning":"to judge quality or effectiveness using evidence","example":"Which option best evaluates the success of the author's argument?","contrast":"Do more than describe. Make and support a judgement.","category":"Question language","difficulty":2,"active":true},
+    {"id":"justify","word":"justify","partOfSpeech":"verb","plainMeaning":"to give convincing reasons or evidence for something","example":"Which detail best justifies the character's decision to leave?","contrast":"A claim alone does not justify itself; it needs support.","category":"Question language","difficulty":1,"active":true},
+    {"id":"substantiate","word":"substantiate","partOfSpeech":"verb","plainMeaning":"to support a claim with evidence","example":"Which quotation most clearly substantiates the view that the policy failed?","contrast":"Substantiate means prove or support, not simply repeat.","category":"Question language","difficulty":3,"active":true},
+    {"id":"refute","word":"refute","partOfSpeech":"verb","plainMeaning":"to prove that a claim is false","example":"The final paragraph refutes the belief that the island was uninhabited.","contrast":"Refute is stronger than disagree; it requires evidence.","category":"Question language","difficulty":3,"active":true},
+    {"id":"corroborate","word":"corroborate","partOfSpeech":"verb","plainMeaning":"to confirm a statement by providing matching evidence","example":"Which source best corroborates the explorer's account?","contrast":"Corroborating evidence independently supports the same claim.","category":"Question language","difficulty":3,"active":true},
+    {"id":"contradict","word":"contradict","partOfSpeech":"verb","plainMeaning":"to say or show the opposite of another statement","example":"Which finding contradicts the scientist's original prediction?","contrast":"A contradiction cannot be true in the same way at the same time.","category":"Question language","difficulty":1,"active":true},
+    {"id":"distinguish","word":"distinguish","partOfSpeech":"verb","plainMeaning":"to recognise or explain the difference between things","example":"Which feature distinguishes the second speaker's viewpoint from the first?","contrast":"Distinguish focuses on a meaningful difference.","category":"Question language","difficulty":2,"active":true},
+    {"id":"characterise","word":"characterise","partOfSpeech":"verb","plainMeaning":"to describe the main qualities of someone or something","example":"Which phrase best characterises the narrator's attitude?","contrast":"Choose the description that fits the overall pattern, not one isolated word.","category":"Question language","difficulty":2,"active":true},
+    {"id":"interpret","word":"interpret","partOfSpeech":"verb","plainMeaning":"to explain the meaning of something","example":"How should the final image of the locked gate be interpreted?","contrast":"An interpretation must fit the text's evidence.","category":"Question language","difficulty":1,"active":true},
+    {"id":"exemplify","word":"exemplify","partOfSpeech":"verb","plainMeaning":"to be a clear example of something","example":"Which sentence best exemplifies the author's use of irony?","contrast":"Look for an actual example, not a definition.","category":"Question language","difficulty":2,"active":true},
+    {"id":"illustrate","word":"illustrate","partOfSpeech":"verb","plainMeaning":"to make an idea clear by giving an example or showing it","example":"The anecdote illustrates the difficulty of enforcing the new rule.","contrast":"Illustrate here means demonstrate, not draw a picture.","category":"Question language","difficulty":1,"active":true},
+    {"id":"summarise","word":"summarise","partOfSpeech":"verb","plainMeaning":"to state the main points briefly and accurately","example":"Which option best summarises the central argument of the passage?","contrast":"A summary excludes minor examples and personal opinions.","category":"Question language","difficulty":1,"active":true},
+    {"id":"implicit","word":"implicit","partOfSpeech":"adjective","plainMeaning":"suggested but not directly stated","example":"The warning contains an implicit criticism of the organisers.","contrast":"Implicit is hidden or suggested; explicit is directly stated.","category":"Meaning & inference","difficulty":2,"active":true},
+    {"id":"explicit","word":"explicit","partOfSpeech":"adjective","plainMeaning":"stated clearly and directly","example":"Which concern is made explicit in the final paragraph?","contrast":"No inference is needed when information is explicit.","category":"Meaning & inference","difficulty":1,"active":true},
+    {"id":"ambiguous","word":"ambiguous","partOfSpeech":"adjective","plainMeaning":"open to more than one reasonable meaning","example":"The ambiguous ending leaves the traveller's fate uncertain.","contrast":"Ambiguous does not simply mean confusing; multiple meanings are possible.","category":"Meaning & inference","difficulty":2,"active":true},
+    {"id":"equivocal","word":"equivocal","partOfSpeech":"adjective","plainMeaning":"unclear or deliberately avoiding a definite answer","example":"Her equivocal reply neither accepted nor rejected the proposal.","contrast":"An equivocal response is non-committal, not necessarily dishonest.","category":"Meaning & inference","difficulty":3,"active":true},
+    {"id":"plausible","word":"plausible","partOfSpeech":"adjective","plainMeaning":"seeming reasonable or likely to be true","example":"Which is the most plausible explanation for the sudden silence?","contrast":"Plausible means believable, not proven.","category":"Argument & evidence","difficulty":2,"active":true},
+    {"id":"credible","word":"credible","partOfSpeech":"adjective","plainMeaning":"believable and worthy of trust","example":"The eyewitness becomes more credible when another source confirms her account.","contrast":"Credibility concerns trustworthiness, not popularity.","category":"Argument & evidence","difficulty":2,"active":true},
+    {"id":"coherent","word":"coherent","partOfSpeech":"adjective","plainMeaning":"clear, logical and well connected","example":"Which revision would make the paragraph more coherent?","contrast":"A coherent response fits together logically from start to finish.","category":"Argument & evidence","difficulty":2,"active":true},
+    {"id":"consistent","word":"consistent","partOfSpeech":"adjective","plainMeaning":"not changing in a way that creates conflict or contradiction","example":"Which action is most consistent with Leila's earlier behaviour?","contrast":"Consistent means matching the established pattern.","category":"Argument & evidence","difficulty":1,"active":true},
+    {"id":"valid","word":"valid","partOfSpeech":"adjective","plainMeaning":"logically sound or properly supported","example":"Which is a valid conclusion based on both sources?","contrast":"A conclusion is not valid merely because it sounds sensible.","category":"Argument & evidence","difficulty":2,"active":true},
+    {"id":"relevant","word":"relevant","partOfSpeech":"adjective","plainMeaning":"directly connected to the issue being considered","example":"Which detail is most relevant to the debate about water use?","contrast":"Interesting information can still be irrelevant.","category":"Argument & evidence","difficulty":1,"active":true},
+    {"id":"premise","word":"premise","partOfSpeech":"noun","plainMeaning":"an idea or statement on which an argument is based","example":"The argument rests on the premise that every resident owns a car.","contrast":"If the premise is weak, the conclusion may also be weak.","category":"Argument & evidence","difficulty":3,"active":true},
+    {"id":"assumption","word":"assumption","partOfSpeech":"noun","plainMeaning":"a belief accepted as true without proof","example":"Which assumption underlies the mayor's argument?","contrast":"An assumption may be reasonable, but it has not been established.","category":"Argument & evidence","difficulty":2,"active":true},
+    {"id":"discrepancy","word":"discrepancy","partOfSpeech":"noun","plainMeaning":"a difference between things that should agree","example":"The discrepancy between the two reports raises doubts about the result.","contrast":"A discrepancy is a mismatch, not merely a small detail.","category":"Argument & evidence","difficulty":3,"active":true},
+    {"id":"anomaly","word":"anomaly","partOfSpeech":"noun","plainMeaning":"something that does not fit the normal pattern","example":"The unusually warm winter was treated as an anomaly in the data.","contrast":"An anomaly is an exception that may need explanation.","category":"Argument & evidence","difficulty":3,"active":true},
+    {"id":"arbitrary","word":"arbitrary","partOfSpeech":"adjective","plainMeaning":"based on personal choice rather than a fair reason or system","example":"The narrator considers the rule arbitrary because no explanation is given.","contrast":"Arbitrary does not mean random every time; it means lacking a sound basis.","category":"Argument & evidence","difficulty":3,"active":true},
+    {"id":"feasible","word":"feasible","partOfSpeech":"adjective","plainMeaning":"possible and practical to carry out","example":"Which proposal is most feasible within the council's limited budget?","contrast":"A good idea may still be unfeasible if it cannot realistically be done.","category":"Argument & evidence","difficulty":2,"active":true},
+    {"id":"negligible","word":"negligible","partOfSpeech":"adjective","plainMeaning":"so small or unimportant that it can be ignored","example":"The change produced only a negligible improvement in results.","contrast":"Negligible means tiny, not completely nonexistent.","category":"Argument & evidence","difficulty":3,"active":true},
+    {"id":"significant","word":"significant","partOfSpeech":"adjective","plainMeaning":"important or large enough to matter","example":"Which event has the most significant effect on the character's decision?","contrast":"Significant can mean important, not only statistically large.","category":"Argument & evidence","difficulty":1,"active":true},
+    {"id":"mitigate","word":"mitigate","partOfSpeech":"verb","plainMeaning":"to reduce the seriousness or harmful effect of something","example":"Planting shade trees could mitigate the effects of extreme heat.","contrast":"Mitigate reduces a problem; it does not necessarily remove it.","category":"Cause & change","difficulty":3,"active":true},
+    {"id":"exacerbate","word":"exacerbate","partOfSpeech":"verb","plainMeaning":"to make a problem worse","example":"The delayed warning exacerbated the confusion during the evacuation.","contrast":"Exacerbate means worsen, the opposite of mitigate.","category":"Cause & change","difficulty":3,"active":true},
+    {"id":"alleviate","word":"alleviate","partOfSpeech":"verb","plainMeaning":"to make pain or a problem less severe","example":"The new timetable may alleviate overcrowding on buses.","contrast":"Alleviate eases a burden without always solving its cause.","category":"Cause & change","difficulty":3,"active":true},
+    {"id":"impede","word":"impede","partOfSpeech":"verb","plainMeaning":"to slow down or block progress","example":"Heavy fog impeded the rescue team's search.","contrast":"Impede means hinder, not completely prevent in every case.","category":"Cause & change","difficulty":3,"active":true},
+    {"id":"facilitate","word":"facilitate","partOfSpeech":"verb","plainMeaning":"to make an action or process easier","example":"Clear signs facilitate movement through the crowded station.","contrast":"Facilitate helps something happen; it does not force it to happen.","category":"Cause & change","difficulty":2,"active":true},
+    {"id":"reinforce","word":"reinforce","partOfSpeech":"verb","plainMeaning":"to strengthen an idea, feeling or structure","example":"The repeated image of locked doors reinforces the theme of isolation.","contrast":"Reinforce adds strength or support.","category":"Cause & change","difficulty":2,"active":true},
+    {"id":"undermine","word":"undermine","partOfSpeech":"verb","plainMeaning":"to weaken something gradually or indirectly","example":"The speaker's exaggeration undermines the credibility of her argument.","contrast":"Undermine weakens support, often without openly attacking it.","category":"Cause & change","difficulty":2,"active":true},
+    {"id":"diminish","word":"diminish","partOfSpeech":"verb","plainMeaning":"to become or make something smaller or less important","example":"The comic ending does not diminish the seriousness of the warning.","contrast":"Diminish means reduce, not necessarily eliminate.","category":"Cause & change","difficulty":2,"active":true},
+    {"id":"intensify","word":"intensify","partOfSpeech":"verb","plainMeaning":"to become or make something stronger","example":"Shorter sentences intensify the sense of panic in the scene.","contrast":"Intensify increases strength, pressure or emotion.","category":"Cause & change","difficulty":1,"active":true},
+    {"id":"preserve","word":"preserve","partOfSpeech":"verb","plainMeaning":"to protect something and keep it in its existing state","example":"The proposal aims to preserve the wetland for future generations.","contrast":"Preserve means protect from loss or damage.","category":"Cause & change","difficulty":1,"active":true},
+    {"id":"inevitable","word":"inevitable","partOfSpeech":"adjective","plainMeaning":"certain to happen and impossible to avoid","example":"The author rejects the claim that technological change is inevitable.","contrast":"Inevitable is stronger than likely.","category":"Cause & change","difficulty":2,"active":true},
+    {"id":"consequence","word":"consequence","partOfSpeech":"noun","plainMeaning":"a result or effect of an action","example":"What is the immediate consequence of the captain ignoring the warning?","contrast":"A consequence can be positive or negative.","category":"Cause & change","difficulty":1,"active":true},
+    {"id":"ambivalent","word":"ambivalent","partOfSpeech":"adjective","plainMeaning":"having mixed or conflicting feelings","example":"The narrator is ambivalent about leaving home: excited yet regretful.","contrast":"Ambivalent means both positive and negative, not simply uncertain.","category":"Tone & attitude","difficulty":3,"active":true},
+    {"id":"sceptical","word":"sceptical","partOfSpeech":"adjective","plainMeaning":"doubtful that a claim is true or useful","example":"The journalist remains sceptical of the company's promises.","contrast":"A sceptical tone questions evidence without necessarily mocking it.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"cynical","word":"cynical","partOfSpeech":"adjective","plainMeaning":"believing that people are mainly motivated by self-interest","example":"His cynical remark suggests the charity event is only a publicity stunt.","contrast":"Cynical is more distrustful and negative than sceptical.","category":"Tone & attitude","difficulty":3,"active":true},
+    {"id":"indignant","word":"indignant","partOfSpeech":"adjective","plainMeaning":"angry because something seems unfair or insulting","example":"The resident's indignant response reveals that she feels wrongly accused.","contrast":"Indignation is anger driven by a sense of injustice.","category":"Tone & attitude","difficulty":3,"active":true},
+    {"id":"apprehensive","word":"apprehensive","partOfSpeech":"adjective","plainMeaning":"anxious that something unpleasant may happen","example":"The children become apprehensive as the path narrows and the light fades.","contrast":"Apprehensive means worried, not fully terrified.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"resentful","word":"resentful","partOfSpeech":"adjective","plainMeaning":"bitter or angry about unfair treatment","example":"Her resentful tone shows that she has not forgiven the decision.","contrast":"Resentment usually lasts longer than a brief burst of anger.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"nostalgic","word":"nostalgic","partOfSpeech":"adjective","plainMeaning":"feeling affectionate sadness for the past","example":"The description of the old playground creates a nostalgic mood.","contrast":"Nostalgia mixes fondness with a sense of loss.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"conciliatory","word":"conciliatory","partOfSpeech":"adjective","plainMeaning":"intended to reduce conflict and restore goodwill","example":"The principal adopts a conciliatory tone after the heated meeting.","contrast":"Conciliatory language tries to calm disagreement, not win by force.","category":"Tone & attitude","difficulty":3,"active":true},
+    {"id":"dismissive","word":"dismissive","partOfSpeech":"adjective","plainMeaning":"showing that something is not worth serious attention","example":"Calling the concerns 'mere fuss' creates a dismissive tone.","contrast":"Dismissive language brushes an idea aside without properly considering it.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"earnest","word":"earnest","partOfSpeech":"adjective","plainMeaning":"serious and sincere","example":"The student's earnest appeal lacks humour but conveys genuine concern.","contrast":"Earnest is sincere, not necessarily skilful or correct.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"contemptuous","word":"contemptuous","partOfSpeech":"adjective","plainMeaning":"showing strong disrespect or scorn","example":"The phrase 'their pathetic excuse' creates a contemptuous tone.","contrast":"Contempt looks down on its target; it is stronger than annoyance.","category":"Tone & attitude","difficulty":3,"active":true},
+    {"id":"reverent","word":"reverent","partOfSpeech":"adjective","plainMeaning":"showing deep respect or admiration","example":"The poet's reverent description presents the forest as sacred.","contrast":"Reverence is solemn respect, not merely enjoyment.","category":"Tone & attitude","difficulty":3,"active":true},
+    {"id":"impartial","word":"impartial","partOfSpeech":"adjective","plainMeaning":"fair and not favouring one side","example":"The report attempts to remain impartial by presenting both perspectives.","contrast":"Impartial does not mean uninterested; it means unbiased.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"tentative","word":"tentative","partOfSpeech":"adjective","plainMeaning":"uncertain or cautious rather than definite","example":"The words 'may suggest' make the conclusion tentative.","contrast":"Tentative language leaves room for doubt.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"assertive","word":"assertive","partOfSpeech":"adjective","plainMeaning":"confident and direct without being needlessly aggressive","example":"The repeated command gives the speech an assertive tone.","contrast":"Assertive is firm; aggressive is hostile.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"emphatic","word":"emphatic","partOfSpeech":"adjective","plainMeaning":"expressed with strong and clear emphasis","example":"The phrase 'under no circumstances' makes the refusal emphatic.","contrast":"Emphatic wording leaves little doubt about the speaker's position.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"ironic","word":"ironic","partOfSpeech":"adjective","plainMeaning":"expressing meaning through a contrast between expectation and reality","example":"It is ironic that the fire station is damaged by a fire.","contrast":"Irony is not simply something unfortunate or coincidental.","category":"Tone & attitude","difficulty":2,"active":true},
+    {"id":"satirical","word":"satirical","partOfSpeech":"adjective","plainMeaning":"using humour or exaggeration to criticise foolishness","example":"The absurd advertisement is satirical because it mocks consumer culture.","contrast":"Satire has a critical target beneath the humour.","category":"Tone & attitude","difficulty":3,"active":true},
+    {"id":"conventional","word":"conventional","partOfSpeech":"adjective","plainMeaning":"following usual or traditional practices","example":"The second poem rejects a conventional image of bravery.","contrast":"Conventional means familiar or standard, not automatically inferior.","category":"Comparison & structure","difficulty":2,"active":true},
+    {"id":"innovative","word":"innovative","partOfSpeech":"adjective","plainMeaning":"introducing a new and effective idea or method","example":"The reviewer praises the production's innovative use of lighting.","contrast":"Innovative means genuinely new in approach, not merely modern-looking.","category":"Comparison & structure","difficulty":2,"active":true},
+    {"id":"superficial","word":"superficial","partOfSpeech":"adjective","plainMeaning":"concerned only with the surface and lacking depth","example":"The article offers a superficial explanation of a complex problem.","contrast":"Superficial analysis may sound polished while missing important causes.","category":"Comparison & structure","difficulty":2,"active":true},
+    {"id":"juxtapose","word":"juxtapose","partOfSpeech":"verb","plainMeaning":"to place things close together to highlight their contrast","example":"The writer juxtaposes the crowded city with the silent desert.","contrast":"Juxtaposition makes a similarity or difference more noticeable.","category":"Comparison & structure","difficulty":3,"active":true},
+    {"id":"parallel","word":"parallel","partOfSpeech":"adjective or noun","plainMeaning":"similar and developing in a corresponding way","example":"The two characters follow parallel journeys despite living decades apart.","contrast":"Parallel ideas resemble each other without being identical.","category":"Comparison & structure","difficulty":2,"active":true},
+    {"id":"contrast","word":"contrast","partOfSpeech":"verb or noun","plainMeaning":"to show or examine important differences","example":"How does the second paragraph contrast the two communities?","contrast":"A contrast concerns differences; a comparison may include both similarities and differences.","category":"Comparison & structure","difficulty":1,"active":true},
+    {"id":"chronological","word":"chronological","partOfSpeech":"adjective","plainMeaning":"arranged in the order that events happened","example":"The biography uses a chronological structure from childhood to old age.","contrast":"Chronological order follows time, not importance.","category":"Comparison & structure","difficulty":2,"active":true},
+    {"id":"consequently","word":"consequently","partOfSpeech":"adverb","plainMeaning":"as a result","example":"The bridge was closed; consequently, the buses were diverted.","contrast":"Consequently introduces an effect, not a contrasting idea.","category":"Connectives","difficulty":2,"active":true},
+    {"id":"nevertheless","word":"nevertheless","partOfSpeech":"adverb","plainMeaning":"despite what has just been said","example":"The climb was exhausting; nevertheless, the group continued.","contrast":"Nevertheless signals contrast or an unexpected continuation.","category":"Connectives","difficulty":2,"active":true},
+    {"id":"conversely","word":"conversely","partOfSpeech":"adverb","plainMeaning":"introducing the opposite or reversed situation","example":"Large schools may offer more subjects; conversely, small schools may provide closer support.","contrast":"Conversely presents an opposite relationship, not just another example.","category":"Connectives","difficulty":3,"active":true},
+    {"id":"whereas","word":"whereas","partOfSpeech":"conjunction","plainMeaning":"while in contrast","example":"The first speaker is hopeful, whereas the second expects failure.","contrast":"Whereas directly contrasts two clauses.","category":"Connectives","difficulty":2,"active":true},
+    {"id":"notwithstanding","word":"notwithstanding","partOfSpeech":"preposition or adverb","plainMeaning":"despite something","example":"Notwithstanding the heavy rain, the ceremony continued outdoors.","contrast":"It means despite, not because of.","category":"Connectives","difficulty":3,"active":true},
+    {"id":"albeit","word":"albeit","partOfSpeech":"conjunction","plainMeaning":"although","example":"The solution was effective, albeit expensive.","contrast":"Albeit introduces a limitation or qualification.","category":"Connectives","difficulty":3,"active":true},
+    {"id":"moreover","word":"moreover","partOfSpeech":"adverb","plainMeaning":"in addition to what has already been said","example":"The plan is cheaper; moreover, it can be completed sooner.","contrast":"Moreover adds supporting information rather than a contrast.","category":"Connectives","difficulty":2,"active":true},
+    {"id":"subsequently","word":"subsequently","partOfSpeech":"adverb","plainMeaning":"afterwards or later","example":"The road flooded and was subsequently closed to traffic.","contrast":"Subsequently signals later time, not necessarily direct cause.","category":"Connectives","difficulty":2,"active":true},
+    {"id":"predominantly","word":"predominantly","partOfSpeech":"adverb","plainMeaning":"mainly or for the most part","example":"The audience was predominantly made up of local residents.","contrast":"Predominantly means mostly, not entirely.","category":"Passage vocabulary","difficulty":3,"active":true},
+    {"id":"deteriorate","word":"deteriorate","partOfSpeech":"verb","plainMeaning":"to become worse in quality or condition","example":"Relations between the groups deteriorate after the accusation.","contrast":"Deteriorate means worsen over time.","category":"Passage vocabulary","difficulty":2,"active":true},
+    {"id":"resilient","word":"resilient","partOfSpeech":"adjective","plainMeaning":"able to recover from difficulty or damage","example":"The community proves resilient by rebuilding after the flood.","contrast":"Resilience is recovery and adaptation, not never being affected.","category":"Passage vocabulary","difficulty":2,"active":true},
+    {"id":"reluctant","word":"reluctant","partOfSpeech":"adjective","plainMeaning":"unwilling and hesitant","example":"Kai is reluctant to speak because he fears betraying his friend.","contrast":"Reluctant means unwilling, not unable.","category":"Passage vocabulary","difficulty":1,"active":true},
+    {"id":"concede","word":"concede","partOfSpeech":"verb","plainMeaning":"to admit that something is true, often unwillingly","example":"The writer concedes that the proposal has one important benefit.","contrast":"Conceding a point does not mean abandoning the whole argument.","category":"Passage vocabulary","difficulty":3,"active":true},
+    {"id":"scrutinise","word":"scrutinise","partOfSpeech":"verb","plainMeaning":"to examine something very closely","example":"The detective scrutinises the photograph for overlooked details.","contrast":"Scrutinise is stronger than glance at or notice.","category":"Passage vocabulary","difficulty":3,"active":true},
+    {"id":"obsolete","word":"obsolete","partOfSpeech":"adjective","plainMeaning":"no longer used because something newer has replaced it","example":"The author argues that printed maps are not yet obsolete.","contrast":"Obsolete means replaced and out of use, not merely old.","category":"Passage vocabulary","difficulty":3,"active":true},
+    {"id":"prevalent","word":"prevalent","partOfSpeech":"adjective","plainMeaning":"common or widespread in a particular place or time","example":"The belief was prevalent among nineteenth-century explorers.","contrast":"Prevalent means widespread, not necessarily correct.","category":"Passage vocabulary","difficulty":3,"active":true},
+    {"id":"meticulous","word":"meticulous","partOfSpeech":"adjective","plainMeaning":"extremely careful and precise about details","example":"Her meticulous notes allow the experiment to be repeated exactly.","contrast":"Meticulous care is thorough rather than merely slow.","category":"Passage vocabulary","difficulty":3,"active":true},
+    {"id":"vulnerable","word":"vulnerable","partOfSpeech":"adjective","plainMeaning":"open to harm, attack or damage","example":"Young seedlings are especially vulnerable to frost.","contrast":"Vulnerable means at risk, not already harmed.","category":"Passage vocabulary","difficulty":2,"active":true}
+  ]
+}
+</script>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
+const $=id=>document.getElementById(id);
+const params=new URLSearchParams(location.search);
+const studentKey=(params.get("student")||"").trim().toLowerCase();
+let bankConfig=null,ctx=null,profile=null,progress={},queue=[],ratings={},position=0,startedAt=Date.now();
+
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function setConn(ok){$("connDot").className="dot "+(ok?"ok":"bad");$("connText").textContent=ok?"connected":"offline"}
+function show(id){["loading","app","complete","error"].forEach(x=>$(x).classList.toggle("hidden",x!==id))}
+function dateKey(value){
+  const d=value?new Date(value):new Date();
+  const parts=new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Sydney",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(d);
+  const get=t=>parts.find(p=>p.type===t).value;
+  return get("year")+"-"+get("month")+"-"+get("day");
+}
+function friendlyDate(){return new Intl.DateTimeFormat("en-AU",{timeZone:"Australia/Sydney",weekday:"long",day:"numeric",month:"long"}).format(new Date())}
+function isVocabResult(r){return String(r&&r.paperId||"").indexOf("vocab-")===0}
+async function callBackend(action,payload={}){
+  let res;
+  try{res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify({action,payload}),redirect:"follow"})}
+  catch(e){setConn(false);throw new Error("The server could not be reached. Check the connection and try again.")}
+  const raw=await res.text();let parsed;
+  try{parsed=JSON.parse(raw)}catch(e){throw new Error("The server returned an unexpected response.")}
+  if(!parsed.success)throw new Error(parsed.error||"The request failed.");setConn(true);return parsed.data;
+}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function byStableHash(a,b){return hash(studentKey+"|"+a.id)-hash(studentKey+"|"+b.id)}
+function draftKey(){return "noof_vocab_"+studentKey+"_"+dateKey()}
+function readDraft(){try{return JSON.parse(localStorage.getItem(draftKey())||"null")}catch(e){return null}}
+function saveDraft(){try{localStorage.setItem(draftKey(),JSON.stringify({queue:queue.map(w=>w.id),ratings,position,startedAt}))}catch(e){}}
+function clearDraft(){try{localStorage.removeItem(draftKey())}catch(e){}}
+
+function buildProgress(history){
+  const out={};
+  (history||[]).filter(isVocabResult).slice().sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(r=>{
+    const day=dateKey(r.date),ps=r.perSkill||{};
+    Object.keys(ps).forEach(key=>{
+      if(key.indexOf("vocab::")!==0)return;
+      const id=key.slice(7),v=ps[key]||{},perfect=Number(v.t)>0&&Number(v.c)>=Number(v.t);
+      const p=out[id]||(out[id]={attempts:0,streak:0,lastDate:"",lastPerfect:false});
+      if(p.lastDate===day)return;
+      p.attempts+=1;p.streak=perfect?p.streak+1:0;p.lastDate=day;p.lastPerfect=perfect;
+    });
+  });
+  return out;
+}
+function chooseQueue(words,limit,target){
+  const active=words.filter(w=>w.active!==false);
+  const available=active.filter(w=>(progress[w.id]?.streak||0)<target);
+  const learning=available.filter(w=>(progress[w.id]?.attempts||0)>0).sort((a,b)=>{
+    const pa=progress[a.id],pb=progress[b.id];
+    if(pa.lastDate!==pb.lastDate)return String(pa.lastDate).localeCompare(String(pb.lastDate));
+    if(pa.streak!==pb.streak)return pb.streak-pa.streak;
+    return byStableHash(a,b);
+  });
+  const unseen=available.filter(w=>!(progress[w.id]?.attempts)).sort(byStableHash);
+  const reviewCount=Math.min(5,learning.length);
+  const picked=learning.slice(0,reviewCount).concat(unseen.slice(0,Math.max(0,limit-reviewCount)));
+  if(picked.length<limit){
+    const used=new Set(picked.map(w=>w.id));
+    learning.concat(unseen).forEach(w=>{if(picked.length<limit&&!used.has(w.id)){picked.push(w);used.add(w.id)}});
+  }
+  return picked;
+}
+function restoreOrCreateQueue(){
+  const active=bankConfig.words.filter(w=>w.active!==false),target=bankConfig.masteryTarget||3;
+  const draft=readDraft();
+  if(draft&&Array.isArray(draft.queue)){
+    const map=Object.fromEntries(active.map(w=>[w.id,w]));
+    const restored=draft.queue.map(id=>map[id]).filter(w=>w&&(progress[w.id]?.streak||0)<target);
+    if(restored.length){queue=restored;ratings=draft.ratings||{};position=Math.min(Number(draft.position)||0,queue.length-1);startedAt=Number(draft.startedAt)||Date.now();return}
+  }
+  queue=chooseQueue(active,bankConfig.dailyLimit||8,target);ratings={};position=0;startedAt=Date.now();saveDraft();
+}
+function statCounts(){
+  const words=bankConfig.words.filter(w=>w.active!==false),target=bankConfig.masteryTarget||3;
+  return {
+    mastered:words.filter(w=>(progress[w.id]?.streak||0)>=target).length,
+    learning:words.filter(w=>(progress[w.id]?.attempts||0)>0&&(progress[w.id]?.streak||0)<target).length,
+    unseen:words.filter(w=>!(progress[w.id]?.attempts)).length,
+    total:words.length
+  };
+}
+function renderStats(){const s=statCounts();$("masteredStat").textContent=s.mastered;$("learningStat").textContent=s.learning;$("remainingStat").textContent=s.unseen}
+function renderWord(){
+  if(!queue.length){showMasteredAll();return}
+  const w=queue[position],p=progress[w.id]||{streak:0};
+  $("wordNum").textContent=position+1;$("wordText").textContent=w.word;$("wordMeta").textContent=w.partOfSpeech+" · "+w.category+" · level "+w.difficulty;
+  $("meaningText").textContent=w.plainMeaning;$("exampleText").textContent=w.example;$("trapText").textContent="Watch the trap: "+w.contrast;
+  $("wordStreak").innerHTML=Array.from({length:bankConfig.masteryTarget||3},(_,i)=>'<i class="'+(i<(p.streak||0)?"on":"")+'"></i>').join("");
+  $("answerBox").classList.add("hidden");$("revealBtn").classList.remove("hidden");
+  $("progressText").textContent="Word "+(position+1)+" of "+queue.length;$("progressBar").style.width=((position/queue.length)*100)+"%";
+  saveDraft();window.scrollTo({top:0,behavior:"smooth"});
+}
+function showMasteredAll(){
+  clearDraft();show("complete");$("completeEyebrow").textContent="Vocabulary bank mastered";$("completeTitle").textContent="Nothing left in the daily queue";
+  $("completeText").textContent="Every active word has reached three confident recalls. Retired words stay out of future practice.";$("summaryList").innerHTML="";
+}
+function rateCurrent(rating){
+  const w=queue[position];ratings[w.id]=rating;
+  if(position<queue.length-1){position+=1;renderWord()}else{saveDraft();submitSession()}
+}
+function previewStreak(w,rating){const old=progress[w.id]?.streak||0;return rating==="know"?old+1:0}
+function renderSummary(saved,already){
+  show("complete");const target=bankConfig.masteryTarget||3;
+  $("completeEyebrow").textContent=already?"Already completed today":"Practice complete";
+  $("completeTitle").textContent=already?"Come back tomorrow":"Today's set is saved";
+  $("completeText").textContent=already?"A new mix of review and unseen words will appear on the next Sydney day.":"Words marked Again or Nearly will return. Three confident recalls in a row retire a word from the queue.";
+  if(already){$("summaryList").innerHTML="";return}
+  $("summaryList").innerHTML=queue.map(w=>{
+    const rating=ratings[w.id],next=previewStreak(w,rating),retired=next>=target;
+    const label=retired?"Mastered":rating==="know"?"Know it":rating==="nearly"?"Nearly":"Again";
+    const cls=retired||rating==="know"?"know":rating;
+    return '<div class="summaryrow"><b>'+esc(w.word)+'</b><span class="tag '+cls+'">'+label+'</span></div>';
+  }).join("");
+}
+async function submitSession(){
+  const buttons=document.querySelectorAll("button");buttons.forEach(b=>b.disabled=true);
+  $("saveMsg").innerHTML='<div class="msg ok"><span class="spin"></span>Saving progress...</div>';
+  const perSkillJson={},answersJson={},wrongJson=[];let score=0;
+  queue.forEach(w=>{
+    const rating=ratings[w.id]||"again",c=rating==="know"?1:rating==="nearly"?.5:0;
+    perSkillJson["vocab::"+w.id]={c,t:1};answersJson[w.id]=rating;
+    if(rating==="know")score+=1;else wrongJson.push({q:w.word,picked:rating==="nearly"?"Nearly":"Again",correct:"Know it",skill:"Vocabulary recall"});
+  });
+  try{
+    await callBackend("submitReading",{nameKey:studentKey,paperId:"vocab-"+dateKey(),score,outOf:queue.length,timeUsedSec:Math.max(1,Math.round((Date.now()-startedAt)/1000)),perSkillJson,answersJson,wrongJson});
+    clearDraft();renderSummary(true,false);
+  }catch(e){
+    $("saveMsg").innerHTML='<div class="msg err">'+esc(e.message)+' Your ratings are still saved on this device. <button class="btn ghost" style="margin-left:8px" onclick="submitSession()">Retry</button></div>';
+  }finally{buttons.forEach(b=>b.disabled=false)}
+}
+function dashboard(){location.href="index.html?student="+encodeURIComponent(studentKey)+"&done=vocabulary"}
+
+async function boot(){
+  if(!studentKey){show("error");$("errorText").textContent="No student was supplied. Open this task from the student dashboard.";return}
+  try{
+    const results=await Promise.all([Promise.resolve(JSON.parse(document.getElementById("vocabularyData").textContent)),callBackend("login",{name:studentKey})]);
+    bankConfig=results[0];ctx=results[1];profile=ctx.profile;progress=buildProgress(ctx.readingHistory||[]);
+    $("todayLabel").textContent=friendlyDate();$("greeting").textContent="Hi, "+profile.displayName;renderStats();
+    const today=(ctx.readingHistory||[]).find(r=>String(r.paperId)==="vocab-"+dateKey());
+    if(today){clearDraft();renderSummary(true,true);return}
+    restoreOrCreateQueue();show("app");renderStats();renderWord();
+  }catch(e){setConn(false);show("error");$("errorText").textContent=e.message||"The practice could not be loaded."}
+}
+$("revealBtn").onclick=()=>{$("answerBox").classList.remove("hidden");$("revealBtn").classList.add("hidden")};
+document.querySelectorAll("[data-rating]").forEach(b=>b.onclick=()=>rateCurrent(b.dataset.rating));
+$("backTop").onclick=dashboard;$("backBottom").onclick=dashboard;$("errorBack").onclick=dashboard;
+boot();
+</script>
+</body>
+</html>
