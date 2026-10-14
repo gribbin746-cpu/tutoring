@@ -454,6 +454,36 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-
 let ctx=null, student=null, adminCache=null, activePrompt=null;
 let adminComments={}, adminDraftText={};
 let revMode=false, revisionOf=null;
+let wUnlimited=false;
+const PERSUASIVE_TEST_ID="persuasive-test-20261014";
+const PERSUASIVE_TEST_URL="Persuasive_Writing_Test.html";
+const TEST_WRITING_CRITERIA = [
+  {key:"content",label:"Content and development",max:4},
+  {key:"form",label:"Form, purpose and audience",max:4},
+  {key:"organisation",label:"Organisation and cohesion",max:4},
+  {key:"vocabulary",label:"Vocabulary and style",max:3},
+  {key:"sentences",label:"Sentence control",max:3},
+  {key:"punctuation",label:"Punctuation",max:3},
+  {key:"grammar",label:"Grammar",max:2},
+  {key:"spelling",label:"Spelling",max:2}
+];
+const PERSUASIVE_CRITERIA={"Multiple choice":[{key:"test_mcq",label:"Questions 1–60: multiple choice",max:30}],"Short answers":[{"key": "test_short_1", "label": "Purpose and openings (written answers)", "max": 12}, {"key": "test_short_2", "label": "Testing arguments (written answers)", "max": 12}, {"key": "test_short_3", "label": "Evidence and believable claims (written answers)", "max": 12}, {"key": "test_short_4", "label": "Paragraphs and structure (written answers)", "max": 12}, {"key": "test_short_5", "label": "Persuasive language and speech voice (written answers)", "max": 12}, {"key": "test_short_6", "label": "Counterarguments and rebuttals (written answers)", "max": 12}, {"key": "test_short_7", "label": "Letters and public persuasive texts (written answers)", "max": 12}, {"key": "test_short_8", "label": "Sentence control and editing (written answers)", "max": 12}, {"key": "test_short_9", "label": "Diagnosing a complete draft (written answers)", "max": 12}, {"key": "test_short_10", "label": "Judgement and independent planning (written answers)", "max": 12}]};
+["Speech","Letter","Persuasive text"].forEach((name,i)=>{
+  PERSUASIVE_CRITERIA[name+" (Question "+(61+i)+")"]=TEST_WRITING_CRITERIA.map(c=>({...c,key:"test_"+(61+i)+"_"+c.key}));
+});
+const PERSUASIVE_MARKING_NOTES=[{"n": 2, "criteria": ["Names Ms Patel, the community centre manager.", "Asks her to approve the six-week Saturday board-game trial.", "Names two suitable letter features, such as a greeting and sign-off.", "Says the ending should make a clear request based on the argument."]}, {"n": 4, "criteria": ["Hook: the opening question about losing an opportunity to borrow books.", "Opinion: the library should trial one evening opening each week.", "Points: access for daytime workers and a quiet place to study after school.", "Distinctness: access to borrowing and access to a study space are different benefits, provided each paragraph develops its own mechanism."]}, {"n": 6, "criteria": ["A relevant hook or engaging opening connected to the proposal.", "A clear position on a voluntary four-week trial, without turning it into a permanent or compulsory program.", "Two distinct, relevant points that could support separate paragraphs.", "A coherent, believable opening without claiming that every student will achieve an extreme result."]}, {"n": 8, "criteria": ["A: repair, because enjoyment needs a specific explanation and a reason it matters; accept keep if the answer still identifies the missing development.", "B: merge with A, because enjoyment and having fun repeat the same benefit.", "C: keep and develop, because access for people unable to attend outside clubs is relevant and distinct.", "D: reject or substantially repair, because a brief activity cannot reasonably guarantee national success."]}, {"n": 10, "criteria": ["An actual activity or source of support, such as completing a manageable task with guidance.", "An immediate change, such as understanding the steps or having a successful first attempt.", "A limited, plausible consequence, such as being more willing to try the activity again.", "A link to why a small voluntary trial is worthwhile for the decision-maker."]}, {"n": 12, "criteria": ["Identifies an unsupported guarantee: every student or immediately.", "Identifies another weakness, such as missing steps explaining how friendships develop.", "Rewrites the claim with a concrete opportunity to interact.", "Keeps the prediction believable and avoids promising a friendship."]}, {"n": 14, "criteria": ["Twelve of the twenty respondents wanted to try the session; 60% of respondents is also accurate.", "Only twenty people answered, all at one centre; their views may not represent all local families.", "Interest is not the same as actual attendance, continued attendance or proof of benefits.", "A practical next step, such as registrations or a small trial followed by attendance and feedback checks."]}, {"n": 16, "criteria": ["Clearly signals an imagined case, for example Imagine a student or A student could.", "Includes a specific shared action, such as working on a model or exchanging chess tips.", "Explains how that action provides a reason to talk or cooperate.", "Limits the outcome rather than claiming that one club immediately makes someone popular."]}, {"n": 18, "criteria": ["Removes the claimed research and percentage without substituting another unsupported measurement.", "Names a concrete leadership responsibility, such as organising materials or arriving prepared.", "Connects that duty to practising responsibility, without guaranteeing a permanent character change.", "Explains that most is still an unsupported claim about how many; softer wording alone does not create evidence."]}, {"n": 20, "criteria": ["Point: 1; link: 5. Award one mark for both.", "First explanation: 2. Award one mark.", "Example: 3; explanation of example: 4. Award one mark for both.", "Explains that 4 interprets the example by showing why the evening slot removes a time barrier; it does not merely repeat the worker’s timetable."]}, {"n": 22, "criteria": ["A focused point about access to a first attempt at an activity.", "Explains how lunchtime availability and existing resources remove an obstacle.", "A concrete, plausible example whose relevance is explained.", "A link showing why that benefit justifies a limited trial, rather than a vague repeated slogan."]}, {"n": 24, "criteria": ["Selects A, C, E, F and G, leaving out B and D.", "Orders C, F, A, G, E. Accept another order if the reasoning stays clear.", "Explains that D introduces a different leadership reason.", "Explains that B gives chess history without supporting access."]}, {"n": 26, "criteria": ["Emotion: the question about exclusion invites readers to imagine missing out; explains that effect.", "Reasoning: the stated timetable explains how the evening slot changes access; explains that connection.", "Emotion limit: feeling sympathy or agreeing with the question does not prove the policy will work.", "Evidence limit: one timetable shows a possible access improvement, not demand, affordability or a result for every resident."]}, {"n": 28, "criteria": ["Opening addresses the actual listeners naturally and respectfully.", "Opening clearly supports the six-week paired-reading trial.", "Ending asks for a relevant action within the audience’s role, such as approving the trial and volunteering if interested.", "Speech voice is sustained through direct address or inclusive wording; no letter sign-off or vague universal appeal."]}, {"n": 30, "criteria": ["Identifies a valid AVRPC check and gives text-based evidence of its weakness.", "Provides a revision that fixes that first weakness.", "Identifies a different valid check and gives text-based evidence.", "Provides a different revision that fixes the second weakness."]}, {"n": 32, "criteria": ["Concede: B.", "Narrow: D.", "Answer: A.", "Link: C. The complete order is B, D, A, C; each correctly placed and labelled move earns one mark."]}, {"n": 34, "criteria": ["Fairly concedes that checking borrowed items could take staff time.", "Identifies a relevant condition, such as many returns arriving together or no record of loans.", "Offers a plausible response that addresses checking work, such as capped loans and a return log; does not pretend work vanishes.", "Links back to a limited trial conditional on manageable workload."]}, {"n": 36, "criteria": ["Concedes that initial enthusiasm may not produce continuing attendance.", "Narrows fairly: the risk matters particularly if a permanent program is approved on interest alone.", "Answers with a small trial, actual attendance checks and feedback, not a promised turnout.", "Links to an evidence-based decision about continuing; acknowledges that sign-ups do not establish attendance."]}, {"n": 38, "criteria": ["Appropriate salutation naming Ms Patel.", "Respectful statement of the reason for writing and position.", "Specific request to approve or consider a six-week Saturday trial, not a vague or permanent demand.", "Suitable closing and writer’s name; removes applause and listening references."]}, {"n": 40, "criteria": ["A relevant title that introduces the issue without making an unsupported guarantee.", "Opening addresses the wider readership and establishes the argument; removes the private salutation and personal correspondence frame.", "Ending makes a public recommendation rather than using a letter sign-off.", "Explains a genuine change in audience or conventions while preserving the same position."]}, {"n": 42, "criteria": ["Speech sentence directly addresses listeners or uses an appropriate inclusive voice and action.", "Letter sentence respectfully frames the request for the principal.", "Public text sentence states the recommendation without a private greeting or performance cue.", "All preserve the four-week voluntary trial; the explanation accurately names an audience or convention difference."]}, {"n": 44, "criteria": ["students’ needs: plural possessive, as the bracketed note specifies several students.", "needs are: correct plural agreement.", "Repairs the comma splice with a full stop, semicolon or suitable conjunction.", "It’s a short trial, so the principal can review it: restores the capital and apostrophe without changing the meaning."]}, {"n": 46, "criteria": ["Corrects spelling in any retained wording, including approve, because, trial and definitely; uses normal sentence capitalisation.", "Removes the personal insult and adopts a respectful register.", "Makes a clear, firm request to approve or consider the trial.", "Replaces the guarantee with a plausible, limited benefit connected to what participants would do."]}, {"n": 48, "criteria": ["Clearly distinguishes older reading partners from younger readers; no unclear they or them.", "Names a concrete action, such as listening, helping with a difficult word or practising a passage.", "Explains a relevant possible benefit of that action.", "Uses a limited claim instead of promising that all participants will become better at everything."]}, {"n": 50, "criteria": ["One distinct, text-based diagnosis with a correct explanation.", "A second distinct diagnosis with explanation.", "A third distinct diagnosis with explanation.", "A fourth distinct diagnosis with explanation. Rewordings of the same flaw earn one mark only."]}, {"n": 52, "criteria": ["Letter framing that respectfully addresses the principal or states the reason for writing.", "A relevant hook and clear support for the four-week voluntary trial.", "Two distinct reasons, such as access for beginners and communication practice for leaders.", "Believable wording and no expansion into compulsory participation or permanent replacement of lunch."]}, {"n": 54, "criteria": ["Preserves the four-week trial and voluntary participation.", "Briefly combines already-developed benefits rather than introducing another reason.", "Makes approval conditional on suitable supervision and gives a relevant review or decision step.", "Ends with a specific request and an appropriate letter closing and name."]}, {"n": 56, "criteria": ["Precise position: support a six-week Saturday equipment-lending trial, with a relevant condition if desired.", "Reason 1 with a mechanism, such as donated equipment giving residents a first attempt without buying their own.", "Reason 2 with a different mechanism, such as sharing reusable equipment rather than leaving it unused.", "A genuine objection, such as loss, damage or staff checking time, plus a response that addresses that concern without guaranteeing it disappears."]}, {"n": 58, "criteria": ["Identifies the unearned guarantee of becoming the best centre in the country.", "Identifies the new tourism argument, which was not developed in the body.", "Revision accurately combines access and reuse rather than merely repeating a slogan.", "Revision recommends the six-week trial with a sensible review step and no new argument."]}, {"n": 60, "criteria": ["A: retain and develop, because it gives a relevant access mechanism; accept repair if the answer accurately specifies needed development.", "B: repair, because almost all remains an unsupported quantity and cannot be asserted without evidence.", "C: retain, because it offers a relevant way to investigate a real staffing concern before approval.", "D: remove or rewrite as a separate concern about noise; it unfairly attacks opponents’ motives and does not answer an objection."]}];
+let adminScoreSchemas={};
+function testDraft(){
+  try{const d=JSON.parse(lsGet("noof_test_v1_"+encodeURIComponent(student.nameKey)+"_"+PERSUASIVE_TEST_ID)||"null");
+    return d&&d.version===1?d:null;}catch(_){return null;}
+}
+function testMarkingNotes(){
+  return '<details class="aitem" style="margin-top:12px"><summary>Marking notes</summary>'+
+    '<p class="aitemmeta">Short answers: one mark per point below, four per question. Accept equivalent reasoning. Mark each complete piece out of 25 using the criteria shown. Do not require a fixed paragraph count or particular acronym.</p>'+
+    PERSUASIVE_MARKING_NOTES.map(q=>'<details><summary>Question '+q.n+' · 4 marks</summary><ol>'+q.criteria.map(c=>'<li>'+esc(c)+'</li>').join('')+'</ol></details>').join('')+
+    '<p class="aitemmeta">For the full pieces, judge the developed argument and its audience, organisation, language and accuracy across the whole response. A greeting alone does not establish the form. The 225-mark total is the scale for this tutoring test.</p></details>';
+}
+
 let wTimer=null, wLeft=30*60, wSubmitted=false, wStarted=false, wTotal=30*60;
 const $=id=>document.getElementById(id);
 
@@ -471,17 +501,20 @@ const WRITING_CRITERIA = {
     {key:"spelling",  label:"Spelling & punctuation",    max:5}
   ]
 };
-function criteriaFlat(){ const a=[]; Object.keys(WRITING_CRITERIA).forEach(s=>WRITING_CRITERIA[s].forEach(c=>a.push(c))); return a; }
-function criteriaMaxTotal(){ return criteriaFlat().reduce((s,c)=>s+c.max,0); }
-function criteriaLabel(key){ const c=criteriaFlat().find(c=>c.key===key); return c?c.label:key; }
+function criteriaFlat(schema=WRITING_CRITERIA){return Object.values(schema).flat();}
+function criteriaMaxTotal(schema=WRITING_CRITERIA){return criteriaFlat(schema).reduce((s,c)=>s+c.max,0);}
+function criteriaLabel(key){const c=criteriaFlat().concat(criteriaFlat(PERSUASIVE_CRITERIA)).find(c=>c.key===key);return c?c.label:key;}
 
 /* admin: build the score editor under a draft */
-function scoreEditor(bid, existing){
-  const sc=(existing&&existing.scores)||{};
-  let html='<div class="scorewrap"><label>Selective score</label>';
-  Object.keys(WRITING_CRITERIA).forEach(setName=>{
+function scoreEditor(bid,existing,promptId,responseText){
+  const isTest=String(promptId)===PERSUASIVE_TEST_ID;
+  const schema=isTest?PERSUASIVE_CRITERIA:WRITING_CRITERIA;adminScoreSchemas[bid]=schema;
+  const sc={...((existing&&existing.scores)||{})};
+  if(isTest&&sc.test_mcq==null){const match=String(responseText||"").match(/^Multiple choice: (\d+) \/ 30$/m);if(match&&Number(match[1])<=30)sc.test_mcq=Number(match[1]);}
+  let html='<div class="scorewrap"><label>'+(isTest?'Persuasive test score':'Selective score')+'</label>';
+  Object.keys(schema).forEach(setName=>{
     html+='<div class="scoreset"><div class="scoresetname">'+esc(setName)+'</div>';
-    WRITING_CRITERIA[setName].forEach(c=>{
+    schema[setName].forEach(c=>{
       let opts='<option value="">\u2013</option>';
       for(let i=0;i<=c.max;i++){ opts+='<option value="'+i+'"'+(String(sc[c.key])===String(i)?' selected':'')+'>'+i+'</option>'; }
       html+='<div class="scorerow2"><span>'+esc(c.label)+'</span>'+
@@ -490,19 +523,20 @@ function scoreEditor(bid, existing){
     });
     html+='</div>';
   });
-  const initTotal=(existing&&existing.total!=null)?existing.total:0;
-  html+='<div class="scoretotal">Total <b id="tot-'+bid+'">'+initTotal+'</b> / '+criteriaMaxTotal()+'</div></div>';
+  const initTotal=criteriaFlat(schema).reduce((sum,c)=>sum+(Number(sc[c.key])||0),0);
+  html+='<div class="scoretotal">Total <b id="tot-'+bid+'">'+initTotal+'</b> / '+criteriaMaxTotal(schema)+'</div></div>';
+  if(isTest)html+=testMarkingNotes();
   return html;
 }
 function recalcScore(bid){
   let total=0, any=false;
-  criteriaFlat().forEach(c=>{ const el=document.getElementById('sc-'+bid+'-'+c.key);
+  criteriaFlat(adminScoreSchemas[bid]||WRITING_CRITERIA).forEach(c=>{ const el=document.getElementById('sc-'+bid+'-'+c.key);
     if(el&&el.value!==''){ total+=Number(el.value); any=true; } });
   document.getElementById('tot-'+bid).textContent=any?total:0;
 }
 function gatherScore(bid){
-  const scores={}; let total=0, any=false; const max=criteriaMaxTotal();
-  criteriaFlat().forEach(c=>{ const el=document.getElementById('sc-'+bid+'-'+c.key);
+  const scores={}; let total=0, any=false; const schema=adminScoreSchemas[bid]||WRITING_CRITERIA; const max=criteriaMaxTotal(schema);
+  criteriaFlat(schema).forEach(c=>{ const el=document.getElementById('sc-'+bid+'-'+c.key);
     if(el&&el.value!==''){ scores[c.key]=Number(el.value); total+=Number(el.value); any=true; } });
   return any? {scores,total,max} : null;
 }
@@ -641,15 +675,23 @@ function taskEl(t,isDone){
   const ds=dueState(t.dueDate);
   el.className="task "+(isDone?"done":ds.cls);
   const isRev=t.type==="revision";
+  const isTest=String(t.sourceId)===PERSUASIVE_TEST_ID;
   const ic=(t.type==="writing"||isRev)?(isRev?IC_REV:IC_WRITE):IC_READ;
-  const typeLabel=isRev?"Revision":(t.type==="writing"?"Writing task":"Reading paper");
-  const meta=isDone?"Submitted":'<span class="due '+ds.cls+'">'+ds.label+"</span>";
+  const typeLabel=isRev?"Revision":isTest?"Writing test":(t.type==="writing"?"Writing task":"Reading paper");
+  const meta=isDone?"Submitted":isTest?"No time limit":'<span class="due '+ds.cls+'">'+ds.label+"</span>";
   el.innerHTML='<div class="ticon">'+ic+'</div><div class="tmid"><p class="ttitle">'+esc(t.title)+'</p>'+
     '<div class="tmeta">'+typeLabel+' &middot; '+meta+'</div></div>';
-  if(!isDone){ const b=document.createElement("button"); b.className="btn sm"; b.textContent="Start"; b.onclick=()=>startTask(t); el.appendChild(b); }
+  if(!isDone||isTest){ const b=document.createElement("button"); b.className="btn sm";
+    const saved=isTest?testDraft():null;
+    b.textContent=isDone?"View answers":saved&&Object.values(saved.answers||{}).some(a=>String(a).trim())?"Resume":"Start";
+    b.onclick=()=>startTask(t); el.appendChild(b); }
   return el;
 }
 function startTask(t){
+  if(String(t.sourceId)===PERSUASIVE_TEST_ID){
+    const url=t.targetUrl||PERSUASIVE_TEST_URL;
+    window.location.href=url+(url.includes("?")?"&":"?")+"student="+encodeURIComponent(student.nameKey)+"&paper="+encodeURIComponent(PERSUASIVE_TEST_ID);return;
+  }
   if(t.type==="revision"){ openRevision(t); return; }
   if(t.type==="writing"){
     const p=(ctx.prompts||[]).find(p=>String(p.promptId)===String(t.sourceId));
@@ -783,8 +825,9 @@ function openWriting(p){
   revMode=false; revisionOf=null;
   $("revContext").classList.add("hidden"); $("revContext").innerHTML="";
   $("wTimeWrap").classList.remove("hidden");
-  activePrompt=p; wTotal=(p.minutes||30)*60; wLeft=wTotal;
-  $("wCat").textContent=p.category||"Writing task";
+  stopWTimer(); activePrompt=p; wUnlimited=p.minutes===0||p.minutes==="0"||String(p.minutes).toLowerCase()==="unlimited";
+  wTotal=wUnlimited?0:(Number(p.minutes)||30)*60; wLeft=wTotal;
+  $("wCat").textContent=(p.category||"Writing task")+(wUnlimited?" · no time limit":"");
   $("wTitle").textContent=p.title; $("wPrompt").innerHTML=renderPrompt(p.text);
   $("wText").value=""; $("wText").readOnly=false; $("wText").style.opacity="1"; $("wCount").textContent="0";
   $("wPlan").value=""; $("wPlan").readOnly=false; $("wPlan").style.opacity="1";
@@ -797,8 +840,8 @@ function openWriting(p){
     $("wCount").textContent=$("wText").value.trim().split(/\s+/).filter(Boolean).length;
     if($("wText").value.trim() || $("wPlan").value.trim()){
       if(typeof dr.left==="number") wLeft=dr.left;
-      wStarted=true; startWTimer();
-      msg($("wMsg"),"info","We restored your saved draft and your timer carried on from where you left off.");
+      wStarted=true; if(!wUnlimited)startWTimer();
+      msg($("wMsg"),"info",wUnlimited?"Saved draft restored.":"We restored your saved draft and your timer carried on from where you left off.");
     }
   }
   renderClock();
@@ -808,7 +851,7 @@ function openWriting(p){
 function openRevision(task){
   const item=(ctx.feedbackInbox||[]).find(f=>String(f.submissionId)===String(task.sourceId));
   const promptObj=item?(ctx.prompts||[]).find(p=>String(p.promptId)===String(item.promptId)):null;
-  revMode=true; revisionOf=task.sourceId;
+  stopWTimer(); wUnlimited=true; revMode=true; revisionOf=task.sourceId;
   activePrompt={
     promptId:"rev_"+task.sourceId,
     submitPromptId:item?item.promptId:"",
@@ -855,19 +898,19 @@ function lockWriting(){
 $("writingBack").onclick=()=>{ saveDraft(); history.back(); };
 $("wText").addEventListener("input",()=>{
   $("wCount").textContent=$("wText").value.trim().split(/\s+/).filter(Boolean).length;
-  if(!revMode && !wStarted){ wStarted=true; startWTimer(); }
+  if(!revMode && !wUnlimited && !wStarted){ wStarted=true; startWTimer(); }
   saveDraft();
 });
 /* planning box: never counted, never submitted. It still starts the timer, since planning is part of the task time. */
 $("wPlan").addEventListener("input",()=>{
-  if(!revMode && !wStarted){ wStarted=true; startWTimer(); }
+  if(!revMode && !wUnlimited && !wStarted){ wStarted=true; startWTimer(); }
   saveDraft();
 });
-function startWTimer(){ stopWTimer(); wTimer=setInterval(()=>{ wLeft--; renderClock();
+function startWTimer(){ stopWTimer(); if(wUnlimited||revMode)return; wTimer=setInterval(()=>{ wLeft--; renderClock();
   if(wLeft%5===0) saveDraft();
   if(wLeft<=0){ stopWTimer(); submitWriting(true);} },1000); }
 function stopWTimer(){ if(wTimer) clearInterval(wTimer); wTimer=null; }
-function renderClock(){ const m=Math.floor(Math.max(wLeft,0)/60),s=Math.max(wLeft,0)%60;
+function renderClock(){ if(wUnlimited){$("wClock").textContent="No time limit";$("wClock").classList.remove("warn");return;} const m=Math.floor(Math.max(wLeft,0)/60),s=Math.max(wLeft,0)%60;
   const el=$("wClock"); el.textContent=m+":"+String(s).padStart(2,"0"); el.classList.toggle("warn",wLeft<=120); }
 async function submitWriting(auto){
   if(wSubmitted) return;
@@ -880,7 +923,7 @@ async function submitWriting(auto){
     const pid=activePrompt.submitPromptId||activePrompt.promptId;
     const ptitle=revMode?(activePrompt.submitTitle+" (revision)"):activePrompt.title;
     const payload={nameKey:student.nameKey,promptId:pid,promptTitle:ptitle,
-      wordCount:words,timeUsedSec:revMode?0:(wTotal-Math.max(wLeft,0)),responseText:text};
+      wordCount:words,timeUsedSec:(revMode||wUnlimited)?0:(wTotal-Math.max(wLeft,0)),responseText:text};
     if(revMode) payload.revisionOf=revisionOf;
     await callBackend("submitWriting",payload);
     wSubmitted=true;
@@ -896,7 +939,9 @@ async function submitWriting(auto){
   }
 }
 $("wSubmit").onclick=()=>submitWriting(false);
-window.addEventListener("beforeunload",e=>{ if(!wSubmitted && ($("wText").value.trim()||$("wPlan").value.trim()) && !$("vWriting").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; } });
+window.addEventListener("pagehide",saveDraft);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")saveDraft();});
+window.addEventListener("beforeunload",e=>{ saveDraft(); if(!wSubmitted && ($("wText").value.trim()||$("wPlan").value.trim()) && !$("vWriting").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; } });
 
 $("toAdmin").onclick=()=>{ clearMsg($("adminMsg")); $("adminConsole").classList.add("hidden"); navPush("admin"); showView("vAdmin"); };
 $("adminBack").onclick=()=>{ history.back(); };
@@ -947,6 +992,7 @@ $("asSubmit").onclick=async()=>{
     const p=papers.find(p=>String(p.paper_id)===$("asPaper").value);
     targetUrl=(papers.length&&p)?(p.file_url||""):$("asUrl").value.trim();
   }
+  if(taskType==="writing"&&$("asSource").value.trim()===PERSUASIVE_TEST_ID)targetUrl=PERSUASIVE_TEST_URL;
   const body={password:adminCache.password,studentKey:$("asStudent").value,taskType,
     title:$("asTitle").value.trim(),targetUrl:targetUrl,
     sourceId:$("asSource").value.trim(),dueDate:$("asDue").value};
@@ -961,7 +1007,7 @@ $("asSubmit").onclick=async()=>{
 };
 function renderAdmin(){
   const wrap=$("adminData"); wrap.innerHTML="";
-  adminComments={}; adminDraftText={};
+  adminComments={}; adminDraftText={}; adminScoreSchemas={};
   const reading=adminCache.reading||[],writing=adminCache.writing||[],assigns=adminCache.assignments||[];
   const keys={};
   (adminCache.students||[]).forEach(s=>keys[String(s.name_key).toLowerCase()]={display:s.display_name||s.name_key,reading:[],writing:[],tasks:[]});
@@ -1024,7 +1070,7 @@ function renderAdmin(){
         adminComments[bid]=(safe(w.comments_json)||[]).filter(c=>c&&c.end>c.start);
         h+='<div class="aitem"><div class="aitemhead"><span class="aitemtitle">'+esc(w.prompt_title)+'</span>'+
           '<span class="aitemmeta">'+fmtDate(isoLike(w.timestamp))+'</span></div>'+
-          '<div class="aitemmeta">'+esc(w.word_count)+' words &middot; '+Math.floor(w.time_used_sec/60)+'m '+(w.time_used_sec%60)+'s</div>'+
+          '<div class="aitemmeta">'+esc(w.word_count)+' words &middot; '+(String(w.prompt_id)===PERSUASIVE_TEST_ID?'No time limit':Math.floor(w.time_used_sec/60)+'m '+(w.time_used_sec%60)+'s')+'</div>'+
           '<button class="linkbtn" style="margin-top:8px" onclick="tog(\''+bid+'\')">Annotate draft</button>'+
           '<div id="'+bid+'" style="display:none">'+
             '<div class="aitemmeta" style="margin:8px 0 6px">Select any words in the draft to attach a comment.</div>'+
@@ -1035,8 +1081,8 @@ function renderAdmin(){
           '<textarea id="fb-'+bid+'" placeholder="What they did well, and the one thing to fix next time." spellcheck="false">'+esc(w.tutor_feedback||"")+'</textarea>'+
           '<label style="margin-top:8px">Target words for the vault <small>(comma separated)</small></label>'+
           '<input type="text" id="tw-'+bid+'" value="'+esc(w.target_words||"")+'" placeholder="resilient, nevertheless, momentum" spellcheck="false">'+
-          scoreEditor(bid, safe(w.score_json))+
-          '<label class="revopt"><input type="checkbox" id="rev-'+bid+'" checked> Set a revision task, due in <input type="number" id="revd-'+bid+'" value="7" min="1"> days</label>'+
+          scoreEditor(bid, safe(w.score_json), w.prompt_id, w.response_text)+
+          '<label class="revopt"><input type="checkbox" id="rev-'+bid+'"'+(String(w.prompt_id)===PERSUASIVE_TEST_ID?'':' checked')+'> Set a revision task, due in <input type="number" id="revd-'+bid+'" value="7" min="1"> days</label>'+
           '<div class="pushrow"><button class="btn sm" onclick="pushFeedback(\''+sid+'\',\''+bid+'\',this)">Push to student</button>'+
           (w.tutor_feedback?' <span class="pill">sent</span>':'')+'</div></div></div>';
       });
@@ -1122,6 +1168,7 @@ async function pushFeedback(sid,bid,btn){
   const feedback=document.getElementById("fb-"+bid).value;
   const targetWords=document.getElementById("tw-"+bid).value;
   const score=gatherScore(bid);
+  if(adminScoreSchemas[bid]===PERSUASIVE_CRITERIA&&score&&Object.keys(score.scores).length!==criteriaFlat(PERSUASIVE_CRITERIA).length){alert("Enter a mark for every part of the test before sending the total.");return;}
   const scoreJson=score?JSON.stringify(score):"";
   const commentsJson=(adminComments[bid]&&adminComments[bid].length)?JSON.stringify(adminComments[bid]):"";
   const revEl=document.getElementById("rev-"+bid);
@@ -1155,6 +1202,7 @@ async function delTask(taskId){
       const done=params.get("done");
       if(done==="reading") toast("Reading paper submitted and ticked off");
       else if(done==="writing") toast("Writing submitted");
+      else if(done==="test") toast("Test submitted");
       navHome();
     }else{
       clearSession();   // saved name no longer valid, e.g. removed by tutor
@@ -1164,3 +1212,4 @@ async function delTask(taskId){
 </script>
 </body>
 </html>
+
