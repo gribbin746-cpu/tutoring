@@ -1,0 +1,1172 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="A single timed HAST-style fiction and nonfiction reading paper for Aneen."><title>Aneen · HAST Reading Test</title><style>
+:root{
+  --navy:#002664; --navy2:#06376b; --blue:#1a73c0; --blue-soft:#e8f1fb;
+  --bg:#eceff3; --panel:#ffffff; --border:#d3d9e1; --line:#e6eaef;
+  --ink:#1b1e23; --muted:#5c6672; --correct:#1d7a3a; --correct-bg:#e7f4ec;
+  --wrong:#c0392b; --wrong-bg:#fbeceb; --flag:#d9822b; --flag-bg:#fcefe0;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--sans);color:var(--ink);background:var(--bg);font-size:15px;line-height:1.45}
+button{font-family:inherit}
+.hidden{display:none!important}
+header{height:54px;background:var(--navy);color:#fff;display:flex;align-items:center;
+  justify-content:space-between;padding:0 16px;position:fixed;top:0;left:0;right:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand .mark{width:24px;height:24px;flex:0 0 auto;color:#fff;opacity:.95}
+.brand .mark svg{width:24px;height:24px;display:block}
+.brand .ttl{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand .pill{background:rgba(255,255,255,.16);padding:2px 9px;border-radius:999px;font-size:11px;
+  letter-spacing:.04em;text-transform:uppercase;flex:0 0 auto}
+.hright{display:flex;align-items:center;gap:12px}
+.timer{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);padding:6px 12px;
+  border-radius:8px;font-variant-numeric:tabular-nums;font-weight:600;font-size:15px}
+.timer.warn{background:#7a1f1a;color:#ffd9d4}
+.timer svg{width:15px;height:15px}
+.btn{border:0;border-radius:8px;padding:9px 16px;font-weight:600;font-size:14px;cursor:pointer}
+.btn-finish{background:#fff;color:var(--navy)}
+.btn-finish:hover{background:#eaf0f8}
+.progbar{position:fixed;top:54px;left:0;right:0;height:3px;background:var(--line);z-index:19}
+.progbar>i{display:block;height:100%;background:var(--blue);width:0;transition:width .25s}
+main{position:fixed;top:57px;bottom:64px;left:0;right:0;display:flex}
+.pane{height:100%;overflow:auto;background:var(--panel)}
+.stim{flex:1 1 56%;border-right:1px solid var(--border);padding:26px 30px}
+.qpane{flex:1 1 44%;padding:22px 28px}
+.stim h2{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 14px}
+.stim .extract-head{font-family:var(--serif);font-style:italic;font-weight:700;font-size:16px;margin:20px 0 8px}
+.stim .work-title{font-family:var(--serif);font-weight:700;font-size:20px;margin:2px 0 12px}
+.stim p,.stim .stanza{font-family:var(--serif);font-size:16px;line-height:1.62;margin:0 0 13px;color:#23272d}
+.stanza{white-space:pre-line}
+.gap{display:inline-block;min-width:30px;text-align:center;border-bottom:2px solid #b9c2cd;
+  color:var(--muted);font-family:var(--sans);font-size:13px;font-weight:700;padding:0 4px;border-radius:3px}
+.gap.active{background:#fff3cf;border-bottom-color:var(--flag);color:#7a4d12}
+.ex-block{margin:0 0 18px;padding:0 0 0 14px;border-left:3px solid var(--line)}
+.ex-block .lbl{font-family:var(--sans);font-weight:700;font-size:13px;color:var(--blue);margin:0 0 4px}
+.qtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.qnum{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.flagbtn{display:flex;align-items:center;gap:6px;border:1px solid var(--border);background:#fff;
+  color:var(--muted);border-radius:7px;padding:6px 11px;font-size:13px;font-weight:600;cursor:pointer}
+.flagbtn svg{width:13px;height:13px}
+.flagbtn.on{background:var(--flag-bg);border-color:var(--flag);color:#9a5713}
+.qstem{font-size:16.5px;font-weight:600;line-height:1.5;margin:10px 0 16px}
+.qstem .qq{font-style:italic;font-weight:600}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:#fff;
+  border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;margin:0 0 10px;cursor:pointer;
+  font-size:15px;line-height:1.45;color:var(--ink);transition:border-color .12s,background .12s}
+.opt:hover{border-color:#9db8d6;background:#fafcff}
+.opt .badge{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1.5px solid #b6c0cc;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.sel .badge{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt:focus-visible{outline:3px solid #9bc2ec;outline-offset:2px}
+.opt .otext{padding-top:2px}
+footer{height:64px;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;padding:0 16px;z-index:20}
+.nav-side{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.navwrap{flex:1 1 auto;overflow-x:auto;display:flex;gap:6px;padding:4px 2px;justify-content:center}
+.navbtn{position:relative;flex:0 0 auto;width:30px;height:30px;border-radius:7px;border:1.5px solid var(--border);
+  background:#fff;color:var(--ink);font-size:13px;font-weight:600;cursor:pointer}
+.navbtn.answered{background:var(--navy);border-color:var(--navy);color:#fff}
+.navbtn.current{outline:3px solid #9bc2ec;outline-offset:1px;border-color:var(--blue)}
+.navbtn.flagged::after{content:"";position:absolute;top:-3px;right:-3px;width:9px;height:9px;border-radius:50%;
+  background:var(--flag);border:1.5px solid #fff}
+.btn-nav{border:1px solid var(--border);background:#fff;border-radius:8px;padding:9px 15px;font-weight:600;
+  font-size:14px;cursor:pointer;color:var(--ink)}
+.btn-nav:hover:not(:disabled){background:#f1f4f8}
+.btn-nav:disabled{opacity:.4;cursor:default}
+.btn-nav.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn-nav.primary:hover{background:var(--navy2)}
+.overlay{position:fixed;inset:0;background:rgba(12,20,33,.55);z-index:40;display:flex;
+  align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:14px;max-width:680px;width:100%;max-height:90vh;overflow:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.card .cap{background:var(--navy);color:#fff;padding:22px 28px}
+.card .cap h1{margin:0 0 4px;font-size:21px}
+.card .cap p{margin:0;opacity:.85;font-size:14px}
+.card .body{padding:24px 28px}
+.card .body h3{margin:18px 0 8px;font-size:14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.card ul{margin:0 0 4px;padding-left:20px}
+.card li{margin:0 0 7px;font-size:14.5px}
+.field{display:flex;gap:10px;align-items:center;margin:16px 0 4px}
+.field input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;font-family:inherit}
+.start-actions{display:flex;justify-content:flex-end;gap:10px;padding:18px 28px 24px}
+.btn-primary{background:var(--navy);color:#fff;border:0;border-radius:9px;padding:12px 22px;font-weight:700;font-size:15px;cursor:pointer}
+.btn-primary:hover{background:var(--navy2)}
+.btn-ghost{background:#fff;border:1px solid var(--border);border-radius:9px;padding:12px 20px;font-weight:600;font-size:15px;cursor:pointer}
+.scorerow{display:flex;gap:18px;align-items:center;margin:4px 0 18px}
+.scorebig{font-size:46px;font-weight:800;color:var(--navy);line-height:1}
+.scorebig small{font-size:20px;color:var(--muted);font-weight:600}
+.scorepct{font-size:15px;color:var(--muted)}
+.brk{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-size:14.5px;margin:0 0 8px}
+.brk .b-lbl{color:var(--muted)}
+.brk .b-val{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+.results-actions{display:flex;gap:10px;justify-content:flex-end;padding:6px 28px 24px}
+.skillrow{display:grid;grid-template-columns:175px 1fr 62px;gap:10px;align-items:center;margin:0 0 9px}
+.skillrow .sl{font-size:13.5px;color:#2b323b}
+.skilltrack{height:11px;background:#eef1f5;border-radius:6px;overflow:hidden}
+.skillfill{height:100%;border-radius:6px;transition:width .4s}
+.skillrow .sv{font-size:13px;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.skillrow .sv b{color:#2b323b}
+.autopsy{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.donut-wrap{position:relative;width:150px;height:150px;flex:0 0 auto}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-center .dn{font-size:26px;font-weight:800;color:var(--navy);line-height:1}
+.donut-center .dl{font-size:11px;color:var(--muted);letter-spacing:.03em}
+.legend{flex:1 1 200px;min-width:200px}
+.legend .lg{display:flex;align-items:center;gap:9px;margin:0 0 7px;font-size:13.5px}
+.legend .sw{width:12px;height:12px;border-radius:3px;flex:0 0 auto}
+.legend .lc{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;color:#2b323b}
+.no-errors{background:var(--correct-bg);color:var(--correct);border-radius:10px;padding:14px 16px;font-weight:600;font-size:14.5px}
+.focus{display:flex;flex-direction:column;gap:9px}
+.focus .fitem{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:9px;padding:11px 13px;background:#fbfcfe}
+.focus .fitem.warn{border-left-color:var(--flag)}
+.focus .fitem.good{border-left-color:var(--correct);background:var(--correct-bg)}
+.focus .ft{font-weight:700;font-size:14px;margin-bottom:2px}
+.focus .fb{font-size:13.5px;color:#3a434e}
+.chip{font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;letter-spacing:.01em}
+.chip.skill{background:#eef2f7;color:#41506a}
+.chip.err{background:var(--wrong-bg);color:var(--wrong)}
+.rev-nums{font-size:13.5px;color:#2b323b;background:#f3f6fa;border-radius:8px;padding:9px 12px;margin:0 0 12px}
+.rev-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border:1px solid var(--line);
+  border-left:4px solid var(--wrong);border-radius:9px;padding:9px 12px;margin:0 0 8px}
+.rev-row .rev-n{font-weight:800;color:var(--navy);font-size:14px;min-width:34px}
+.rev-row .rev-ans{margin-left:auto;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rev-row .rev-ans b.no{color:var(--wrong)}
+.rev-row .rev-ans b.ok{color:var(--correct)}
+.rev-explanation{width:100%;padding-left:42px;font-size:12.5px;color:var(--muted)}
+@media (max-width:880px){
+  main{flex-direction:column;bottom:96px}
+  .stim{flex:0 0 auto;max-height:42vh;border-right:0;border-bottom:1px solid var(--border)}
+  .qpane{flex:1 1 auto}
+  footer{height:auto;flex-wrap:wrap;padding:8px 10px;gap:8px}
+  .navwrap{order:3;width:100%;justify-content:flex-start}
+  .brand .ttl{max-width:44vw}
+  .skillrow{grid-template-columns:130px 1fr 58px}
+}
+
+[hidden]{display:none!important}button:disabled{opacity:.45;cursor:default}button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #9bc2ec;outline-offset:3px}input{font:inherit}.status{font-size:12px;color:var(--muted);line-height:1.6;min-height:18px}.start-actions,.results-actions{flex-wrap:wrap;justify-content:flex-start}.field{display:block}.field label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:5px}.field input{width:100%;max-width:360px}.cap .kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:9px;opacity:.75}.overlay{background:#edf1f7;overflow:auto}.card .cap{background:linear-gradient(120deg,#06203f,#11447f);border-bottom:2px solid #b0892f}.stim .work-title{font-size:26px;line-height:1.3;margin:12px 0 22px}.stim p{font-size:18px;line-height:1.82;position:relative;padding-left:23px;margin-bottom:18px}.pnum{position:absolute;left:0;top:4px;font:10px var(--sans);color:#858e99;user-select:none}.extract-meta{display:flex;justify-content:space-between;gap:15px;color:var(--muted);font-size:11px}.opt input{accent-color:var(--blue);margin:7px 0 0;flex-shrink:0}.opt{cursor:pointer}.opt.correct{border-color:var(--correct);background:var(--correct-bg)}.opt.wrong{border-color:var(--wrong);background:var(--wrong-bg)}.opt.correct .badge{background:var(--correct);color:white;border-color:var(--correct)}.opt.wrong .badge{background:var(--wrong);color:white;border-color:var(--wrong)}.option-note{display:block;font-size:11px;font-weight:650;margin-top:4px}.qstem{margin-top:16px}#opts{border:0;padding:0;margin:0;min-width:0}#explanation{font-size:13px;line-height:1.7;border-top:1px solid var(--border);margin-top:22px;padding-top:14px}#explanation p{margin:10px 0}.evidence{background:#f5eedc;border-radius:8px;padding:12px 14px}.evidence button{font:inherit;border:0;background:none;color:#715218;padding:0;text-decoration:underline;cursor:pointer}.navbtn.correct{background:var(--correct);border-color:var(--correct);color:white}.navbtn.wrong{background:var(--wrong);border-color:var(--wrong);color:white}.review-state{font-size:12px;color:var(--muted);padding-top:6px}.result-meta{font-size:13px;color:var(--muted);line-height:1.8}.scorebig{font-size:50px}.results-actions .btn-primary,.results-actions .btn-ghost{font-size:13px;padding:10px 14px}.storage-warning{position:fixed;left:0;right:0;top:0;background:#fff1c9;color:#654a15;padding:10px 18px;z-index:80;font-size:12px}.question-map{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin:10px 0}.question-map button{height:30px;border:1px solid var(--border);background:white;border-radius:5px;color:var(--ink);cursor:pointer}.question-map button.correct{background:var(--correct-bg);color:var(--correct);border-color:#acd2b8}.question-map button.wrong{background:var(--wrong-bg);color:var(--wrong);border-color:#e5b5b0}.question-map button.blank{background:#f0f3f7;border-style:dashed}.sr-only{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}dialog{border:0;border-radius:14px;padding:0;width:calc(100% - 40px);max-width:460px;box-shadow:0 20px 60px #0005;color:var(--ink)}dialog::backdrop{background:#0b203e88}dialog .cap{background:var(--navy);color:white;padding:22px 25px}dialog h2{margin:0 0 8px;font-size:21px}dialog p{font-size:14px;margin:0;line-height:1.6}dialog .start-actions{padding:20px 25px}.navwrap{justify-content:flex-start;scroll-behavior:smooth}.pane{min-width:0}.stim{flex:1 1 53%}.qpane{flex:1 1 47%}#resultsOverlay{background:#edf1f7}.result-head{display:flex;align-items:center;gap:10px}mark{background:#fae6a5;color:inherit}.card{max-width:710px}#resultsOverlay .card{max-width:740px}.skillrow{grid-template-columns:150px 1fr 60px}.start-actions a{text-decoration:none;color:var(--ink);font-size:13px;padding:12px 6px}.results-actions .btn-ghost[hidden]{display:none}.card .body>p{line-height:1.65}.card .cap h1{font-family:var(--serif);font-size:29px;font-weight:normal}.scorepct{line-height:1.7}.start-brand{font-family:var(--serif);font-size:24px;letter-spacing:-.3px}.start-brand small{font:12px var(--sans);letter-spacing:0;margin-left:10px;opacity:.7}.cap p{line-height:1.7}.question-count{font-size:11px;color:var(--muted);margin-bottom:8px}.qtop{gap:15px}.btn-nav{white-space:nowrap}
+@media(max-width:880px){main{bottom:102px}.stim{flex:0 0 42%;max-height:none;min-height:0;padding:18px 20px}.qpane{flex:1 1 58%;min-height:0;padding:18px 20px}.stim p{font-size:17px;line-height:1.7}.stim .work-title{font-size:23px;margin-bottom:17px}.extract-meta{font-size:10px}.navwrap{max-width:100%;gap:5px}.navbtn{width:29px;height:29px}.brand .ttl{font-size:12px;max-width:41vw}.brand .pill{display:none}.hright{gap:8px}.timer{padding:6px 8px;font-size:14px}.btn-finish{padding:8px 11px;font-size:12px}.card .cap,.card .body{padding:20px 22px}.start-actions{padding:14px 22px 22px}.card{max-height:94dvh}.overlay{padding:12px}.question-map{grid-template-columns:repeat(8,1fr)}.skillrow{grid-template-columns:125px 1fr 55px}.results-actions{padding:10px 22px 22px}.brand .mark{display:none}.flagbtn{padding:5px 8px;font-size:12px}.qstem{font-size:15.5px}.opt{font-size:14px;padding:11px;gap:9px}.btn-nav{padding:8px 12px}.stim h2{font-size:11px}.card .cap h1{font-size:25px}.scorebig{font-size:44px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}@media print{header,footer,.overlay,dialog{display:none!important}main{position:static;display:block}.pane{height:auto;overflow:visible;border:0}.opt{break-inside:avoid}}
+</style></head><body>
+<div id="storageWarning" class="storage-warning" hidden>Browser saving is unavailable. Keep this page open until you finish, then download your results.</div>
+<section class="overlay" id="startOverlay" aria-labelledby="introTitle"><div class="card"><div class="cap"><div class="start-brand">Noof <small>Tutoring</small></div><h1 id="introTitle" style="margin-top:24px">HAST Reading Test</h1><p>45 minutes · 40 questions</p></div><div class="body"><div class="field" id="nameField"><label for="nameInput">Name</label><input id="nameInput" type="text" value="Aneen" maxlength="60" autocomplete="off"></div><p class="status" id="startStatus" role="status"></p></div><div class="start-actions"><button class="btn-primary" id="beginBtn">Begin test</button><a href="index.html" id="introBack">Back to portal</a></div></div></section>
+<dialog id="confirmDialog" aria-labelledby="confirmTitle"><div class="cap"><h2 id="confirmTitle">Submit the test?</h2><p id="confirmSub"></p></div><div class="start-actions"><button class="btn-ghost" id="keepGoingBtn">Keep working</button><button class="btn-primary" id="confirmFinishBtn">Submit and mark</button></div></dialog>
+<section class="overlay" id="resultsOverlay" hidden aria-labelledby="resultsTitle"><div class="card"><div class="cap"><h1 id="resultsTitle">Your results</h1><p id="resultsWho"></p></div><div class="body"><div class="scorerow"><div class="scorebig" id="scoreBig"></div><div><div class="scorepct" id="scorePct"></div><div class="scorepct" id="scoreTime"></div></div></div><p class="result-meta" id="attemptSummary"></p><h3>By text type</h3><div class="brk" id="brkBox"></div><h3>By reading skill</h3><div id="skillBox"></div><h3>Review your answers</h3><div id="reviewMap" class="question-map"></div><p id="sendStatus" class="status" role="status"></p></div><div class="results-actions"><button class="btn-ghost" id="reviewBtn">Review all answers</button><button class="btn-ghost" id="downloadBtn">Download results</button><button class="btn-ghost" id="sendBtn" hidden>Send to portal</button><button class="btn-primary" id="backToDashBtn">Back to portal</button></div></div></section>
+<header><div class="brand"><span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 6.5C10.6 5.2 8.4 4.5 5.5 4.5C4.7 4.5 4 5.2 4 6v11.5c0 .6.5 1 1.1 1c2.7-.2 4.8.5 6.9 2c2.1-1.5 4.2-2.2 6.9-2c.6 0 1.1-.4 1.1-1V6c0-.8-.7-1.5-1.5-1.5c-2.9 0-5.1.7-6.5 2z"/><path d="M12 6.5v12"/></svg></span><div class="ttl">HAST Reading Test</div><div class="pill">Aneen</div></div><div class="hright"><div class="timer" id="timer" role="timer" aria-label="Time remaining"><span id="timeText">45:00</span></div><button class="btn btn-finish" id="finishBtn" disabled>Submit</button></div></header>
+<div class="progbar" aria-hidden="true"><i id="progFill"></i></div>
+<main id="testMain" hidden><article class="pane stim" id="stim" aria-label="Reading extract"></article><section class="pane qpane" id="qpane" aria-label="Question"><div id="answeredCount" class="question-count"></div><div class="qtop"><div class="qnum" id="qnum"></div><button class="flagbtn" id="flagBtn" aria-pressed="false">Flag</button></div><h1 class="qstem" id="qstem"></h1><fieldset id="opts" aria-labelledby="qstem"></fieldset><div id="explanation" hidden></div></section></main>
+<footer id="testFooter" hidden><div class="nav-side"><button class="btn-nav" id="prevBtn">Previous</button></div><nav class="navwrap" id="navwrap" aria-label="Questions"></nav><div class="nav-side"><button class="btn-nav primary" id="nextBtn">Next</button></div></footer><div class="sr-only" id="liveStatus" role="status" aria-live="polite"></div>
+<script id="testData" type="application/json">{
+  "extracts": [
+    {
+      "id": "f1",
+      "title": "The evening shift",
+      "genre": "Fiction",
+      "paragraphs": [
+        "By five o'clock the waiting room had emptied, except for a woman with a paper bag folded on her knees. Leila wiped the counter twice. Her father had left her in charge of the shoe-repair shop for an hour, and she had been enjoying the little bell, the tickets, the reassuring numbers on the shelves. The woman's ticket was number forty-three. Shelf forty-three was empty.",
+        "Leila found the shoes beneath her father's bench. One heel was finished; the other lay beside a jar of tacks. The woman watched her carry them out. “He's usually very good,” she said. It was worse than a complaint. Leila had been preparing to defend him, and now there was nothing to push against.",
+        "“Tomorrow morning?” Leila suggested. The woman rubbed the folded edge of the bag. She needed them that evening, she said, for a dinner at the hotel. It was her first evening in the kitchen there. Leila looked again at the shoes: black, plain, worn pale inside. She had imagined a dining room, candles, someone waiting at a table.",
+        "She rang her father. While they waited, she moved the chair from beside the cold door to the small electric heater. The woman put her bag down at last. When her father arrived, Leila stayed behind the counter, although her hour had ended."
+      ]
+    },
+    {
+      "id": "n1",
+      "title": "When a clock is useful",
+      "genre": "Nonfiction",
+      "paragraphs": [
+        "A stopped clock is easy to identify. A public clock that is seven minutes slow presents a more interesting problem. It continues to perform the appearance of a service. People glance up, adjust their pace and miss a bus. Its hands are moving; the error travels with them.",
+        "Yet accuracy is only one way a town clock can be useful. At the railway square in this account, the clock tower was long used as a meeting place, including during six months when its mechanism was removed. “Under the clock” remained a perfectly adequate instruction. Nobody needed the missing hands to find the tower.",
+        "When the mechanism returned, a proposal to replace its dial with a digital display divided residents. The engineer preferred a display that could be read precisely from the far side of the square. Several shopkeepers preferred the old dial because it was recognisable. Both groups called their preferred design “more useful”. They were measuring different services.",
+        "This does not make accuracy optional. A clock that invites people to rely on its time should keep that time properly. It does mean that replacing a public object involves a question that a test of its mechanism cannot settle: which of its jobs are we asking it to do?"
+      ]
+    },
+    {
+      "id": "f2",
+      "title": "The reserve",
+      "genre": "Fiction",
+      "paragraphs": [
+        "The team photograph was taken before the final. Owen stood at the end of the back row, where he could slip out when the coach called the starting side. He had practised the expression he would wear: interested, untroubled, not too eager. Beside him, Dev was pulling at a loose thread on his sleeve.",
+        "“You'll tear it,” Owen said. Dev let go. There were people Owen could have said more to, but Dev was starting in his position. For the past week, every kind thing Owen thought of saying to him had arrived with something attached.",
+        "Ten minutes into the game, Dev put a pass straight over the sideline. Owen felt a quick, shameful satisfaction. Then Dev looked towards the bench. The coach was writing on his clipboard. Owen raised both hands and made the small pushing motion they used in practice: move up, give yourself room. Dev nodded.",
+        "After half-time Owen went on. He played well enough, though later he could not remember the order of the goals. What he remembered was Dev dropping onto the bench beside him afterwards and saying, “I saw you.” Owen bent to undo his boots. The knot had tightened in the rain; he worked at it long after it came loose."
+      ]
+    },
+    {
+      "id": "n2",
+      "title": "The unmarked nest",
+      "genre": "Nonfiction",
+      "paragraphs": [
+        "A field notebook can be misleading precisely because its pages look so orderly. Dates line up. Species have columns. An empty box appears to be the opposite of a filled one. But what does the empty box mean?",
+        "Consider an invented survey in which volunteers look for nests beside a walking track. On the first weekend, they record every nest they notice. On the second, they return with a local guide who points out several nests concealed behind rough bark. The new pages contain more entries. It is tempting to report that nesting has increased. The notebook, however, records discoveries, not the arrival dates of the birds.",
+        "The guide has changed the observers’ chances of finding what was already there. This does not make the second weekend’s observations worthless. Indeed, they may provide a more complete account of the area. It does make a direct comparison of the two totals unsafe. Greater skill has altered the measuring process while the heading on the column has stayed the same.",
+        "A better notebook would distinguish a checked site with no nest found from a site never checked, and record who searched, for how long and by what method. Such details make the page untidier. They also make it possible for a later reader to decide what the apparent change can reasonably mean."
+      ]
+    },
+    {
+      "id": "f3",
+      "title": "The inspection",
+      "genre": "Fiction",
+      "paragraphs": [
+        "Mrs Vale arrived at the boarding house with a notebook so small that Mr Finch distrusted it immediately. A proper inspector, he felt, would require something with a stiff cover. He showed her the front sitting room, where the curtains had been washed for the first time since the previous inspection.",
+        "“A quiet room,” she said.",
+        "“Very quiet,” said Mr Finch. He had asked the lodgers to remain upstairs. Above them a chair scraped, followed by an extended effort to make no sound at all.",
+        "Mrs Vale wrote something. Mr Finch explained that they were a considerate household. The chair scraped again. He began a description of the house’s excellent ventilation, though it was October and he had nailed the sitting-room window shut against the draught.",
+        "At the foot of the stairs Mrs Vale paused beside a row of muddy boots. Mr Finch moved in front of them. “We have people who work,” he said, before he could improve the sentence.",
+        "“Yes,” she said. “I understood that.”",
+        "For the first time he looked directly at her notebook. It was open at a page of measurements: the width of doors, the height of handrails. Mrs Vale stepped around him and tested the banister. Upstairs, somebody sneezed. This time Mr Finch did not apologise."
+      ]
+    },
+    {
+      "id": "n3",
+      "title": "The map in the drawer",
+      "genre": "Nonfiction",
+      "paragraphs": [
+        "The quickest route across a town is not necessarily the easiest route to explain. A map drawn for delivery drivers might show a narrow service lane behind a supermarket. A map printed for visitors might omit the lane and emphasise a wide street with a name visible at both ends. One map helps the reader save time; the other helps the reader avoid getting lost.",
+        "It is therefore unhelpful to ask which map leaves things out without asking why. Both must leave things out. A map showing every drain, doorway and change in paving would bury its directions under its own accuracy. Selection is part of the work, not evidence that the work has failed.",
+        "Selection becomes a problem when the map’s purpose and its omissions no longer fit each other. A walking map that marks a stepped footbridge but omits the steps can give a wheelchair user a route that exists on paper and fails on arrival. Adding every feature would not be the remedy. Adding the feature that changes whether the route can be used would be.",
+        "The useful question is not whether a map is complete. No portable map is. It is whether the maker has understood what the intended reader needs to decide."
+      ]
+    },
+    {
+      "id": "f5",
+      "title": "The blue bowl",
+      "genre": "Fiction",
+      "paragraphs": [
+        "For the sale, Dad put a square of masking tape underneath every bowl and wrote a price on it. He priced the blue one last. It had a pale crescent along the rim where the glaze had failed to take. My mother used to turn that side towards the wall.",
+        "“Five?” I said.",
+        "Dad wrote five, then pressed the tape flat with his thumbnail. Outside, a woman was examining the bookcase. She asked whether the bowls were part of a set. Dad said they had never managed to become one.",
+        "I carried the blue bowl to the kitchen to wash it. There was nothing in it except dust. I washed it anyway, using the soft cloth that had escaped the box marked CLEANING. Through the window I could see Dad walking the woman to her car with the bookcase shelves under his arm.",
+        "When I brought the bowl back, the tape was damp and peeling. Dad reached for a fresh piece. I held it out to him but did not put it down. He looked at my hands.",
+        "“We'll need something for the keys at the new place,” he said.",
+        "I put the bowl in the box beside his coat. The pale crescent faced upwards. Dad shut the lid without moving it."
+      ]
+    },
+    {
+      "id": "n5",
+      "title": "Reading a voice",
+      "genre": "Nonfiction",
+      "paragraphs": [
+        "A written transcript of a conversation is already an interpretation. Speech contains pauses, false starts, overlapping voices and unfinished phrases. To turn it into readable lines, an editor must make decisions that are easy to overlook once the page looks clean.",
+        "Suppose a speaker says, “I thought ... no, I hoped it would work.” An editor who prints only “I hoped it would work” preserves the final choice of word but removes the revision. That revision may matter: the speaker distinguishes an expectation from a wish. Another editor could keep every hesitation, yet make a thoughtful speaker seem confused by filling the page with fragments that sounded natural aloud.",
+        "There is no single level of detail suited to every purpose. A researcher studying turn-taking needs interruptions that a short newspaper account may reasonably omit. But a purpose is not a licence to make any alteration convenient. An account presented as a person’s considered opinion must not remove a qualification that changes what that person appears to believe.",
+        "A careful editor therefore makes the treatment of speech visible. A note explaining that repeated words have been removed is not a guarantee of fairness. It gives the reader a better starting point for judging what kind of record is being offered."
+      ]
+    },
+    {
+      "id": "f6",
+      "title": "The short way home",
+      "genre": "Fiction",
+      "paragraphs": [
+        "On the map the path along the creek saved twelve minutes. I had measured it with the edge of a receipt while Mum packed the sandwiches. She said we would go by the road.",
+        "“It's longer,” I said.",
+        "“I know.”",
+        "At the creek she stopped anyway. From the bridge we could see the path, dry and clear between the reeds. I waited for her to admit it. Instead she took an orange from the bag and began to peel it. A strip of skin fell into her palm, unbroken.",
+        "“Your grandfather used to bring us here,” she said. “He'd make us stand still until we could hear the water under the traffic.”",
+        "I could hear a truck changing gears. Mum divided the orange and handed me half. There was a piece of white pith on her sleeve. I nearly brushed it off, then left it. Below the bridge, water clicked against a bottle caught between two stones.",
+        "We stayed until the truck was well out of hearing. When we started again, Mum turned towards the road. I put the receipt in my pocket. At the next crossing I pressed the button and waited beside her, although the street was empty."
+      ]
+    },
+    {
+      "id": "n6",
+      "title": "The life of a repaired chair",
+      "genre": "Nonfiction",
+      "paragraphs": [
+        "The repair on the chair was easy to spot: a strip of darker wood ran across the back. In the auction catalogue it was described as a defect. In a family photograph, taken forty years earlier, the same strip was already visible behind the owner’s shoulder. The catalogue and the photograph were recording different kinds of value.",
+        "To a buyer seeking an untouched example of a maker’s work, the repair could reasonably reduce the chair’s appeal. The new strip interrupts the original design and raises questions about how much of the object remains. It would be sentimental to insist that every trace of use automatically adds value for every purpose.",
+        "Yet it would be equally narrow to treat use only as damage. Someone chose to keep this chair when replacement was possible. The repair records that choice, though it cannot tell us the reason. Affection, economy, convenience and habit are all possible. To call it a treasured possession solely because it was repaired would turn a trace of the past into a story more complete than the evidence allows.",
+        "Preserving an object can therefore involve preserving uncertainty. We can describe the strip, date its appearance within limits and explain what it changes. We can leave open the question of what the chair meant to the person who sat in it."
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "n": 1,
+      "extract": "f1",
+      "stem": "Why is the woman’s remark worse than a complaint for Leila?",
+      "skill": "Inference",
+      "options": [
+        "Its fairness leaves Leila unable to answer defensively.",
+        "Its familiarity suggests the woman knows her father.",
+        "Its praise implies that Leila should repair the heel.",
+        "Its politeness makes the delay seem less important."
+      ],
+      "reasons": [
+        "Leila expects to defend her father, but the woman acknowledges his usual reliability. The anticipated argument disappears.",
+        "The woman may be a customer, but knowing her father personally is not the reason supplied.",
+        "Nothing in the remark asks Leila to do the repair herself.",
+        "The remark makes Leila more uncomfortable, not less concerned about the delay."
+      ],
+      "correct": 0,
+      "evidence": "Leila had been preparing to defend him, and now there was nothing to push against.",
+      "paragraph": 2
+    },
+    {
+      "n": 2,
+      "extract": "f1",
+      "stem": "What does Leila revise when the woman mentions the kitchen?",
+      "skill": "Character change",
+      "options": [
+        "Her impression that the woman is being impatient.",
+        "Her picture of what the dinner means for the woman.",
+        "Her estimate of how long the repair will take.",
+        "Her belief that her father has misplaced the ticket."
+      ],
+      "reasons": [
+        "The woman has waited without the impatience this option assumes.",
+        "She had pictured a guest at dinner; the woman is going to work. That changes the practical stakes of the delay.",
+        "There is no new information about the repair time.",
+        "The shoes have already been found; the ticket is not at issue."
+      ],
+      "correct": 1,
+      "evidence": "It was her first evening in the kitchen there.",
+      "paragraph": 3
+    },
+    {
+      "n": 3,
+      "extract": "f1",
+      "stem": "Which detail best supports a growing sense of responsibility in Leila?",
+      "skill": "Evidence",
+      "options": [
+        "She checks the shelf matching the woman’s ticket.",
+        "She wipes the shop counter a second time.",
+        "She remains after the hour she agreed to cover.",
+        "She carries the unfinished shoes from the bench."
+      ],
+      "reasons": [
+        "Checking the shelf is part of her ordinary task.",
+        "The cleaning occurs before the problem and does not show a change in responsibility.",
+        "Staying beyond the arrangement shows involvement beyond simply performing her assigned role.",
+        "Carrying out the shoes establishes the problem rather than her later change."
+      ],
+      "correct": 2,
+      "evidence": "Leila stayed behind the counter, although her hour had ended.",
+      "paragraph": 4
+    },
+    {
+      "n": 4,
+      "extract": "f1",
+      "stem": "In paragraph 1, the numbers are “reassuring” because they seem to offer",
+      "skill": "Vocabulary",
+      "options": [
+        "a reminder that her father will return shortly.",
+        "evidence that the shop has many loyal customers.",
+        "a dependable order that Leila can manage.",
+        "a record of the money earned during her shift."
+      ],
+      "reasons": [
+        "The numbers do not measure the time until her father returns.",
+        "Customer loyalty is not connected to the numbers in the passage.",
+        "Her pleasure in the tickets and shelves suggests confidence in a manageable system, which the missing shoes disrupt.",
+        "The passage identifies tickets and shelf numbers, not earnings."
+      ],
+      "correct": 2,
+      "evidence": "the tickets, the reassuring numbers on the shelves",
+      "paragraph": 1
+    },
+    {
+      "n": 5,
+      "extract": "n1",
+      "stem": "What is the passage’s central argument?",
+      "skill": "Main idea",
+      "options": [
+        "An accurate time display is the main duty of a town clock.",
+        "Judging a public object requires identifying the uses it serves.",
+        "Public objects retain their value when their mechanisms fail.",
+        "Traditional designs deserve priority over technical improvements."
+      ],
+      "reasons": [
+        "Timekeeping is a duty, but calling it the main one misses the wider argument.",
+        "The argument moves from timekeeping to meeting-place and recognition functions, then asks which jobs matter.",
+        "The tower retains one use, but the author still insists on proper timekeeping. This claim is too broad.",
+        "The author presents the competing views without awarding priority to tradition."
+      ],
+      "correct": 1,
+      "evidence": "which of its jobs are we asking it to do?",
+      "paragraph": 4
+    },
+    {
+      "n": 6,
+      "extract": "n1",
+      "stem": "“The error travels with them” chiefly emphasises that the slow clock",
+      "skill": "Language",
+      "options": [
+        "becomes less accurate as the day progresses.",
+        "has a fault in the movement of its hands.",
+        "confuses visitors more often than residents.",
+        "continually supplies misleading information."
+      ],
+      "reasons": [
+        "A constant seven-minute delay need not increase during the day.",
+        "The expression describes the consequence of the error, not a mechanical diagnosis.",
+        "The passage makes no comparison between visitors and residents.",
+        "The moving hands repeatedly present the wrong time; the passage does not say that the seven-minute error grows."
+      ],
+      "correct": 3,
+      "evidence": "Its hands are moving; the error travels with them.",
+      "paragraph": 1
+    },
+    {
+      "n": 7,
+      "extract": "n1",
+      "stem": "Why include the period when the mechanism was absent?",
+      "skill": "Structure",
+      "options": [
+        "To establish that repairing the mechanism took too long.",
+        "To suggest that shopkeepers benefited from the delay.",
+        "To separate the tower’s meeting-place role from its timekeeping.",
+        "To show why residents requested a digital replacement."
+      ],
+      "reasons": [
+        "Six months is stated, but the passage does not assess the repair duration.",
+        "No benefit to shopkeepers from the delay is described.",
+        "The meeting instruction still works without hands, demonstrating an independent use.",
+        "The absence is not given as the cause of the digital proposal."
+      ],
+      "correct": 2,
+      "evidence": "“Under the clock” remained a perfectly adequate instruction.",
+      "paragraph": 2
+    },
+    {
+      "n": 8,
+      "extract": "n1",
+      "stem": "Which view would the author most likely accept?",
+      "skill": "Inference",
+      "options": [
+        "Public preferences provide a better measure than engineering tests.",
+        "Agreement on accuracy would resolve the dispute over the dial.",
+        "Recognisability matters chiefly while a mechanism is out of service.",
+        "A technical improvement may leave another valued function worse served."
+      ],
+      "reasons": [
+        "The author requires accuracy as well as consideration of other uses, rather than ranking opinion above tests.",
+        "The disagreement concerns different uses, so accuracy alone cannot settle it.",
+        "Recognition remains a concern after the mechanism returns.",
+        "The digital display may improve precise reading while changing the familiar appearance valued by others."
+      ],
+      "correct": 3,
+      "evidence": "They were measuring different services.",
+      "paragraph": 3
+    },
+    {
+      "n": 9,
+      "extract": "f2",
+      "stem": "What is most likely “attached” to Owen’s kind thoughts?",
+      "skill": "Inference",
+      "options": [
+        "Resentment that complicates his wish to be generous.",
+        "A memory of being helped by Dev at practice.",
+        "Concern that Dev will misunderstand the advice.",
+        "A plan to win the coach’s attention through friendship."
+      ],
+      "reasons": [
+        "Dev has the position Owen wants. Owen’s brief pleasure at the mistake confirms the resentment beneath his attempted kindness.",
+        "The reference to practice describes a shared signal, not an earlier kindness from Dev.",
+        "Misunderstanding is possible in general, but there is no evidence that this is Owen’s concern.",
+        "His carefully managed expression concerns selection, but the passage supplies no friendship strategy."
+      ],
+      "correct": 0,
+      "evidence": "Dev was starting in his position.",
+      "paragraph": 2
+    },
+    {
+      "n": 10,
+      "extract": "f2",
+      "stem": "Owen’s signal to Dev shows that he",
+      "skill": "Character change",
+      "options": [
+        "expects the coach to replace Dev after the mistake.",
+        "has stopped caring whether he enters the game.",
+        "has decided that Dev deserves the position more.",
+        "acts supportively despite still having mixed feelings."
+      ],
+      "reasons": [
+        "The coach is writing, but no expectation of substitution is stated.",
+        "He later plays; the passage does not establish indifference to selection.",
+        "He does not compare their merits or surrender his wish to play.",
+        "The supportive act follows the admitted satisfaction. Behaviour changes without proof that jealousy disappears."
+      ],
+      "correct": 3,
+      "evidence": "Owen raised both hands and made the small pushing motion they used in practice",
+      "paragraph": 3
+    },
+    {
+      "n": 11,
+      "extract": "f2",
+      "stem": "The prolonged attention to the loosened knot most strongly suggests Owen’s",
+      "skill": "Language",
+      "options": [
+        "discomfort at having his private struggle recognised.",
+        "disappointment at forgetting the sequence of goals.",
+        "frustration that his wet boots have been damaged.",
+        "wish to avoid discussing how well Dev has played."
+      ],
+      "reasons": [
+        "Dev’s “I saw you” exposes the significance of Owen’s gesture; Owen occupies himself after the practical reason has gone.",
+        "His memory of the goals is not presented as a source of distress.",
+        "The knot loosens, and damage is not mentioned.",
+        "Dev comments on Owen’s support, not his own performance."
+      ],
+      "correct": 0,
+      "evidence": "he worked at it long after it came loose.",
+      "paragraph": 4
+    },
+    {
+      "n": 12,
+      "extract": "f2",
+      "stem": "The contrast between the goals and the gesture suggests that, for Owen,",
+      "skill": "Structure",
+      "options": [
+        "the match mattered less because his side lost it.",
+        "an interpersonal choice outweighs the match’s details.",
+        "his poor memory prevents him assessing his performance.",
+        "the gesture mattered chiefly because it helped him play."
+      ],
+      "reasons": [
+        "The result is never given.",
+        "He remembers supporting Dev and being recognised for it more vividly than the scoring.",
+        "His selective memory indicates emotional importance, not an inability to assess play.",
+        "No causal connection is made between the gesture and Owen’s substitution."
+      ],
+      "correct": 1,
+      "evidence": "What he remembered was Dev dropping onto the bench beside him",
+      "paragraph": 4
+    },
+    {
+      "n": 13,
+      "extract": "n2",
+      "stem": "Why can the two weekends’ totals not safely establish an increase in nesting?",
+      "skill": "Evidence",
+      "options": [
+        "The second search covered ground farther from the track.",
+        "The volunteers counted nests rather than individual birds.",
+        "The chance of detecting a nest changed between searches.",
+        "The guide recorded nests that the volunteers had rejected."
+      ],
+      "reasons": [
+        "The text does not say that the search area changed.",
+        "Counting nests fits a nesting survey; the central problem is changed detection.",
+        "The guide improves detection of concealed nests, so higher recorded totals need not mean more nests exist.",
+        "Previously missed nests are described, not rejected records."
+      ],
+      "correct": 2,
+      "evidence": "The guide has changed the observers’ chances of finding what was already there.",
+      "paragraph": 3
+    },
+    {
+      "n": 14,
+      "extract": "n2",
+      "stem": "The author’s attitude to the second weekend’s records is best described as",
+      "skill": "Tone",
+      "options": [
+        "dismissive of their usefulness without arrival dates.",
+        "appreciative of their value but cautious about comparisons.",
+        "doubtful of their accuracy because a guide intervened.",
+        "confident that they correct the first weekend’s errors."
+      ],
+      "reasons": [
+        "The author explicitly rejects the view that the observations are worthless.",
+        "The author explicitly values the greater completeness while limiting what the comparison can show.",
+        "The guide may improve the account; intervention does not make the observations inaccurate.",
+        "The second search may be more complete, but complete correction is not established."
+      ],
+      "correct": 1,
+      "evidence": "Indeed, they may provide a more complete account of the area.",
+      "paragraph": 3
+    },
+    {
+      "n": 15,
+      "extract": "n2",
+      "stem": "“While the heading on the column has stayed the same” draws attention to",
+      "skill": "Vocabulary",
+      "options": [
+        "a consistent search method producing unexpectedly different results.",
+        "a field notebook whose categories need to include more species.",
+        "a consistent label concealing a change in how results were obtained.",
+        "a clerical mistake that has placed discoveries under the wrong date."
+      ],
+      "reasons": [
+        "The search process has changed through the guide’s involvement.",
+        "More species categories would not address the detection problem.",
+        "The heading looks unchanged even though observer skill changes the measurement.",
+        "No wrong date is reported."
+      ],
+      "correct": 2,
+      "evidence": "Greater skill has altered the measuring process",
+      "paragraph": 3
+    },
+    {
+      "n": 16,
+      "extract": "n2",
+      "stem": "Which pair of entries would best resolve the ambiguity of an empty box?",
+      "skill": "Inference",
+      "options": [
+        "“New nest” and “nest previously recorded”.",
+        "“Guide present” and “volunteers present”.",
+        "“Searched; none found” and “not searched”.",
+        "“Search complete” and “search took longer”."
+      ],
+      "reasons": [
+        "Both imply a nest was recorded and do not explain an empty box.",
+        "Observer identities matter but do not settle whether an empty box means no search.",
+        "These distinguish an unsuccessful observation from no observation, the ambiguity posed at the start.",
+        "Duration does not distinguish absence of searching from no nest being found."
+      ],
+      "correct": 2,
+      "evidence": "distinguish a checked site with no nest found from a site never checked",
+      "paragraph": 4
+    },
+    {
+      "n": 17,
+      "extract": "f3",
+      "stem": "Mr Finch’s distrust of the notebook reveals his tendency to",
+      "skill": "Inference",
+      "options": [
+        "resent officials who ask him to supply records.",
+        "believe that careful inspections require several visits.",
+        "judge authority through its outward presentation.",
+        "notice defects that other people overlook."
+      ],
+      "reasons": [
+        "No request for records is made.",
+        "The number of visits is not discussed.",
+        "He decides what a proper inspector should carry before seeing how she works.",
+        "The notebook is small, but no defect in the inspection is established."
+      ],
+      "correct": 2,
+      "evidence": "A proper inspector, he felt, would require something with a stiff cover.",
+      "paragraph": 1
+    },
+    {
+      "n": 18,
+      "extract": "f3",
+      "stem": "The account of the household’s quietness is chiefly",
+      "skill": "Tone",
+      "options": [
+        "gently comic about the effort to appear respectable.",
+        "sharply critical of the lodgers’ lack of consideration.",
+        "admiring of Mr Finch’s control over his household.",
+        "uneasy about an inspector’s unpredictable temper."
+      ],
+      "reasons": [
+        "The scrape followed by conspicuous silence exposes the staged quietness with restrained humour.",
+        "The lodgers are attempting to obey, not behaving inconsiderately.",
+        "The comedy undermines the impression of easy control.",
+        "Mrs Vale remains matter-of-fact; no temper is shown."
+      ],
+      "correct": 0,
+      "evidence": "followed by an extended effort to make no sound at all.",
+      "paragraph": 3
+    },
+    {
+      "n": 19,
+      "extract": "f3",
+      "stem": "Which detail most directly revises Mr Finch’s view of Mrs Vale’s priorities?",
+      "skill": "Evidence",
+      "options": [
+        "The notebook contains measurements of doors and handrails.",
+        "She records something after hearing the chair scrape.",
+        "She describes the sitting room as quiet.",
+        "She pauses beside the row of muddy boots."
+      ],
+      "reasons": [
+        "The measurements and subsequent test reveal attention to practical features rather than his social performance.",
+        "He cannot yet know what she has written.",
+        "Her early remark can still be read within his concern about appearances.",
+        "The pause alone does not establish what concerns her."
+      ],
+      "correct": 0,
+      "evidence": "the width of doors, the height of handrails.",
+      "paragraph": 7
+    },
+    {
+      "n": 20,
+      "extract": "f3",
+      "stem": "Mr Finch’s failure to apologise for the sneeze suggests that he",
+      "skill": "Character change",
+      "options": [
+        "has become annoyed by the lodgers’ repeated interruptions.",
+        "expects the inspection to end before the upper rooms.",
+        "believes the inspector has already approved the house.",
+        "feels less need to conceal ordinary signs of occupation."
+      ],
+      "reasons": [
+        "There is no sign of growing anger at the lodgers.",
+        "No information about the remaining inspection is given.",
+        "No approval has been communicated.",
+        "His discovery of her practical focus eases his earlier effort to stage a perfectly quiet, tidy household."
+      ],
+      "correct": 3,
+      "evidence": "This time Mr Finch did not apologise.",
+      "paragraph": 7
+    },
+    {
+      "n": 21,
+      "extract": "n3",
+      "stem": "The passage argues that a good map should",
+      "skill": "Main idea",
+      "options": [
+        "make unfamiliar routes easy enough for every visitor to follow.",
+        "favour clear landmarks over routes that are difficult to describe.",
+        "include as many accurate features as a portable format will allow.",
+        "select information according to the decisions its readers need to make."
+      ],
+      "reasons": [
+        "The passage distinguishes intended readers rather than requiring one map to suit everyone.",
+        "Landmarks suit the visitor example, but other readers may need different information.",
+        "Maximum detail can obscure directions; quantity is not the criterion.",
+        "Purpose and reader needs determine which details should be included."
+      ],
+      "correct": 3,
+      "evidence": "what the intended reader needs to decide.",
+      "paragraph": 4
+    },
+    {
+      "n": 22,
+      "extract": "n3",
+      "stem": "The example of the stepped footbridge mainly",
+      "skill": "Structure",
+      "options": [
+        "shows that paper maps are less useful than direct experience.",
+        "explains why walking maps require more detail than driving maps.",
+        "sets a limit on the defence of leaving information out.",
+        "illustrates a physical feature that should appear on every map."
+      ],
+      "reasons": [
+        "The failure is a specific omitted detail, not the use of paper.",
+        "The passage does not rank the overall detail required by the two types.",
+        "After defending selection, the author shows an omission that defeats the map’s purpose for a reader.",
+        "Relevance depends on purpose; the author rejects universal completeness."
+      ],
+      "correct": 2,
+      "evidence": "Selection becomes a problem when the map’s purpose and its omissions no longer fit",
+      "paragraph": 3
+    },
+    {
+      "n": 23,
+      "extract": "n3",
+      "stem": "“Bury its directions under its own accuracy” suggests that excessive detail can",
+      "skill": "Language",
+      "options": [
+        "obscure the guidance the map is supposed to provide.",
+        "conceal errors behind an appearance of precision.",
+        "replace familiar place names with technical labels.",
+        "make the map harder to keep accurate over time."
+      ],
+      "reasons": [
+        "Accurate details can crowd out the map’s practical message.",
+        "The author accepts the details’ accuracy; the problem is their effect on usability.",
+        "Technical naming is not the issue described.",
+        "Updating maps is not discussed."
+      ],
+      "correct": 0,
+      "evidence": "A map showing every drain, doorway and change in paving",
+      "paragraph": 2
+    },
+    {
+      "n": 24,
+      "extract": "n3",
+      "stem": "Which omission is most consistent with the author’s reasoning?",
+      "skill": "Inference",
+      "options": [
+        "A walking map leaves out the location of a river crossing.",
+        "A visitor’s street map leaves out underground drainage pipes.",
+        "A delivery map leaves out a lane used to reach loading bays.",
+        "An accessible-route map leaves out the slope of a steep path."
+      ],
+      "reasons": [
+        "A crossing can determine whether a walking route is possible.",
+        "Drainage pipes ordinarily do not affect the visitor’s route decisions in the use described.",
+        "Loading access is directly relevant to delivery drivers.",
+        "A steep slope can affect whether the intended reader can use the route."
+      ],
+      "correct": 1,
+      "evidence": "Both must leave things out.",
+      "paragraph": 2
+    },
+    {
+      "n": 25,
+      "extract": "f5",
+      "stem": "Why does the narrator wash the bowl although it contains only dust?",
+      "skill": "Inference",
+      "options": [
+        "The narrator thinks a cleaner bowl will justify a higher price.",
+        "The care given to it hints at attachment beyond its sale value.",
+        "The narrator wants to hide the flaw before a buyer returns.",
+        "Dad has instructed the narrator to prepare every item for sale."
+      ],
+      "reasons": [
+        "No attempt is made to change the price, and the bowl is ultimately kept.",
+        "The unnecessary care and later reluctance to set it down develop emotional attachment.",
+        "Washing cannot remove the glaze flaw, and no returning buyer is mentioned.",
+        "No such instruction is given."
+      ],
+      "correct": 1,
+      "evidence": "I washed it anyway, using the soft cloth",
+      "paragraph": 4
+    },
+    {
+      "n": 26,
+      "extract": "f5",
+      "stem": "Dad’s comment that the bowls “had never managed to become” a set is",
+      "skill": "Language",
+      "options": [
+        "a pointed criticism of the woman’s question.",
+        "a regretful admission that several bowls have been broken.",
+        "a promise that the missing pieces will be found.",
+        "a wry description of their mismatched character."
+      ],
+      "reasons": [
+        "Nothing establishes hostility towards the woman.",
+        "Breakage is not given as the reason they are not a set.",
+        "He offers no search or promise.",
+        "He describes the bowls as if they had unsuccessfully attempted to form a set, a restrained joke about being mismatched."
+      ],
+      "correct": 3,
+      "evidence": "Dad said they had never managed to become one.",
+      "paragraph": 3
+    },
+    {
+      "n": 27,
+      "extract": "f5",
+      "stem": "What most strongly suggests Dad understands the narrator’s hesitation?",
+      "skill": "Evidence",
+      "options": [
+        "He proposes a use for the bowl at their new home.",
+        "He reaches for fresh tape when the first label peels.",
+        "He presses the first price label flat with his thumbnail.",
+        "He helps the woman carry the bookcase shelves."
+      ],
+      "reasons": [
+        "The keys provide a practical reason to keep it immediately after he notices the narrator’s hands.",
+        "Fresh tape initially suggests continuing with the sale, before he understands.",
+        "This happens before the narrator’s hesitation and could simply secure the price.",
+        "Helping a buyer is unrelated to the narrator’s feelings."
+      ],
+      "correct": 0,
+      "evidence": "“We'll need something for the keys at the new place,” he said.",
+      "paragraph": 6
+    },
+    {
+      "n": 28,
+      "extract": "f5",
+      "stem": "The final reference to the pale crescent chiefly suggests",
+      "skill": "Structure",
+      "options": [
+        "the bowl will be repaired before it is used again.",
+        "the narrator has forgotten how the bowl used to be positioned.",
+        "the bowl can be kept without its imperfection being hidden.",
+        "Dad now regards the flaw as the bowl’s most attractive feature."
+      ],
+      "reasons": [
+        "No repair is proposed.",
+        "The opening memory and deliberate closing detail make forgetting an unsupported explanation.",
+        "The exposed crescent contrasts with the mother’s habit of turning it away; Dad leaves it as it is.",
+        "Acceptance is supported; an aesthetic preference is not."
+      ],
+      "correct": 2,
+      "evidence": "The pale crescent faced upwards. Dad shut the lid without moving it.",
+      "paragraph": 7
+    },
+    {
+      "n": 29,
+      "extract": "n5",
+      "stem": "The author chiefly argues that transcripts",
+      "skill": "Main idea",
+      "options": [
+        "are useful only when checked against a sound recording.",
+        "involve choices that should suit their purpose and be made clear.",
+        "should preserve the speaker’s final wording rather than revisions.",
+        "become less reliable as editors remove more spoken detail."
+      ],
+      "reasons": [
+        "A recording may help, but the passage does not make it a condition of usefulness.",
+        "The argument balances purpose, preservation of meaning and transparency about editing.",
+        "The example explains why a revision can matter.",
+        "Complete detail can also misrepresent how a speaker sounded, so there is no simple more-is-better rule."
+      ],
+      "correct": 1,
+      "evidence": "makes the treatment of speech visible.",
+      "paragraph": 4
+    },
+    {
+      "n": 30,
+      "extract": "n5",
+      "stem": "Why does changing “thought” to “hoped” matter in the example?",
+      "skill": "Language",
+      "options": [
+        "It identifies a mistake about an event that has already happened.",
+        "It changes a negative judgement into a positive one.",
+        "It replaces an uncertain claim with a confident prediction.",
+        "It separates a belief about an outcome from a desire for it."
+      ],
+      "reasons": [
+        "The outcome itself is not provided.",
+        "Both words can concern the same desired outcome; positivity is not the distinction.",
+        "Hoped is a wish, not a stronger prediction.",
+        "Expectation and wish carry different commitments; the revision reveals the distinction."
+      ],
+      "correct": 3,
+      "evidence": "the speaker distinguishes an expectation from a wish.",
+      "paragraph": 2
+    },
+    {
+      "n": 31,
+      "extract": "n5",
+      "stem": "Which edit most clearly breaches the limit set in paragraph 3?",
+      "skill": "Evidence",
+      "options": [
+        "Removing “only if it stays affordable” from support for a proposal.",
+        "Removing a repeated “I” from an answer in a brief news report.",
+        "Leaving out a cough in a transcript of a committee meeting.",
+        "Omitting a brief overlap from an account of the final decision."
+      ],
+      "reasons": [
+        "The deleted condition changes conditional support into apparent unqualified support.",
+        "Removing a repeated word can preserve meaning in that purpose.",
+        "A cough need not qualify the opinion being reported.",
+        "Overlap may be irrelevant to a decision account; no changed opinion is specified."
+      ],
+      "correct": 0,
+      "evidence": "must not remove a qualification that changes what that person appears to believe.",
+      "paragraph": 3
+    },
+    {
+      "n": 32,
+      "extract": "n5",
+      "stem": "What is the value of an editor’s note about removed repetitions?",
+      "skill": "Inference",
+      "options": [
+        "It removes the need to consider the editor’s purpose.",
+        "It ensures that readers can reconstruct the conversation word for word.",
+        "It makes the transcript suitable for studying interruptions.",
+        "It helps readers assess the record without proving the editing was fair."
+      ],
+      "reasons": [
+        "Purpose remains central to judging which choices are appropriate.",
+        "A general note cannot restore all deleted wording.",
+        "A note on repetitions does not ensure interruptions are preserved.",
+        "The final paragraph expressly distinguishes a useful starting point from a guarantee."
+      ],
+      "correct": 3,
+      "evidence": "not a guarantee of fairness",
+      "paragraph": 4
+    },
+    {
+      "n": 33,
+      "extract": "f6",
+      "stem": "Why does the narrator initially wait for Mum to “admit it”?",
+      "skill": "Inference",
+      "options": [
+        "The narrator expects an apology for leaving the map behind.",
+        "The visible path seems to confirm the narrator’s argument for taking it.",
+        "Mum appears to have forgotten where the road leads.",
+        "Mum has promised to explain why the creek is unsafe."
+      ],
+      "reasons": [
+        "The narrator measured on a map; leaving it behind is not a dispute.",
+        "The narrator sees a dry, clear shortcut and expects Mum to acknowledge that the measured route is preferable.",
+        "Mum’s route choices show no confusion about directions.",
+        "No safety explanation or promise appears."
+      ],
+      "correct": 1,
+      "evidence": "the path, dry and clear between the reeds.",
+      "paragraph": 4
+    },
+    {
+      "n": 34,
+      "extract": "f6",
+      "stem": "The final wait at the empty crossing most strongly suggests",
+      "skill": "Character change",
+      "options": [
+        "a new fear of traffic after hearing the truck.",
+        "an intention to prove the road wastes time.",
+        "a growing willingness to share Mum’s pace.",
+        "a decision never to take the creek path again."
+      ],
+      "reasons": [
+        "No fear is described, and the street is empty.",
+        "The receipt is put away and the tone no longer presses the argument.",
+        "The narrator stops insisting on efficiency and waits beside Mum, extending the change beyond the bridge.",
+        "The ending supports a present shift, not a permanent rule about the path."
+      ],
+      "correct": 2,
+      "evidence": "waited beside her, although the street was empty.",
+      "paragraph": 7
+    },
+    {
+      "n": 35,
+      "extract": "f6",
+      "stem": "The sound of water clicking against the bottle chiefly shows that the narrator",
+      "skill": "Language",
+      "options": [
+        "is distracted from Mum’s story by litter in the creek.",
+        "realises that the grandfather’s memory was inaccurate.",
+        "notices evidence that the creek path has become dangerous.",
+        "begins to attend to the place in the way Mum recalls."
+      ],
+      "reasons": [
+        "The detail enacts attention to the water rather than rejection of the story.",
+        "Hearing water supports rather than disproves the recalled exercise.",
+        "The bottle is in the creek, not evidence of danger on the path.",
+        "The small sound follows the story about listening for water, showing the narrator’s attention changing."
+      ],
+      "correct": 3,
+      "evidence": "water clicked against a bottle caught between two stones.",
+      "paragraph": 6
+    },
+    {
+      "n": 36,
+      "extract": "f6",
+      "stem": "The receipt most clearly represents the narrator’s initial",
+      "skill": "Structure",
+      "options": [
+        "wish to remember the cost of the sandwiches.",
+        "need to show Mum that they have become lost.",
+        "doubt about whether the map is accurate.",
+        "habit of judging the route mainly by time saved."
+      ],
+      "reasons": [
+        "The receipt’s purchase details are irrelevant and unstated.",
+        "They are not presented as lost.",
+        "The narrator trusts the measurement and seeks confirmation.",
+        "It measures the route at the start and is put away after the shared pause, marking the reduced importance of efficiency."
+      ],
+      "correct": 3,
+      "evidence": "the path along the creek saved twelve minutes.",
+      "paragraph": 1
+    },
+    {
+      "n": 37,
+      "extract": "n6",
+      "stem": "The author’s attitude to the repaired chair is best described as",
+      "skill": "Tone",
+      "options": [
+        "sceptical that photographs can reveal anything about its past.",
+        "interested in its history while careful about what can be inferred.",
+        "admiring of the repair because it improves the original design.",
+        "sympathetic to its owner and critical of commercial buyers."
+      ],
+      "reasons": [
+        "The photograph provides evidence that the repair existed forty years earlier.",
+        "The author values the repair as evidence while refusing an unsupported motive.",
+        "The repair interrupts the design; improvement is not claimed.",
+        "The buyer’s preference is explicitly treated as reasonable."
+      ],
+      "correct": 1,
+      "evidence": "Preserving an object can therefore involve preserving uncertainty.",
+      "paragraph": 4
+    },
+    {
+      "n": 38,
+      "extract": "n6",
+      "stem": "What does the photograph establish about the repair?",
+      "skill": "Evidence",
+      "options": [
+        "It was present by the time the photograph was taken.",
+        "It was carried out forty years before the chair was sold.",
+        "It was made by the person shown sitting in the chair.",
+        "It was added to make the chair more comfortable."
+      ],
+      "reasons": [
+        "The visible strip sets a latest possible date; it may have been made earlier.",
+        "The photograph dates its presence, not the repair event exactly.",
+        "The sitter is not identified as the repairer.",
+        "Comfort is not established as the purpose."
+      ],
+      "correct": 0,
+      "evidence": "the same strip was already visible behind the owner’s shoulder.",
+      "paragraph": 1
+    },
+    {
+      "n": 39,
+      "extract": "n6",
+      "stem": "Why does the author list affection, economy, convenience and habit?",
+      "skill": "Inference",
+      "options": [
+        "To show that one physical trace permits several explanations.",
+        "To contrast sensible motives with an owner’s emotional attachment.",
+        "To rank the most likely reasons for choosing to repair furniture.",
+        "To explain how the owner reached the decision to keep the chair."
+      ],
+      "reasons": [
+        "The possible motives demonstrate why repair alone cannot establish affection.",
+        "The motives are alternatives without the proposed judgement.",
+        "No probabilities or ranking are given.",
+        "The actual owner’s reasoning remains unknown."
+      ],
+      "correct": 0,
+      "evidence": "The repair records that choice, though it cannot tell us the reason.",
+      "paragraph": 3
+    },
+    {
+      "n": 40,
+      "extract": "n6",
+      "stem": "What is the effect of describing both the buyer’s and the family record’s perspective?",
+      "skill": "Structure",
+      "options": [
+        "It shows that the photograph disproves the catalogue’s description.",
+        "It prepares the argument that value depends on the question being asked.",
+        "It establishes that the family’s account is more trustworthy than the catalogue.",
+        "It suggests that the auction price overlooks the chair’s original quality."
+      ],
+      "reasons": [
+        "The photograph confirms the visible repair rather than disproving its existence.",
+        "The two records foreground different values; neither alone settles all questions about the object.",
+        "The records concern different things, not competing factual accuracy.",
+        "No sale price or judgement about original quality is supplied."
+      ],
+      "correct": 1,
+      "evidence": "The catalogue and the photograph were recording different kinds of value.",
+      "paragraph": 1
+    }
+  ]
+}</script>
+<script>
+
+'use strict';
+const DATA=JSON.parse(document.getElementById('testData').textContent),Q=DATA.questions,TEXTS=DATA.extracts,DURATION=45*60,VERSION=2;
+const API_URL='https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec';
+const $=id=>document.getElementById(id),letters='ABCD',esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const params=new URLSearchParams(location.search),portalStudent=params.get('student')||'',paperId=params.get('paper')||'hast-speed-1';
+let attempt=null,currentText=null,timerId=null,saving=true,submissionPending=false;
+function fmt(sec){sec=Math.max(0,Math.ceil(sec));return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')}
+function nameKey(name){return (portalStudent||name||'aneen').trim().toLowerCase()}
+function storageKey(name){return 'noof_hast_once_v2_'+encodeURIComponent(nameKey(name))+'_'+encodeURIComponent(paperId)}
+function readAttempt(name){try{const raw=localStorage.getItem(storageKey(name));if(!raw)return null;const a=JSON.parse(raw);if(a.version!==VERSION||a.paperId!==paperId||!Number.isFinite(a.startedAt)||!Number.isFinite(a.deadline)||!a.answers||!Array.isArray(a.flags))return null;a.cur=Number.isInteger(a.cur)?Math.max(0,Math.min(Q.length-1,a.cur)):0;return a;}catch(e){saving=false;$('storageWarning').hidden=false;return null;}}
+function save(){if(!saving||!attempt)return;try{localStorage.setItem(storageKey(attempt.student),JSON.stringify(attempt));}catch(e){saving=false;$('storageWarning').hidden=false;}}
+function stats(){const byGenre={},bySkill={};let correct=0,answered=0;for(const q of Q){const g=TEXTS.find(t=>t.id===q.extract).genre;for(const [obj,k] of [[byGenre,g],[bySkill,q.skill]]){if(!obj[k])obj[k]={c:0,t:0};obj[k].t++;}const answer=attempt.answers[q.n];if(Number.isInteger(answer)&&answer>=0&&answer<4)answered++;if(answer===q.correct){correct++;byGenre[g].c++;bySkill[q.skill].c++;}}return {correct,answered,total:Q.length,byGenre,bySkill};}
+function portalURL(){return 'index.html'+(portalStudent?'?student='+encodeURIComponent(portalStudent)+(attempt&&attempt.finishedAt?'&done=reading':''):'')}
+function welcome(){attempt=readAttempt($('nameInput').value);$('introBack').href=portalURL();if(attempt&&attempt.sendState==='pending'&&!attempt.sent){attempt.sendState='unknown';save();}if(attempt&&attempt.finishedAt){renderResults();return;}if(attempt){$('beginBtn').textContent='Resume test';$('nameInput').value=attempt.student;$('nameInput').disabled=true;$('startStatus').textContent=fmt((attempt.deadline-Date.now())/1000)+' remaining';if(Date.now()>=attempt.deadline){finish(true);return;}}else{$('beginBtn').textContent='Begin test';$('nameInput').disabled=!!portalStudent;}}
+function begin(){if(attempt){if(attempt.finishedAt){renderResults();return;}resume();return;}const student=($('nameInput').value.trim()||'Aneen').slice(0,60);const saved=readAttempt(student);if(saved){attempt=saved;attempt.finishedAt?renderResults():resume();return;}const now=Date.now();attempt={version:VERSION,paperId,student,nameKey:nameKey(student),startedAt:now,deadline:now+DURATION*1000,finishedAt:null,expired:false,answers:{},flags:[],cur:0,sent:false,sendState:'none'};save();resume();}
+function resume(){if(attempt.finishedAt){renderResults();return;}if(Date.now()>=attempt.deadline){finish(true);return;}$('startOverlay').hidden=true;$('resultsOverlay').hidden=true;$('testMain').hidden=false;$('testFooter').hidden=false;$('finishBtn').disabled=false;renderQuestion();clearInterval(timerId);tick();timerId=setInterval(tick,250);}
+function tick(){if(!attempt||attempt.finishedAt)return;const left=(attempt.deadline-Date.now())/1000;$('timeText').textContent=fmt(left);$('timer').classList.toggle('warn',left<=300);if(left<=0)finish(true);}
+function editable(){if(!attempt||attempt.finishedAt)return false;if(Date.now()>=attempt.deadline){finish(true);return false;}return true;}
+function renderText(q){if(currentText===q.extract)return;const t=TEXTS.find(t=>t.id===q.extract),index=TEXTS.indexOf(t),nums=Q.filter(x=>x.extract===t.id).map(x=>x.n);$('stim').innerHTML='<div class="extract-meta"><span>'+esc(t.genre)+' · Extract '+(index+1)+' of '+TEXTS.length+'</span><span>Questions '+nums[0]+'–'+nums[nums.length-1]+'</span></div><h2 class="work-title">'+esc(t.title)+'</h2>'+t.paragraphs.map((p,i)=>'<p id="p-'+(i+1)+'"><span class="pnum" aria-hidden="true">'+(i+1)+'</span>'+esc(p)+'</p>').join('');currentText=q.extract;$('stim').scrollTop=0;}
+function renderQuestion(){const q=Q[attempt.cur],locked=!!attempt.finishedAt,pick=attempt.answers[q.n];renderText(q);$('qnum').textContent='Question '+q.n+' of '+Q.length;$('qstem').textContent=q.stem;$('answeredCount').textContent=locked?'Submitted answer · '+(pick===q.correct?'correct':Number.isInteger(pick)?'incorrect':'unanswered'):stats().answered+' of '+Q.length+' answered';$('opts').innerHTML=q.options.map((o,i)=>'<label class="opt'+(pick===i?' sel':'')+(locked?(i===q.correct?' correct':i===pick?' wrong':''):'')+'"><input type="radio" name="answer" value="'+i+'"'+(pick===i?' checked':'')+(locked?' disabled':'')+'><span class="badge" aria-hidden="true">'+letters[i]+'</span><span class="otext">'+esc(o)+(locked&&i===q.correct?'<span class="option-note">Correct answer</span>':'')+(locked&&i===pick&&i!==q.correct?'<span class="option-note">Your submitted answer</span>':'')+'</span></label>').join('');$('flagBtn').hidden=locked;$('flagBtn').classList.toggle('on',attempt.flags.includes(q.n));$('flagBtn').setAttribute('aria-pressed',attempt.flags.includes(q.n));$('flagBtn').textContent=attempt.flags.includes(q.n)?'Flagged':'Flag';$('explanation').hidden=!locked;if(locked){$('explanation').innerHTML='<p><strong>'+esc(q.skill)+'</strong></p><div class="evidence"><strong>Evidence · paragraph '+q.paragraph+'</strong><p>“'+esc(q.evidence)+'”</p><button data-evidence="'+q.paragraph+'">Find in extract</button></div>'+q.reasons.map((r,i)=>'<p><strong>'+letters[i]+(i===q.correct?' · best answer':'')+'.</strong> '+esc(r)+'</p>').join('');}$('prevBtn').disabled=attempt.cur===0;$('nextBtn').textContent=attempt.cur===Q.length-1?(locked?'Results':'Submit'):'Next';renderNav();$('progFill').style.width=100*stats().answered/Q.length+'%';}
+function renderNav(){$('navwrap').innerHTML=Q.map((q,i)=>{const picked=attempt.answers[q.n],answered=Number.isInteger(picked),locked=!!attempt.finishedAt;return '<button class="navbtn'+(answered?' answered':'')+(locked?(picked===q.correct?' correct':' wrong'):'')+(i===attempt.cur?' current':'')+(attempt.flags.includes(q.n)?' flagged':'')+'" data-question="'+i+'" aria-label="Question '+q.n+(answered?', answered':', unanswered')+(attempt.flags.includes(q.n)?', flagged':'')+(locked?(picked===q.correct?', correct':', missed'):'')+'"'+(i===attempt.cur?' aria-current="step"':'')+'>'+q.n+'</button>';}).join('');const active=$('navwrap').querySelector('.current');if(active)active.scrollIntoView({block:'nearest',inline:'nearest'});}
+function move(index){if(!attempt)return;if(!attempt.finishedAt&&!editable())return;attempt.cur=Math.max(0,Math.min(Q.length-1,index));save();renderQuestion();$('qpane').scrollTop=0;}
+function openConfirm(){if(attempt&&attempt.finishedAt){renderResults();return;}if(!editable())return;const s=stats(),missing=Q.length-s.answered,flags=attempt.flags.length;$('confirmSub').textContent=(missing?missing+' question'+(missing===1?' is':'s are')+' still unanswered. ':'All 40 questions are answered. ')+(flags?flags+' flagged. ':'')+'Submitting locks your answers and shows the mark scheme.';$('confirmDialog').showModal();}
+function finish(expired=false){if(!attempt||attempt.finishedAt)return;clearInterval(timerId);attempt.finishedAt=Math.min(Date.now(),attempt.deadline);attempt.expired=expired;save();if($('confirmDialog').open)$('confirmDialog').close();$('liveStatus').textContent=expired?'Time is up. Your answers are locked and results are ready.':'Test submitted. Your answers are locked.';renderResults();if(portalStudent&&params.get('paper')&&/^https?:$/.test(location.protocol))sendResult();}
+function renderResults(){clearInterval(timerId);$('startOverlay').hidden=true;$('resultsOverlay').hidden=false;$('testMain').hidden=true;$('testFooter').hidden=true;$('finishBtn').disabled=false;$('finishBtn').textContent='Results';$('timeText').textContent='Submitted';$('timer').classList.remove('warn');const s=stats();$('resultsWho').textContent=attempt.student+' · Reading test';$('scoreBig').innerHTML=s.correct+'<small> / '+s.total+'</small>';$('scorePct').textContent=Math.round(s.correct/s.total*100)+'% correct';$('scoreTime').textContent='Time used: '+fmt((attempt.finishedAt-attempt.startedAt)/1000);$('attemptSummary').textContent=(attempt.expired?'Time expired. ':'Test submitted. ')+s.answered+' answered · '+(s.total-s.answered)+' unanswered.';$('brkBox').innerHTML=Object.entries(s.byGenre).map(([g,v])=>'<div class="b-lbl">'+g+'</div><div class="b-val">'+v.c+' / '+v.t+'</div>').join('');$('skillBox').innerHTML=Object.entries(s.bySkill).sort((a,b)=>a[1].c/a[1].t-b[1].c/b[1].t).map(([sk,v])=>'<div class="skillrow"><div class="sl">'+esc(sk)+'</div><div class="skilltrack"><div class="skillfill" style="width:'+100*v.c/v.t+'%;background:'+(v.c/v.t>=.8?'var(--correct)':v.c/v.t>=.5?'#c9871f':'var(--wrong)')+'"></div></div><div class="sv"><b>'+v.c+'/'+v.t+'</b></div></div>').join('');$('reviewMap').innerHTML=Q.map((q,i)=>'<button class="'+(attempt.answers[q.n]===q.correct?'correct':Number.isInteger(attempt.answers[q.n])?'wrong':'blank')+'" data-review="'+i+'" aria-label="Review question '+q.n+'">'+q.n+'</button>').join('');syncSendState();$('resultsOverlay').querySelector('.card').scrollTop=0;}
+function review(index=0){attempt.cur=index;save();$('resultsOverlay').hidden=true;$('testMain').hidden=false;$('testFooter').hidden=false;$('finishBtn').textContent='Results';renderQuestion();$('qpane').scrollTop=0;}
+function resultData(){const s=stats();return {paper:'Aneen HAST Reading Test',paperId,student:attempt.student,startedAt:new Date(attempt.startedAt).toISOString(),submittedAt:new Date(attempt.finishedAt).toISOString(),timeUsedSeconds:Math.ceil((attempt.finishedAt-attempt.startedAt)/1000),timeExpired:attempt.expired,score:s.correct,outOf:s.total,answered:s.answered,byTextType:s.byGenre,bySkill:s.bySkill,questions:Q.map(q=>({number:q.n,extract:TEXTS.find(t=>t.id===q.extract).title,question:q.stem,skill:q.skill,submittedAnswer:Number.isInteger(attempt.answers[q.n])?letters[attempt.answers[q.n]]:null,correctAnswer:letters[q.correct],options:Object.fromEntries(q.options.map((o,i)=>[letters[i],o])),explanations:Object.fromEntries(q.reasons.map((r,i)=>[letters[i],r])),evidence:q.evidence,evidenceParagraph:q.paragraph}))};}
+function download(){const url=URL.createObjectURL(new Blob([JSON.stringify(resultData(),null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='Aneen_HAST_Reading_Test_Results.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function syncSendState(){const linked=!!portalStudent&&!!params.get('paper')&&/^https?:$/.test(location.protocol);$('sendBtn').hidden=!linked||attempt.sent;$('sendBtn').disabled=submissionPending;$('sendStatus').textContent=attempt.sent?'Score saved.':attempt.sendState==='pending'?'Saving score…':attempt.sendState==='unknown'?'Save not confirmed. Check the portal before resending.':'';}
+async function sendResult(){if(!attempt||!attempt.finishedAt||attempt.sent||submissionPending)return;const linked=portalStudent&&params.get('paper')&&/^https?:$/.test(location.protocol);if(!linked)return;submissionPending=true;attempt.sendState='pending';save();syncSendState();const s=stats(),controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),20000);try{const response=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},redirect:'follow',signal:controller.signal,body:JSON.stringify({action:'submitReading',payload:{nameKey:attempt.nameKey,paperId,score:s.correct,outOf:Q.length,timeUsedSec:Math.ceil((attempt.finishedAt-attempt.startedAt)/1000),perSkillJson:s.bySkill,answersJson:Object.fromEntries(Q.map(q=>[q.n,Number.isInteger(attempt.answers[q.n])?letters[attempt.answers[q.n]]:null])),wrongJson:Q.filter(q=>attempt.answers[q.n]!==q.correct).map(q=>({q:q.n,picked:Number.isInteger(attempt.answers[q.n])?letters[attempt.answers[q.n]]:null,correct:letters[q.correct],skill:q.skill,issue:Number.isInteger(attempt.answers[q.n])?q.skill:'Unanswered',explanation:q.reasons[q.correct]}))}})});if(!response.ok)throw Error('Submission failed');const body=await response.json();if(!body.success)throw Error(body.error||'Submission not accepted');attempt.sent=true;attempt.sendState='sent';}catch(e){attempt.sendState='unknown';}finally{clearTimeout(timeout);submissionPending=false;save();syncSendState();}}
+$('beginBtn').onclick=begin;$('finishBtn').onclick=()=>attempt&&attempt.finishedAt?renderResults():openConfirm();$('prevBtn').onclick=()=>move(attempt.cur-1);$('nextBtn').onclick=()=>{if(attempt.cur<Q.length-1)move(attempt.cur+1);else attempt.finishedAt?renderResults():openConfirm();};
+$('opts').addEventListener('change',e=>{if(!editable())return;const radio=e.target;if(radio.name!=='answer')return;attempt.answers[Q[attempt.cur].n]=Number(radio.value);save();renderQuestion();});
+$('flagBtn').onclick=()=>{if(!editable())return;const n=Q[attempt.cur].n;attempt.flags=attempt.flags.includes(n)?attempt.flags.filter(x=>x!==n):[...attempt.flags,n];save();renderQuestion();};
+$('navwrap').onclick=e=>{const b=e.target.closest('[data-question]');if(b)move(Number(b.dataset.question));};$('reviewMap').onclick=e=>{const b=e.target.closest('[data-review]');if(b)review(Number(b.dataset.review));};
+$('explanation').onclick=e=>{const b=e.target.closest('[data-evidence]');if(!b)return;document.querySelectorAll('#stim mark').forEach(m=>m.replaceWith(...m.childNodes));const p=$('p-'+b.dataset.evidence);p.innerHTML=p.innerHTML.replace(/(<span class="pnum"[^>]*>.*?<\/span>)([\s\S]*)/,'$1<mark>$2</mark>');p.scrollIntoView({block:'center',behavior:'smooth'});};
+$('keepGoingBtn').onclick=()=>$('confirmDialog').close();$('confirmFinishBtn').onclick=()=>finish(false);$('reviewBtn').onclick=()=>review(0);$('downloadBtn').onclick=download;$('sendBtn').onclick=sendResult;$('backToDashBtn').onclick=()=>location.href=portalURL();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick();});window.addEventListener('pagehide',save);
+window.addEventListener('storage',e=>{if(!attempt||e.key!==storageKey(attempt.student)||!e.newValue)return;try{const remote=JSON.parse(e.newValue);if(remote.version===VERSION&&remote.startedAt===attempt.startedAt){attempt=remote;if(remote.finishedAt){renderResults();}else if(!$('startOverlay').hidden){welcome();}else renderQuestion();}}catch(e){}});
+document.addEventListener('keydown',e=>{if(!attempt||!$('resultsOverlay').hidden||!$('startOverlay').hidden||$('confirmDialog').open)return;if(e.target.matches('input,textarea,select,button,a'))return;if(e.key==='ArrowRight'){e.preventDefault();attempt.cur<Q.length-1?move(attempt.cur+1):null;}else if(e.key==='ArrowLeft'){e.preventDefault();move(attempt.cur-1);}else if(/^[a-d]$/i.test(e.key)&&editable()){attempt.answers[Q[attempt.cur].n]=letters.indexOf(e.key.toUpperCase());save();renderQuestion();}});
+$('nameInput').value=portalStudent?portalStudent.toLowerCase()==='aneen'?'Aneen':portalStudent.replace(/[_-]/g,' '):'Aneen';welcome();
+
+</script>
+</body></html>
