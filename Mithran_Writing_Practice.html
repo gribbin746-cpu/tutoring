@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Writing practice · Noof</title>
+<style>
+:root{--ink:#172b42;--navy:#0a2a4e;--muted:#637181;--line:#dce2e8;--paper:#fff;--bg:#f2f3f1;--gold:#98752e;--blue:#eaf1f9;--green:#206543;--red:#a53d2c}*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:default;opacity:.55}a{color:var(--navy)}header{background:var(--navy);color:white;padding:17px 28px;display:flex;justify-content:space-between;gap:20px;align-items:center}header a{color:inherit;text-decoration:none}.brand{font:600 23px Georgia,serif}.who{font-size:14px;opacity:.8}main{max-width:1050px;margin:auto;padding:34px 24px 70px}h1,h2{font-family:Georgia,serif;font-weight:normal;line-height:1.18}h1{font-size:36px;margin:0 0 12px}h2{font-size:26px;margin:0 0 12px}p{margin:0 0 15px}.muted,.small{color:var(--muted)}.small{font-size:13px}.eyebrow{text-transform:uppercase;font-size:11px;letter-spacing:.13em;font-weight:700;color:var(--gold);margin-bottom:12px}.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:28px}.choices{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:26px}.choice p{min-height:50px}.btn{border:1px solid var(--navy);border-radius:7px;padding:10px 19px;background:var(--navy);color:white;font-weight:600}.btn.secondary{background:white;color:var(--navy);border-color:var(--line)}.btn:hover:not(:disabled){filter:brightness(.94)}.btn:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #79aad9;outline-offset:3px}.topline{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:22px}.clockbox{text-align:right;min-width:145px}.clock{font-size:30px;font-variant-numeric:tabular-nums;letter-spacing:.015em;line-height:1.2}.clock.overtime{color:var(--red)}.clocklabel{font-size:12px;color:var(--muted);margin-top:5px}.editor{width:100%;min-height:470px;padding:22px;border:1px solid #c7d0da;border-radius:8px;resize:vertical;color:var(--ink);background:#fff;font:18px/1.85 Georgia,serif}.editor:disabled{background:#f7f8fa;opacity:.85}.editor.peel{min-height:330px}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:17px}.toolbar .save{margin-right:auto;font-size:13px;color:var(--muted)}.status{margin-top:18px;font-size:14px;white-space:pre-line}.status.error{color:var(--red)}.status.good{color:var(--green)}.rounds{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 24px}.round{padding:12px 10px;border:1px solid var(--line);background:white;color:var(--muted);border-radius:7px;text-align:left;font-size:13px;line-height:1.5}.round b{display:block;font-size:14px;color:var(--ink)}.round.current{border-color:var(--navy);box-shadow:inset 0 0 0 1px var(--navy)}.round.done b{color:var(--green)}.round span{display:block;font-variant-numeric:tabular-nums}.scaffold{font-size:14px;background:var(--blue);border-radius:7px;padding:12px 16px;margin:18px 0}.question{font-size:19px;line-height:1.5;margin-bottom:8px}.byline{font-size:12px;color:var(--muted);margin:12px 0 0}.bottomnav{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-top:24px}.back{border:0;background:none;padding:0;color:var(--muted);text-decoration:underline}.storage-warning{padding:10px 14px;background:#fff2dd;color:#714c18;border:1px solid #e5c388;border-radius:7px;margin-bottom:20px;font-size:14px}label{display:block;margin:20px 0 7px}input{padding:10px;border:1px solid var(--line);border-radius:7px;width:100%;max-width:360px}.donebox{background:#edf5ef;border:1px solid #cadece;padding:20px;border-radius:8px;margin-top:20px}.summary{display:grid;gap:8px;margin:14px 0;font-size:14px}.summary div{display:flex;justify-content:space-between;gap:15px}.progress{height:3px;background:#e6e9ed;border-radius:2px;overflow:hidden;margin:14px 0 0}.progress span{display:block;height:100%;background:var(--gold);width:0%}details{margin-top:18px}summary{cursor:pointer}.model{white-space:pre-wrap;font:17px/1.8 Georgia,serif;margin-top:15px}.key li{margin-bottom:12px}.key span{font-size:13px;color:var(--muted);display:block}.footerlink{font-size:14px}.onlyprint{display:none}@media(max-width:650px){header{padding:14px 18px}main{padding:24px 15px 50px}.card{padding:22px 17px}h1{font-size:29px}.choices{grid-template-columns:1fr}.choice p{min-height:0}.topline{gap:12px}.clockbox{min-width:110px}.clock{font-size:25px}.editor{font-size:17px;padding:16px;min-height:510px}.editor.peel{min-height:350px}.rounds{grid-template-columns:1fr 1fr}.round{padding:10px}.bottomnav{align-items:flex-start;flex-wrap:wrap}.toolbar .save{flex-basis:100%}}@media print{header,.rounds,.toolbar,.bottomnav,.clockbox,.progress{display:none}.card{border:0;padding:0}.editor{border:0;min-height:0}body{background:white}}
+</style>
+</head>
+<body>
+<header><a class="brand" href="index.html" id="brandLink">Noof</a><span class="who" id="studentLabel">Writing practice</span></header>
+<main>
+<div class="storage-warning" id="storageWarning" hidden>Draft saving is unavailable in this browser. Keep this page open and download a copy before leaving.</div>
+<section id="identify" class="card" hidden><h1>Writing practice</h1><label for="studentInput">Student name</label><input id="studentInput" autocomplete="username"><div class="toolbar"><button class="btn" id="signIn">Continue</button></div><p class="status" id="signInStatus" role="status"></p></section>
+<section id="home" hidden><div class="eyebrow">Writing practice</div><h1>Five minutes at a time.</h1><p class="muted">Keep working after five minutes. Submit when you are ready.</p><div class="choices"><article class="card choice"><div class="eyebrow">01 · Editing</div><h2>Proofreading</h2><p>Correct spelling, punctuation and grammar in a short passage.</p><button class="btn" id="chooseProof">Open proofreading</button></article><article class="card choice"><div class="eyebrow">02 · Paragraphs</div><h2>Four PEEL paragraphs</h2><p>Four topics, with a separate five-minute timer for each.</p><button class="btn" id="choosePeel">Open PEEL practice</button></article></div></section>
+<section id="work" hidden>
+<div class="topline"><div><div class="eyebrow" id="workLabel"></div><h1 id="workTitle"></h1><p class="muted" id="workInstructions"></p></div><div class="clockbox"><div class="clock" id="clock" role="timer" aria-label="Time remaining">5:00</div><div class="clocklabel" id="clockLabel">Not started</div></div></div>
+<div class="rounds" id="rounds" aria-label="Paragraphs" hidden></div>
+<article class="card">
+<div id="promptWrap" hidden><h2 id="paragraphTitle"></h2><p class="question" id="question"></p><p class="small" id="paragraphTask"></p><div class="scaffold">Point → Explain → Example → Link. Use a realistic example rather than an invented study.</div></div>
+<label for="editor" id="editorLabel">Passage</label><textarea class="editor" id="editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" disabled></textarea>
+<p class="byline" id="byline" hidden>Adapted from Kenneth Grahame, <i>The Wind in the Willows</i>, Chapter 1. Errors have been added for this exercise.</p>
+<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+<div class="toolbar"><span class="save" id="saveLabel">Ready</span><button class="btn secondary" id="download">Download draft</button><button class="btn" id="start">Start five minutes</button><button class="btn" id="finishRound" hidden>Finish paragraph</button><button class="btn" id="submit" hidden>Submit to tutor</button></div>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+<section class="donebox" id="submittedBox" hidden><b>Submitted to your tutor.</b><div class="summary" id="timeSummary"></div><a class="footerlink" id="returnLink" href="index.html">Back to dashboard</a><div id="proofReview" hidden></div></section>
+</article>
+<div class="bottomnav"><button class="back" id="allExercises">All exercises</button><a class="footerlink" id="dashboardLink" href="index.html">Back to dashboard</a></div>
+</section>
+</main>
+<script>
+'use strict';
+const CONFIG={"api": "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec", "proofId": "writing-proofreading-mithran-20261029", "peelId": "writing-peel-mithran-20261029", "flawed": "As he sat on the grass and looked across the river a dark hole in the opposite bank caught Moles eye. He wondered what a snug home it would make, something bright twinkled inside it. It vanished, then twinkled once more.\n\nThe two animals was standing and looking at each other cautiosly. \"Would you like to come over.\" asked the Water Rat. Rat unfastend a rope and steped into a little boat. It was painted blue outside, it was white within. The boat were just the right size for two animal's.\n\nWhen Rat reached the bank he held up his paw. As Mole stepped down he leant on it. \"This has been a wonderfull day!\" said Mole. \"Ive never been in a boat before.\" Rat pushed off and took to the oars again.\n\nMole leaned back and surveyed the cushions and the fasinating fittings. Although he felt nervous he was quite prepared to enjoy hisself. The boat swayed lightly beneath him. Rat was so busy talking that he did not look ahead.\n\n\"Look ahead Rat!\" cried Mole sudenly. It was too late, the boat struck the bank. Rat lay on his back at the bottom of the boat. His feet was in the air.", "model": "As he sat on the grass and looked across the river, a dark hole in the opposite bank caught Mole's eye. He wondered what a snug home it would make. Something bright twinkled inside it. It vanished, then twinkled once more.\n\nThe two animals were standing and looking at each other cautiously. \"Would you like to come over?\" asked the Water Rat. Rat unfastened a rope and stepped into a little boat. It was painted blue outside. It was white within. The boat was just the right size for two animals.\n\nWhen Rat reached the bank, he held up his paw. As Mole stepped down, he leant on it. \"This has been a wonderful day!\" said Mole. \"I've never been in a boat before.\" Rat pushed off and took to the oars again.\n\nMole leaned back and surveyed the cushions and the fascinating fittings. Although he felt nervous, he was quite prepared to enjoy himself. The boat swayed lightly beneath him. Rat was so busy talking that he did not look ahead.\n\n\"Look ahead, Rat!\" cried Mole suddenly. It was too late. The boat struck the bank. Rat lay on his back at the bottom of the boat. His feet were in the air.", "issues": [["Missing commas", "river a dark", "river, a dark", "Put a comma after the opening dependent clause."], ["Apostrophes", "Moles eye", "Mole’s eye", "The eye belongs to Mole."], ["Comma splices", "make, something", "make. Something", "Separate the two complete clauses with a full stop, semicolon or suitable conjunction. A comma alone cannot join them."], ["Grammar", "The two animals was", "The two animals were", "The plural subject animals takes were."], ["Spelling", "cautiosly", "cautiously", "Keep the -tious- spelling."], ["Other punctuation", "come over.", "come over?", "A direct question needs a question mark inside the quotation marks."], ["Spelling", "unfastend", "unfastened", "The past tense is unfastened."], ["Spelling", "steped", "stepped", "Double the final p before -ed."], ["Comma splices", "outside, it", "outside. It", "Both clauses can stand alone. A semicolon or a suitable conjunction is also valid."], ["Grammar", "The boat were", "The boat was", "The singular subject boat takes was."], ["Apostrophes", "two animal’s / two animal's", "two animals", "A plural does not take an apostrophe here."], ["Missing commas", "bank he", "bank, he", "Close the opening When clause with a comma."], ["Missing commas", "down he", "down, he", "Close the opening As clause with a comma."], ["Spelling", "wonderfull", "wonderful", "Wonderful ends in one l."], ["Apostrophes", "Ive", "I’ve", "The apostrophe stands for the missing ha in I have."], ["Spelling", "fasinating", "fascinating", "Fascinating contains sc."], ["Missing commas", "nervous he", "nervous, he", "Close the opening Although clause with a comma."], ["Grammar", "hisself", "himself", "Use the reflexive pronoun himself."], ["Other punctuation", "Look ahead Rat", "Look ahead, Rat", "Set off the name of the person being addressed."], ["Spelling", "sudenly", "suddenly", "Suddenly contains dd."], ["Comma splices", "late, the boat", "late. The boat", "Separate the two complete clauses. Accept a semicolon or a suitable conjunction."], ["Grammar", "His feet was", "His feet were", "The plural subject feet takes were."]], "prompts": [{"title": "Sports equipment at lunch", "question": "Should schools lend students sports equipment during lunch?", "task": "Write one PEEL paragraph arguing for or against the proposal."}, {"title": "Weekend homework", "question": "Should homework be optional on weekends?", "task": "Write one PEEL paragraph arguing for or against the proposal."}, {"title": "An evening at the library", "question": "Should local libraries stay open for one evening each week?", "task": "Write one PEEL paragraph arguing for or against the proposal."}, {"title": "Choosing seats", "question": "Should students be allowed to choose their own seats in class?", "task": "Write one PEEL paragraph arguing for or against the proposal."}], "source": "https://www.gutenberg.org/cache/epub/289/pg289-images.html"};
+const $=id=>document.getElementById(id);
+const query=new URLSearchParams(location.search);
+let studentKey=(query.get('student')||'').trim().toLowerCase();
+let mode=query.get('exercise')==='peel'?'peel':query.get('exercise')==='proofreading'?'proof':null;
+if(!mode && query.get('paper')===CONFIG.peelId)mode='peel';
+if(!mode && query.get('paper')===CONFIG.proofId)mode='proof';
+let state=null,submitting=false,storageOK=true,context=null,saveNotice='';
+const LIMIT_MS=300000;
+const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const words=t=>t.trim().split(/\s+/).filter(Boolean).length;
+const mmss=seconds=>{seconds=Math.max(0,Math.floor(seconds));return Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');};
+function taskID(){return mode==='proof'?CONFIG.proofId:CONFIG.peelId;}
+function storeKey(){return 'noof_writing_drills_v1_'+encodeURIComponent(studentKey)+'_'+taskID();}
+function newTask(text=''){return {text,started:false,completed:false,elapsedMs:0,runningSince:null,atFive:null,atFiveSec:null};}
+function newState(){return {version:1,studentKey,id:taskID(),active:0,submitted:false,submittedAt:null,tasks:mode==='proof'?[newTask(CONFIG.flawed)]:CONFIG.prompts.map(()=>newTask())};}
+function load(){
+  state=newState();
+  try{
+    const raw=localStorage.getItem(storeKey());
+    if(raw){const saved=JSON.parse(raw);if(saved.version===1&&saved.studentKey===studentKey&&saved.id===taskID()&&Array.isArray(saved.tasks)&&saved.tasks.length===state.tasks.length){
+      state={...state,...saved};
+      state.active=Number.isInteger(state.active)&&state.active>=0&&state.active<state.tasks.length?state.active:0;
+      state.tasks=state.tasks.map(t=>({...newTask(),...t,elapsedMs:Math.max(0,Number(t.elapsedMs)||0),runningSince:Number(t.runningSince)>0?Number(t.runningSince):null}));
+    }}
+  }catch(_){storageOK=false;$('storageWarning').hidden=false;}
+}
+function save(){if(!state)return;try{localStorage.setItem(storeKey(),JSON.stringify(state));if(storageOK){saveNotice='Draft saved';}}catch(_){storageOK=false;$('storageWarning').hidden=false;saveNotice='Draft not saved';}}
+function elapsed(t,now=Date.now()){return Math.max(0,t.elapsedMs+(t.runningSince===null?0:Math.max(0,now-t.runningSince)));}
+function freeze(t){if(t.runningSince!==null){t.elapsedMs=elapsed(t);t.runningSince=null;}}
+function sample(t){if(t.started&&t.atFive===null&&elapsed(t)>=LIMIT_MS){t.atFive=t.text;t.atFiveSec=Math.floor(elapsed(t)/1000);return true;}return false;}
+function stopTasks(){state.tasks.forEach(t=>{sample(t);freeze(t);});}
+function current(){return state.tasks[state.active];}
+function show(id){['identify','home','work'].forEach(x=>$(x).hidden=x!==id);}
+function status(message,error=false){$('status').textContent=message;$('status').className='status'+(error?' error':'');}
+function links(){const url='index.html?student='+encodeURIComponent(studentKey);['brandLink','dashboardLink','returnLink'].forEach(id=>$(id).href=url+(id==='returnLink'?'&done=writing':''));}
+async function callBackend(action,payload){
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),45000);
+  try{const r=await fetch(CONFIG.api,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action,payload}),redirect:'follow',signal:controller.signal});
+    const raw=await r.text();let d;try{d=JSON.parse(raw);}catch(_){throw new Error('The server did not confirm the request.');}if(!d.success)throw new Error(d.error||'The request failed.');return d.data;
+  }finally{clearTimeout(timeout);}
+}
+function assignmentSubmitted(c){return (c.assignments||[]).some(t=>String(t.sourceId)===taskID()&&String(t.status).toLowerCase()==='submitted');}
+async function checkServer(){context=await callBackend('login',{name:studentKey});if(context.profile){studentKey=context.profile.nameKey;$('studentLabel').textContent=context.profile.displayName||studentKey;links();}return assignmentSubmitted(context);}
+function openMode(next){
+  if(submitting)return;
+  if(state){stopTasks();save();}
+  mode=next;load();
+  // Switching exercises preserves the time already spent on each task.
+  const p=new URLSearchParams({student:studentKey,exercise:mode==='proof'?'proofreading':'peel',paper:taskID()});
+  history.replaceState(null,'',location.pathname+'?'+p);
+  if(context&&assignmentSubmitted(context)){state.submitted=true;stopTasks();save();}
+  const active=current();
+  if(active.started&&!active.completed&&!state.submitted&&active.runningSince===null){active.runningSince=Date.now();save();}
+  render();show('work');
+}
+function render(){
+  const proof=mode==='proof',t=current();
+  $('workLabel').textContent=proof?'Editing · 5 minutes':'PEEL · 5 minutes per paragraph';
+  $('workTitle').textContent=proof?'Mole meets Rat':'Four PEEL paragraphs';
+  $('workInstructions').textContent=proof?'Correct the passage below. The clock continues after five minutes.':'Write one paragraph for each topic. Finish each paragraph when you are ready.';
+  $('rounds').hidden=proof;$('promptWrap').hidden=proof;$('byline').hidden=!proof;
+  $('editorLabel').textContent=proof?'Passage':'Your paragraph';
+  $('editor').classList.toggle('peel',!proof);$('editor').value=t.text;
+  $('editor').disabled=!t.started||t.completed||state.submitted||submitting;
+  $('start').hidden=state.submitted||submitting||(t.started&&!t.completed);
+  $('start').textContent=t.completed?'Edit paragraph':t.started?'Continue':'Start five minutes';
+  $('finishRound').hidden=proof||state.submitted||!t.started||t.completed;
+  $('submit').hidden=state.submitted||(proof?!t.started:!state.tasks.every(x=>x.completed));
+  $('submit').disabled=submitting;$('finishRound').disabled=submitting;$('download').disabled=submitting;
+  if(!proof){const p=CONFIG.prompts[state.active];$('paragraphTitle').textContent='Paragraph '+(state.active+1)+' · '+p.title;$('question').textContent=p.question;$('paragraphTask').textContent=p.task;}
+  renderRounds();renderClock();renderSubmitted();
+}
+function renderRounds(){
+  $('rounds').innerHTML=state.tasks.map((t,i)=>'<button class="round'+(i===state.active?' current':'')+(t.completed?' done':'')+'" data-round="'+i+'"'+(submitting?' disabled':'')+'><b>Paragraph '+(i+1)+(t.completed?' ✓':'')+'</b><span>'+(!t.started?'Not started':(t.completed?'Finished · ':'Started · ')+mmss(elapsed(t)/1000))+'</span></button>').join('');
+}
+function renderClock(){
+  if(!state)return;const t=current(),ms=elapsed(t),over=ms>=LIMIT_MS;
+  $('clock').textContent=over?'+'+mmss((ms-LIMIT_MS)/1000):mmss(Math.ceil((LIMIT_MS-ms)/1000));
+  $('clock').classList.toggle('overtime',over);$('clock').setAttribute('aria-label',over?'Overtime':'Time remaining');
+  $('clockLabel').textContent=state.submitted?'Submitted':t.completed?'Finished':!t.started?'Not started':over?'Overtime · keep writing':'Time remaining';
+  $('progressBar').style.width=Math.min(100,ms/LIMIT_MS*100)+'%';
+  $('saveLabel').textContent=(mode==='peel'?words(t.text)+' words · ':'')+(state.submitted?'Submitted':!t.started?'Ready':saveNotice||'Draft saved');
+}
+function renderSubmitted(){
+  $('submittedBox').hidden=!state.submitted;if(!state.submitted)return;
+  $('timeSummary').innerHTML=state.tasks.map((t,i)=>'<div><span>'+(mode==='proof'?'Proofreading':'Paragraph '+(i+1))+'</span><span>'+mmss(elapsed(t)/1000)+' total'+(elapsed(t)>LIMIT_MS?' · '+mmss((elapsed(t)-LIMIT_MS)/1000)+' overtime':'')+'</span></div>').join('');
+  const review=$('proofReview');review.hidden=mode!=='proof';
+  if(mode==='proof')review.innerHTML='<details><summary>Check the corrections</summary><p class="small" style="margin-top:12px">This is one correct version. A semicolon or a suitable conjunction can also repair a comma splice. Straight or curly apostrophes are both fine.</p><div class="model">'+escapeHTML(CONFIG.model)+'</div><ol class="key">'+CONFIG.issues.map(x=>'<li><b>'+escapeHTML(x[1])+' → '+escapeHTML(x[2])+'</b><span>'+escapeHTML(x[3])+'</span></li>').join('')+'</ol><a href="'+CONFIG.source+'" target="_blank" rel="noopener">Read the original chapter</a></details>';
+}
+function begin(){
+  if(submitting||state.submitted)return;const t=current();
+  state.tasks.forEach((x,i)=>{if(i!==state.active)freeze(x);});
+  t.started=true;t.completed=false;if(t.runningSince===null)t.runningSince=Date.now();save();status('');render();$('editor').focus();
+}
+function finishRound(){
+  if(submitting||state.submitted)return;const t=current();if(!t.text.trim()){status('Write your paragraph before finishing.',true);return;}
+  sample(t);freeze(t);t.completed=true;save();status('');
+  const next=state.tasks.findIndex((x,i)=>i>state.active&&!x.completed);if(next!==-1)state.active=next;
+  save();render();if(state.tasks.every(x=>x.completed))status('All four paragraphs are ready. You can review them or submit.');
+}
+function selectRound(i){
+  if(submitting||i===state.active)return;const t=current();sample(t);freeze(t);state.active=i;save();status('');render();
+  if(current().started&&!current().completed&&!state.submitted){current().runningSince=Date.now();save();renderClock();}
+}
+function collectResponse(){
+  const out=[mode==='proof'?'PROOFREADING: MOLE MEETS RAT':'PEEL: FOUR PARAGRAPHS','Target: 5 minutes per task. Submitted manually.',''];
+  state.tasks.forEach((t,i)=>{
+    out.push(mode==='proof'?'Proofreading':('PARAGRAPH '+(i+1)+': '+CONFIG.prompts[i].question));
+    out.push('Time used: '+mmss(elapsed(t)/1000)+'; overtime: '+mmss(Math.max(0,elapsed(t)-LIMIT_MS)/1000));
+    out.push(mode==='proof'?'Corrected passage:':'Paragraph:');out.push(t.text);out.push('');
+    if(t.atFive!==null){out.push('Draft captured at '+mmss(t.atFiveSec)+' elapsed (first check at or after five minutes):');out.push(t.atFive);out.push('');}
+  });
+  if(mode==='proof'){out.push('ORIGINAL EXERCISE PASSAGE:',CONFIG.flawed,'','TUTOR KEY: 22 correction targets; accept equivalent grammatical repairs.');CONFIG.issues.forEach((x,i)=>out.push((i+1)+'. '+x[0]+': '+x[1]+' → '+x[2]+'. '+x[3]));out.push('','Adapted from Kenneth Grahame, The Wind in the Willows, Chapter 1.',CONFIG.source);}
+  return out.join('\n');
+}
+function showSubmitted(){state.submitted=true;state.submittedAt=new Date().toISOString();stopTasks();save();status('');render();}
+async function submitWork(){
+  if(submitting||state.submitted)return;
+  if(mode==='peel'&&!state.tasks.every(t=>t.completed)){status('Finish all four paragraphs before submitting.',true);return;}
+  if(!current().started||!state.tasks.every(t=>t.text.trim())){status('Complete your work before submitting.',true);return;}
+  if(!confirm('Submit this '+(mode==='proof'?'proofreading exercise':'set of four paragraphs')+' to your tutor?'))return;
+  const runningIndex=state.tasks.findIndex(t=>t.runningSince!==null);
+  stopTasks();save();submitting=true;render();status('Submitting…');
+  try{
+    // Check for a confirmed earlier submission before retrying an uncertain request.
+    if(await checkServer()){showSubmitted();return;}
+    const payload={nameKey:studentKey,promptId:taskID(),promptTitle:mode==='proof'?'Proofreading: Mole meets Rat':'PEEL practice: four paragraphs',wordCount:state.tasks.reduce((n,t)=>n+words(t.text),0),timeUsedSec:Math.floor(state.tasks.reduce((n,t)=>n+elapsed(t),0)/1000),responseText:collectResponse()};
+    await callBackend('submitWriting',payload);showSubmitted();
+  }catch(error){
+    let confirmed=false;try{confirmed=await checkServer();}catch(_){}
+    if(confirmed)showSubmitted();else{
+      if(runningIndex>=0)state.tasks[runningIndex].runningSince=Date.now();save();
+      status('Submission was not confirmed. Your work is still here. Check your connection and try again, or download a copy.',true);
+    }
+  }finally{submitting=false;render();}
+}
+function download(){
+  save();const file=new Blob([collectResponse()],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(file),a=document.createElement('a');
+  a.href=url;a.download=taskID()+'-'+studentKey+'.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('editor').addEventListener('input',()=>{if(!state||state.submitted||submitting)return;const t=current();if(!t.started||t.completed)return;t.text=$('editor').value;sample(t);save();renderClock();});
+$('rounds').addEventListener('click',event=>{const b=event.target.closest('[data-round]');if(b)selectRound(Number(b.dataset.round));});
+$('start').onclick=begin;$('finishRound').onclick=finishRound;$('submit').onclick=submitWork;$('download').onclick=download;
+$('chooseProof').onclick=()=>openMode('proof');$('choosePeel').onclick=()=>openMode('peel');
+$('allExercises').onclick=()=>{if(submitting)return;stopTasks();save();show('home');};
+async function identify(){
+  const input=$('studentInput').value.trim();if(!input){$('signInStatus').textContent='Enter your student name.';return;}
+  $('signIn').disabled=true;$('signInStatus').textContent='';
+  try{context=await callBackend('login',{name:input});studentKey=context.profile.nameKey;$('studentLabel').textContent=context.profile.displayName||studentKey;links();if(mode)openMode(mode);else show('home');}
+  catch(error){$('signInStatus').textContent='Could not sign in. Check your name and connection.';}finally{$('signIn').disabled=false;}
+}
+$('signIn').onclick=identify;$('studentInput').addEventListener('keydown',event=>{if(event.key==='Enter')identify();});
+setInterval(()=>{if(!state||state.submitted||submitting)return;let changed=false;state.tasks.forEach(t=>{if(sample(t))changed=true;});if(changed)save();renderClock();if(mode==='peel')renderRounds();},250);
+window.addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{if(state){state.tasks.forEach(sample);save();}});
+window.addEventListener('beforeunload',event=>{if(submitting){event.preventDefault();event.returnValue='';}});
+(async()=>{
+  if(!studentKey){show('identify');return;}
+  links();$('studentLabel').textContent=studentKey;if(mode)openMode(mode);else show('home');
+  try{context=await callBackend('login',{name:studentKey});studentKey=context.profile.nameKey;$('studentLabel').textContent=context.profile.displayName||studentKey;links();if(state&&assignmentSubmitted(context))showSubmitted();}
+  catch(_){if(state)status('Working offline. You can keep writing and submit when connected.');}
+})();
+</script>
+</body>
+</html>

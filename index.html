@@ -501,17 +501,34 @@ const WRITING_CRITERIA = {
     {key:"spelling",  label:"Spelling & punctuation",    max:5}
   ]
 };
+/* Short writing exercises use the existing writing submission and feedback backend. */
+const WRITING_DRILLS = {"writing-proofreading-mithran-20261029": {"url": "Mithran_Writing_Practice.html?exercise=proofreading", "label": "Proofreading", "minutes": 5}, "writing-peel-mithran-20261029": {"url": "Mithran_Writing_Practice.html?exercise=peel", "label": "PEEL practice", "minutes": 20}};
+const PROOFREADING_DRILL_ID = "writing-proofreading-mithran-20261029";
+const PEEL_DRILL_ID = "writing-peel-mithran-20261029";
+const PROOFREADING_CRITERIA = {"Proofreading": [{"key": "proof_splices", "label": "Comma splices", "max": 3}, {"key": "proof_commas", "label": "Commas after opening clauses", "max": 4}, {"key": "proof_spelling", "label": "Spelling", "max": 6}, {"key": "proof_grammar", "label": "Grammar and agreement", "max": 4}, {"key": "proof_apostrophes", "label": "Apostrophes", "max": 3}, {"key": "proof_other", "label": "Question mark and direct address", "max": 2}]};
+const PEEL_CRITERIA = {"Paragraph 1: Sports equipment at lunch": [{"key": "peel_1_point", "label": "Clear, focused point", "max": 2}, {"key": "peel_1_explain", "label": "Explains how or why", "max": 3}, {"key": "peel_1_example", "label": "Specific, relevant example", "max": 3}, {"key": "peel_1_link", "label": "Links to the position", "max": 1}, {"key": "peel_1_control", "label": "Sentence control and accuracy", "max": 1}], "Paragraph 2: Weekend homework": [{"key": "peel_2_point", "label": "Clear, focused point", "max": 2}, {"key": "peel_2_explain", "label": "Explains how or why", "max": 3}, {"key": "peel_2_example", "label": "Specific, relevant example", "max": 3}, {"key": "peel_2_link", "label": "Links to the position", "max": 1}, {"key": "peel_2_control", "label": "Sentence control and accuracy", "max": 1}], "Paragraph 3: An evening at the library": [{"key": "peel_3_point", "label": "Clear, focused point", "max": 2}, {"key": "peel_3_explain", "label": "Explains how or why", "max": 3}, {"key": "peel_3_example", "label": "Specific, relevant example", "max": 3}, {"key": "peel_3_link", "label": "Links to the position", "max": 1}, {"key": "peel_3_control", "label": "Sentence control and accuracy", "max": 1}], "Paragraph 4: Choosing seats": [{"key": "peel_4_point", "label": "Clear, focused point", "max": 2}, {"key": "peel_4_explain", "label": "Explains how or why", "max": 3}, {"key": "peel_4_example", "label": "Specific, relevant example", "max": 3}, {"key": "peel_4_link", "label": "Links to the position", "max": 1}, {"key": "peel_4_control", "label": "Sentence control and accuracy", "max": 1}]};
+const PROOFREADING_KEY = [["Missing commas", "river a dark", "river, a dark", "Put a comma after the opening dependent clause."], ["Apostrophes", "Moles eye", "Mole’s eye", "The eye belongs to Mole."], ["Comma splices", "make, something", "make. Something", "Separate the two complete clauses with a full stop, semicolon or suitable conjunction. A comma alone cannot join them."], ["Grammar", "The two animals was", "The two animals were", "The plural subject animals takes were."], ["Spelling", "cautiosly", "cautiously", "Keep the -tious- spelling."], ["Other punctuation", "come over.", "come over?", "A direct question needs a question mark inside the quotation marks."], ["Spelling", "unfastend", "unfastened", "The past tense is unfastened."], ["Spelling", "steped", "stepped", "Double the final p before -ed."], ["Comma splices", "outside, it", "outside. It", "Both clauses can stand alone. A semicolon or a suitable conjunction is also valid."], ["Grammar", "The boat were", "The boat was", "The singular subject boat takes was."], ["Apostrophes", "two animal’s / two animal's", "two animals", "A plural does not take an apostrophe here."], ["Missing commas", "bank he", "bank, he", "Close the opening When clause with a comma."], ["Missing commas", "down he", "down, he", "Close the opening As clause with a comma."], ["Spelling", "wonderfull", "wonderful", "Wonderful ends in one l."], ["Apostrophes", "Ive", "I’ve", "The apostrophe stands for the missing ha in I have."], ["Spelling", "fasinating", "fascinating", "Fascinating contains sc."], ["Missing commas", "nervous he", "nervous, he", "Close the opening Although clause with a comma."], ["Grammar", "hisself", "himself", "Use the reflexive pronoun himself."], ["Other punctuation", "Look ahead Rat", "Look ahead, Rat", "Set off the name of the person being addressed."], ["Spelling", "sudenly", "suddenly", "Suddenly contains dd."], ["Comma splices", "late, the boat", "late. The boat", "Separate the two complete clauses. Accept a semicolon or a suitable conjunction."], ["Grammar", "His feet was", "His feet were", "The plural subject feet takes were."]];
+function drillMarkingNotes(promptId){
+  if(String(promptId)===PROOFREADING_DRILL_ID){
+    return '<details class="aitem" style="margin-top:12px"><summary>Proofreading key · 22 corrections</summary><p class="aitemmeta">Award one mark per target repaired. Accept full stops, semicolons and suitable conjunctions for comma splices, and either straight or curly apostrophes. Do not require an exact text match or penalise valid changes in wording. Read the whole passage for errors introduced by an attempted repair. The task is adapted from Kenneth Grahame, The Wind in the Willows, Chapter 1.</p><ol>'+PROOFREADING_KEY.map(x=>'<li><b>'+esc(x[1])+' → '+esc(x[2])+'</b><p class="aitemmeta">'+esc(x[3])+'</p></li>').join('')+'</ol></details>';
+  }
+  if(String(promptId)===PEEL_DRILL_ID){
+    return '<details class="aitem" style="margin-top:12px"><summary>PEEL marking guide · 10 per paragraph</summary><p class="aitemmeta">Point (2): focused reason and a clear position. Explanation (3): develops a believable causal link rather than restating the point. Example (3): a specific, plausible case that supports the reason; an invented study earns no credit as evidence. Link (1): returns to the position without adding a different argument. Control (1): readable, accurate sentences. Accept either position and a valid variation in paragraph order. Timings and the draft captured after five minutes appear in the submission. Overtime carries no automatic penalty.</p></details>';
+  }
+  return '';
+}
+
 function criteriaFlat(schema=WRITING_CRITERIA){return Object.values(schema).flat();}
 function criteriaMaxTotal(schema=WRITING_CRITERIA){return criteriaFlat(schema).reduce((s,c)=>s+c.max,0);}
-function criteriaLabel(key){const c=criteriaFlat().concat(criteriaFlat(PERSUASIVE_CRITERIA)).find(c=>c.key===key);return c?c.label:key;}
+function criteriaLabel(key){const c=criteriaFlat().concat(criteriaFlat(PERSUASIVE_CRITERIA),criteriaFlat(PROOFREADING_CRITERIA),criteriaFlat(PEEL_CRITERIA)).find(c=>c.key===key);const paragraph=String(key).match(/^peel_(\d+)_/);return c?((paragraph?"Paragraph "+paragraph[1]+": ":"")+c.label):key;}
 
 /* admin: build the score editor under a draft */
 function scoreEditor(bid,existing,promptId,responseText){
   const isTest=String(promptId)===PERSUASIVE_TEST_ID;
-  const schema=isTest?PERSUASIVE_CRITERIA:WRITING_CRITERIA;adminScoreSchemas[bid]=schema;
+  const schema=isTest?PERSUASIVE_CRITERIA:String(promptId)===PROOFREADING_DRILL_ID?PROOFREADING_CRITERIA:String(promptId)===PEEL_DRILL_ID?PEEL_CRITERIA:WRITING_CRITERIA;adminScoreSchemas[bid]=schema;
   const sc={...((existing&&existing.scores)||{})};
   if(isTest&&sc.test_mcq==null){const match=String(responseText||"").match(/^Multiple choice: (\d+) \/ 30$/m);if(match&&Number(match[1])<=30)sc.test_mcq=Number(match[1]);}
-  let html='<div class="scorewrap"><label>'+(isTest?'Persuasive test score':'Selective score')+'</label>';
+  let html='<div class="scorewrap"><label>'+(isTest?'Persuasive test score':String(promptId)===PROOFREADING_DRILL_ID?'Proofreading score':String(promptId)===PEEL_DRILL_ID?'PEEL practice score':'Selective score')+'</label>';
   Object.keys(schema).forEach(setName=>{
     html+='<div class="scoreset"><div class="scoresetname">'+esc(setName)+'</div>';
     schema[setName].forEach(c=>{
@@ -526,6 +543,7 @@ function scoreEditor(bid,existing,promptId,responseText){
   const initTotal=criteriaFlat(schema).reduce((sum,c)=>sum+(Number(sc[c.key])||0),0);
   html+='<div class="scoretotal">Total <b id="tot-'+bid+'">'+initTotal+'</b> / '+criteriaMaxTotal(schema)+'</div></div>';
   if(isTest)html+=testMarkingNotes();
+  html+=drillMarkingNotes(promptId);
   return html;
 }
 function recalcScore(bid){
@@ -677,7 +695,8 @@ function taskEl(t,isDone){
   const isRev=t.type==="revision";
   const isTest=String(t.sourceId)===PERSUASIVE_TEST_ID;
   const ic=(t.type==="writing"||isRev)?(isRev?IC_REV:IC_WRITE):IC_READ;
-  const typeLabel=isRev?"Revision":isTest?"Writing test":(t.type==="writing"?"Writing task":"Reading paper");
+  const drill=WRITING_DRILLS[String(t.sourceId)];
+  const typeLabel=isRev?"Revision":drill?drill.label:isTest?"Writing test":(t.type==="writing"?"Writing task":"Reading paper");
   const meta=isDone?"Submitted":isTest?"No time limit":'<span class="due '+ds.cls+'">'+ds.label+"</span>";
   el.innerHTML='<div class="ticon">'+ic+'</div><div class="tmid"><p class="ttitle">'+esc(t.title)+'</p>'+
     '<div class="tmeta">'+typeLabel+' &middot; '+meta+'</div></div>';
@@ -688,6 +707,13 @@ function taskEl(t,isDone){
   return el;
 }
 function startTask(t){
+  const drill=WRITING_DRILLS[String(t.sourceId)];
+  if(t.type==="writing"&&(t.targetUrl||drill)){
+    const url=new URL(t.targetUrl||drill.url,location.href);
+    url.searchParams.set("student",student.nameKey);
+    url.searchParams.set("paper",String(t.sourceId||""));
+    window.location.href=url.href;return;
+  }
   if(String(t.sourceId)===PERSUASIVE_TEST_ID){
     const url=t.targetUrl||PERSUASIVE_TEST_URL;
     window.location.href=url+(url.includes("?")?"&":"?")+"student="+encodeURIComponent(student.nameKey)+"&paper="+encodeURIComponent(PERSUASIVE_TEST_ID);return;
@@ -993,6 +1019,7 @@ $("asSubmit").onclick=async()=>{
     targetUrl=(papers.length&&p)?(p.file_url||""):$("asUrl").value.trim();
   }
   if(taskType==="writing"&&$("asSource").value.trim()===PERSUASIVE_TEST_ID)targetUrl=PERSUASIVE_TEST_URL;
+  if(taskType==="writing"&&WRITING_DRILLS[$("asSource").value.trim()])targetUrl=WRITING_DRILLS[$("asSource").value.trim()].url;
   const body={password:adminCache.password,studentKey:$("asStudent").value,taskType,
     title:$("asTitle").value.trim(),targetUrl:targetUrl,
     sourceId:$("asSource").value.trim(),dueDate:$("asDue").value};
