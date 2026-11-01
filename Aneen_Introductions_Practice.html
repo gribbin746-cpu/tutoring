@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Introductions &amp; PEEL · Noof</title>
+<style>
+:root{--ink:#172b42;--navy:#0a2a4e;--muted:#637181;--line:#dce2e8;--paper:#fff;--bg:#f2f3f1;--gold:#98752e;--green:#206543;--red:#a53d2c}*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{cursor:default;opacity:.55}a{color:var(--navy)}header{background:var(--navy);color:white;padding:17px 28px;display:flex;justify-content:space-between;gap:20px;align-items:center}header a{color:inherit;text-decoration:none}.brand{font:600 23px Georgia,serif}.who{font-size:14px;opacity:.8}main{max-width:1050px;margin:auto;padding:34px 24px 70px}h1,h2{font-family:Georgia,serif;font-weight:normal;line-height:1.22}h1{font-size:36px;margin:0}h2{font-size:26px;margin:0 0 24px}.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:28px}.eyebrow{text-transform:uppercase;font-size:11px;letter-spacing:.13em;font-weight:700;color:var(--gold);margin-bottom:12px}.btn{border:1px solid var(--navy);border-radius:7px;padding:10px 19px;background:var(--navy);color:white;font-weight:600}.btn.secondary{background:white;color:var(--navy);border-color:var(--line)}.btn:hover:not(:disabled){filter:brightness(.94)}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #79aad9;outline-offset:3px}.topline{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;margin-bottom:26px}.clockbox{text-align:right;min-width:135px}.clock{font-size:30px;font-variant-numeric:tabular-nums;line-height:1.2}.clock.overtime{color:var(--red)}.clocklabel{font-size:12px;color:var(--muted);margin-top:5px}.editor{display:block;width:100%;min-height:330px;padding:22px;border:1px solid #c7d0da;border-radius:8px;resize:vertical;color:var(--ink);background:#fff;font:18px/1.85 Georgia,serif}.editor:disabled{background:#f7f8fa}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:17px}.save{margin-right:auto;font-size:13px;color:var(--muted)}.status{margin:18px 0 0;font-size:14px;white-space:pre-line}.status.error{color:var(--red)}.rounds{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 24px}.round{padding:12px 10px;border:1px solid var(--line);background:white;color:var(--muted);border-radius:7px;text-align:left;font-size:13px;line-height:1.5}.round b{display:block;font-size:14px;color:var(--ink)}.round.current{border-color:var(--navy);box-shadow:inset 0 0 0 1px var(--navy)}.round.done b{color:var(--green)}.round span{display:block;font-variant-numeric:tabular-nums}.storage-warning{padding:10px 14px;background:#fff2dd;color:#714c18;border:1px solid #e5c388;border-radius:7px;margin-bottom:20px;font-size:14px}label{display:block;margin:0 0 9px;font-size:14px}input{padding:10px;border:1px solid var(--line);border-radius:7px;width:100%;max-width:360px}.donebox{background:#edf5ef;border:1px solid #cadece;padding:20px;border-radius:8px;margin-top:20px}.summary{display:grid;gap:8px;margin:14px 0;font-size:14px}.summary div{display:flex;justify-content:space-between;gap:15px}.progress{height:3px;background:#e6e9ed;border-radius:2px;overflow:hidden;margin:14px 0 0}.progress span{display:block;height:100%;background:var(--gold);width:0%}.bottomnav{margin-top:24px;font-size:14px}.sign-title{margin-bottom:24px}@media(max-width:650px){header{padding:14px 18px}main{padding:24px 15px 50px}.card{padding:22px 17px}h1{font-size:29px}h2{font-size:23px}.topline{gap:12px}.clockbox{min-width:100px}.clock{font-size:25px}.editor{font-size:17px;padding:16px;min-height:350px}.rounds{grid-template-columns:1fr 1fr}.toolbar .save{flex-basis:100%}}@media print{header,.rounds,.toolbar,.bottomnav,.clockbox,.progress{display:none}.card{border:0;padding:0}body{background:white}}
+</style>
+</head>
+<body>
+<header><a class="brand" href="index.html" id="brandLink">Noof</a><span class="who" id="studentLabel">Writing practice</span></header>
+<main>
+<div class="storage-warning" id="storageWarning" hidden>Draft saving is unavailable. Download a copy before leaving.</div>
+<section id="identify" class="card" hidden>
+<h1 class="sign-title">Introductions &amp; PEEL</h1>
+<label for="studentInput">Student name</label><input id="studentInput" autocomplete="username">
+<div class="toolbar"><button class="btn" id="signIn">Continue</button></div>
+<p class="status" id="signInStatus" role="status"></p>
+</section>
+<section id="work" hidden>
+<div class="topline"><h1>Introductions &amp; PEEL</h1><div class="clockbox"><div class="clock" id="clock" role="timer" aria-label="Time remaining">5:00</div><div class="clocklabel" id="clockLabel">Not started</div></div></div>
+<nav class="rounds" id="rounds" aria-label="Writing tasks"></nav>
+<article class="card">
+<div class="eyebrow" id="taskLabel"></div><h2 id="question"></h2>
+<label for="editor" id="editorLabel">Your introduction</label>
+<textarea class="editor" id="editor" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" data-gramm="false" data-gramm_editor="false" data-enable-grammarly="false" disabled></textarea>
+<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+<div class="toolbar"><span class="save" id="saveLabel">Ready</span><button class="btn secondary" id="download">Download draft</button><button class="btn" id="start">Start 5 minutes</button><button class="btn" id="finishRound" hidden>Finish</button><button class="btn" id="submit" hidden>Submit to tutor</button></div>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+<section class="donebox" id="submittedBox" hidden><b>Submitted to your tutor.</b><div class="summary" id="timeSummary"></div><a id="returnLink" href="index.html">Back to dashboard</a></section>
+</article>
+<div class="bottomnav"><a id="dashboardLink" href="index.html">Back to dashboard</a></div>
+</section>
+</main>
+<script>
+'use strict';
+const CONFIG={
+  api:'https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec',
+  id:'writing-introductions-aneen-20261101',
+  title:'Writing practice: three introductions and one PEEL paragraph',
+  prompts:[
+    {label:'Introduction 1',kind:'introduction',question:'Should school uniforms be compulsory?'},
+    {label:'Introduction 2',kind:'introduction',question:'Should children under 13 be allowed to use social media?'},
+    {label:'Introduction 3',kind:'introduction',question:'Should public transport be free for school students?'},
+    {label:'PEEL paragraph',kind:'paragraph',question:'Should schools replace printed textbooks with digital textbooks?'}
+  ]
+};
+const $=id=>document.getElementById(id);
+const query=new URLSearchParams(location.search);
+const LIMIT_MS=300000;
+let studentKey=(query.get('student')||'').trim().toLowerCase();
+let state=null,submitting=false,storageOK=true,saveNotice='';
+const words=t=>String(t).trim().split(/\s+/).filter(Boolean).length;
+const mmss=s=>{s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function storeKey(){return 'noof_writing_drills_v1_'+encodeURIComponent(studentKey)+'_'+CONFIG.id;}
+function newTask(){return {text:'',started:false,completed:false,elapsedMs:0,runningSince:null,atFive:null,atFiveSec:null};}
+function load(){
+  state={version:1,studentKey,id:CONFIG.id,active:0,submitted:false,submittedAt:null,tasks:CONFIG.prompts.map(newTask)};
+  try{
+    const raw=localStorage.getItem(storeKey());
+    if(!raw)return;
+    const s=JSON.parse(raw);
+    if(s.version!==1||s.studentKey!==studentKey||s.id!==CONFIG.id||!Array.isArray(s.tasks)||s.tasks.length!==4)return;
+    state.active=Number.isInteger(s.active)&&s.active>=0&&s.active<4?s.active:0;
+    state.submitted=s.submitted===true;state.submittedAt=s.submittedAt||null;
+    state.tasks=s.tasks.map(t=>({...newTask(),text:typeof t.text==='string'?t.text:'',started:t.started===true,completed:t.completed===true,
+      elapsedMs:Number.isFinite(t.elapsedMs)?Math.max(0,t.elapsedMs):0,
+      runningSince:Number.isFinite(t.runningSince)&&t.runningSince>0?t.runningSince:null,
+      atFive:typeof t.atFive==='string'?t.atFive:null,atFiveSec:Number.isFinite(t.atFiveSec)?t.atFiveSec:null}));
+  }catch(_){storageOK=false;$('storageWarning').hidden=false;}
+}
+function save(){if(!state)return;try{localStorage.setItem(storeKey(),JSON.stringify(state));saveNotice='Draft saved';}catch(_){storageOK=false;$('storageWarning').hidden=false;saveNotice='Draft not saved';}}
+function elapsed(t,now=Date.now()){return Math.max(0,t.elapsedMs+(t.runningSince===null?0:Math.max(0,now-t.runningSince)));}
+function freeze(t){if(t.runningSince!==null){t.elapsedMs=elapsed(t);t.runningSince=null;}}
+function sample(t){if(t.started&&t.atFive===null&&elapsed(t)>=LIMIT_MS){t.atFive=t.text;t.atFiveSec=Math.floor(elapsed(t)/1000);return true;}return false;}
+function stopTasks(){state.tasks.forEach(t=>{sample(t);freeze(t);});}
+function current(){return state.tasks[state.active];}
+function status(message,error=false){$('status').textContent=message;$('status').className='status'+(error?' error':'');}
+function links(){const url='index.html?student='+encodeURIComponent(studentKey);['brandLink','dashboardLink','returnLink'].forEach(id=>$(id).href=url+(id==='returnLink'?'&done=writing':''));}
+async function callBackend(action,payload){
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),45000);
+  try{
+    const r=await fetch(CONFIG.api,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action,payload}),redirect:'follow',signal:controller.signal});
+    const raw=await r.text();let d;try{d=JSON.parse(raw);}catch(_){throw new Error('The server did not confirm the request.');}
+    if(!d.success)throw new Error(d.error||'The request failed.');return d.data;
+  }finally{clearTimeout(timeout);}
+}
+function assignmentSubmitted(c){return (c.assignments||[]).some(t=>String(t.sourceId)===CONFIG.id&&String(t.status).toLowerCase()==='submitted');}
+async function checkServer(){return assignmentSubmitted(await callBackend('login',{name:studentKey}));}
+function openWork(){
+  load();links();
+  const t=current();
+  if(!state.submitted&&t.started&&!t.completed&&t.runningSince===null){t.runningSince=Date.now();save();}
+  $('identify').hidden=true;$('work').hidden=false;render();
+}
+function render(){
+  const p=CONFIG.prompts[state.active],t=current();
+  $('taskLabel').textContent=p.label;$('question').textContent=p.question;
+  $('editorLabel').textContent=p.kind==='introduction'?'Your introduction':'Your PEEL paragraph';
+  $('editor').value=t.text;$('editor').disabled=!t.started||t.completed||state.submitted||submitting;
+  $('start').hidden=state.submitted||submitting||(t.started&&!t.completed);
+  $('start').textContent=t.completed?'Edit':t.started?'Continue':'Start 5 minutes';
+  $('finishRound').hidden=state.submitted||!t.started||t.completed;
+  $('finishRound').disabled=submitting;$('submit').hidden=state.submitted||!state.tasks.every(x=>x.completed);
+  $('submit').disabled=submitting;$('download').disabled=submitting;
+  $('rounds').innerHTML=state.tasks.map((t,i)=>'<button class="round'+(i===state.active?' current':'')+(t.completed?' done':'')+'" data-round="'+i+'"'+(i===state.active?' aria-current="step"':'')+(submitting?' disabled':'')+'><b>'+CONFIG.prompts[i].label+(t.completed?' ✓':'')+'</b><span id="time'+i+'"></span></button>').join('');
+  renderClock();renderSubmitted();
+}
+function renderClock(){
+  if(!state)return;const t=current(),ms=elapsed(t),over=ms>=LIMIT_MS;
+  $('clock').textContent=over?'+'+mmss((ms-LIMIT_MS)/1000):mmss(Math.ceil((LIMIT_MS-ms)/1000));
+  $('clock').classList.toggle('overtime',over);$('clock').setAttribute('aria-label',over?'Overtime':'Time remaining');
+  $('clockLabel').textContent=state.submitted?'Submitted':t.completed?'Finished':!t.started?'Not started':over?'Overtime':'Time remaining';
+  $('progressBar').style.width=Math.min(100,ms/LIMIT_MS*100)+'%';
+  $('saveLabel').textContent=words(t.text)+' words · '+(state.submitted?'Submitted':!t.started?'Ready':saveNotice||(storageOK?'Draft saved':'Draft not saved'));
+  state.tasks.forEach((x,i)=>{const el=$('time'+i);if(el)el.textContent=!x.started?'Not started':(x.completed?'Finished · ':'Started · ')+mmss(elapsed(x)/1000);});
+}
+function renderSubmitted(){
+  $('submittedBox').hidden=!state.submitted;if(!state.submitted)return;
+  $('timeSummary').innerHTML=state.tasks.map((t,i)=>'<div><span>'+CONFIG.prompts[i].label+'</span><span>'+mmss(elapsed(t)/1000)+(elapsed(t)>LIMIT_MS?' · '+mmss((elapsed(t)-LIMIT_MS)/1000)+' overtime':'')+'</span></div>').join('');
+}
+function begin(){
+  if(!state||submitting||state.submitted)return;const t=current();
+  state.tasks.forEach((x,i)=>{if(i!==state.active)freeze(x);});
+  t.started=true;t.completed=false;if(t.runningSince===null)t.runningSince=Date.now();save();status('');render();$('editor').focus();
+}
+function finishRound(){
+  if(!state||submitting||state.submitted)return;const t=current();
+  if(!t.started||!t.text.trim()){status('Write your response before finishing.',true);return;}
+  sample(t);freeze(t);t.completed=true;
+  const next=state.tasks.findIndex((x,i)=>i>state.active&&!x.completed);
+  if(next!==-1)state.active=next;
+  save();status('');render();
+  if(state.tasks.every(x=>x.completed))$('submit').focus();
+}
+function selectRound(i){
+  if(!state||submitting||!Number.isInteger(i)||i<0||i>=state.tasks.length||i===state.active)return;
+  sample(current());freeze(current());state.active=i;
+  if(current().started&&!current().completed&&!state.submitted)current().runningSince=Date.now();
+  save();status('');render();
+}
+function collectResponse(){
+  const out=['THREE INTRODUCTIONS AND ONE PEEL PARAGRAPH','Target: 5 minutes per response. Submitted manually.',''];
+  state.tasks.forEach((t,i)=>{
+    const p=CONFIG.prompts[i];
+    out.push(p.label.toUpperCase()+': '+p.question,'Time used: '+mmss(elapsed(t)/1000)+'; overtime: '+mmss(Math.max(0,elapsed(t)-LIMIT_MS)/1000),'',t.text,'');
+    if(t.atFive!==null)out.push('Draft captured at '+mmss(t.atFiveSec)+' elapsed (first check at or after five minutes):',t.atFive,'');
+  });return out.join('\n');
+}
+function showSubmitted(){state.submitted=true;state.submittedAt=state.submittedAt||new Date().toISOString();stopTasks();save();status('');render();}
+async function submitWork(){
+  if(!state||submitting||state.submitted)return;
+  if(!state.tasks.every(t=>t.completed&&t.text.trim())){status('Finish all four responses before submitting.',true);return;}
+  if(!confirm('Submit all four responses to your tutor?'))return;
+  stopTasks();save();submitting=true;render();status('Submitting…');
+  try{
+    if(await checkServer()){showSubmitted();return;}
+    const payload={nameKey:studentKey,promptId:CONFIG.id,promptTitle:CONFIG.title,wordCount:state.tasks.reduce((n,t)=>n+words(t.text),0),timeUsedSec:Math.floor(state.tasks.reduce((n,t)=>n+elapsed(t),0)/1000),responseText:collectResponse()};
+    await callBackend('submitWriting',payload);showSubmitted();
+  }catch(_){
+    let confirmed=false;try{confirmed=await checkServer();}catch(_){}
+    if(confirmed)showSubmitted();else status('Submission was not confirmed. Your draft is still here. Try again or download a copy.',true);
+  }finally{submitting=false;render();}
+}
+function download(){
+  if(!state)return;save();const file=new Blob([collectResponse()],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(file),a=document.createElement('a');
+  a.href=url;a.download=CONFIG.id+'-'+studentKey+'.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+async function identify(){
+  const input=$('studentInput').value.trim();if(!input){$('signInStatus').textContent='Enter your student name.';return;}
+  $('signIn').disabled=true;$('signInStatus').textContent='';
+  try{
+    const c=await callBackend('login',{name:input});if(!c.profile?.nameKey)throw new Error('Unknown student.');
+    studentKey=c.profile.nameKey;$('studentLabel').textContent=c.profile.displayName||studentKey;
+    query.set('student',studentKey);query.set('paper',CONFIG.id);history.replaceState(null,'',location.pathname+'?'+query);
+    openWork();if(assignmentSubmitted(c))showSubmitted();
+  }catch(_){$('signInStatus').textContent='Could not sign in. Check your name and connection.';}finally{$('signIn').disabled=false;}
+}
+$('editor').addEventListener('input',()=>{if(!state||state.submitted||submitting)return;const t=current();if(!t.started||t.completed)return;t.text=$('editor').value;sample(t);save();renderClock();});
+$('rounds').addEventListener('click',e=>{const b=e.target.closest('[data-round]');if(b)selectRound(Number(b.dataset.round));});
+$('start').onclick=begin;$('finishRound').onclick=finishRound;$('submit').onclick=submitWork;$('download').onclick=download;
+$('signIn').onclick=identify;$('studentInput').addEventListener('keydown',e=>{if(e.key==='Enter')identify();});
+setInterval(()=>{if(!state||state.submitted||submitting)return;let changed=false;state.tasks.forEach(t=>{if(sample(t))changed=true;});if(changed)save();renderClock();},250);
+window.addEventListener('pagehide',save);
+document.addEventListener('visibilitychange',()=>{if(state){state.tasks.forEach(t=>sample(t));save();}});
+window.addEventListener('beforeunload',e=>{if(submitting){e.preventDefault();e.returnValue='';}});
+(async()=>{
+  if(!studentKey){$('identify').hidden=false;return;}
+  $('studentLabel').textContent=studentKey;openWork();
+  try{
+    const c=await callBackend('login',{name:studentKey});
+    if(!c.profile?.nameKey)throw new Error('Unknown student.');
+    if(c.profile.nameKey!==studentKey){stopTasks();save();studentKey=c.profile.nameKey;openWork();}
+    $('studentLabel').textContent=c.profile.displayName||studentKey;links();
+    if(assignmentSubmitted(c))showSubmitted();
+  }catch(_){status('Offline. Draft saved locally; connect before submitting.');}
+})();
+</script>
+</body>
+</html>
