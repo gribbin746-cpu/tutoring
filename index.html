@@ -667,7 +667,7 @@ function renderDashboard(){
   renderStatStrip(); renderTasks(); renderInbox(); renderVault(); renderSkills(); renderRevision();
 }
 function renderStatStrip(){
-  const a=ctx.assignments||[], rh=ctx.readingHistory||[];
+  const a=studentTasks(), rh=ctx.readingHistory||[];
   const open=a.filter(t=>String(t.status).toLowerCase()!=="submitted").length;
   const avg=rh.length?Math.round(rh.reduce((s,r)=>s+(r.outOf?r.score/r.outOf*100:0),0)/rh.length):null;
   $("statStrip").innerHTML=
@@ -677,7 +677,7 @@ function renderStatStrip(){
 }
 function renderTasks(){
   const list=$("taskList"); list.innerHTML="";
-  const tasks=(ctx.assignments||[]).slice();
+  const tasks=studentTasks();
   const open=tasks.filter(t=>String(t.status).toLowerCase()!=="submitted");
   const done=tasks.filter(t=>String(t.status).toLowerCase()==="submitted");
   if(open.length===0) list.innerHTML='<div class="emptyline">Nothing due right now. Nice work staying on top of it.</div>';
@@ -687,6 +687,17 @@ function renderTasks(){
     list.appendChild(lab);
     done.slice().reverse().forEach(t=>list.appendChild(taskEl(t,true)));
   }
+}
+const EHAN_LOOP_IDS=["reading-word-cloze-ehan-20261106","writing-asat-docix-ehan-20261106"];
+function studentTasks(){
+  const tasks=(ctx.assignments||[]).slice();
+  if(String(student.nameKey).toLowerCase()!=="ehan")return tasks;
+  let saved={};try{saved=JSON.parse(lsGet("noof_ehan_loop_v1_ehan")||"{}");}catch(_){}
+  const writingDone=saved.writing&&saved.writing.delivery==="sent";
+  const readingDone=writingDone||(saved.reading&&saved.reading.delivery==="sent")||(ctx.readingHistory||[]).some(r=>String(r.paperId)===EHAN_LOOP_IDS[0]);
+  const additions=[{type:"reading",sourceId:EHAN_LOOP_IDS[0],title:"Word cloze · 30 questions & mistake review",status:readingDone?"submitted":"open",targetUrl:"Ehan_Reading_Writing_Loop.html?view=reading"},{type:"writing",sourceId:EHAN_LOOP_IDS[1],title:"ASAT · Rewrite your Docix speech",status:writingDone?"submitted":"open",targetUrl:"Ehan_Reading_Writing_Loop.html?view=writing"}];
+  additions.reverse().forEach(t=>{if(!tasks.some(a=>String(a.sourceId)===t.sourceId))tasks.unshift(t);});
+  return tasks;
 }
 function taskEl(t,isDone){
   const el=document.createElement("div");
@@ -700,13 +711,20 @@ function taskEl(t,isDone){
   const meta=isDone?"Submitted":isTest?"No time limit":'<span class="due '+ds.cls+'">'+ds.label+"</span>";
   el.innerHTML='<div class="ticon">'+ic+'</div><div class="tmid"><p class="ttitle">'+esc(t.title)+'</p>'+
     '<div class="tmeta">'+typeLabel+' &middot; '+meta+'</div></div>';
-  if(!isDone||isTest){ const b=document.createElement("button"); b.className="btn sm";
+  const isEhanLoop=EHAN_LOOP_IDS.includes(String(t.sourceId));
+  if(!isDone||isTest||isEhanLoop){ const b=document.createElement("button"); b.className="btn sm";
     const saved=isTest?testDraft():null;
     b.textContent=isDone?"View answers":saved&&Object.values(saved.answers||{}).some(a=>String(a).trim())?"Resume":"Start";
     b.onclick=()=>startTask(t); el.appendChild(b); }
   return el;
 }
 function startTask(t){
+  if(EHAN_LOOP_IDS.includes(String(t.sourceId))){
+    const url=new URL("Ehan_Reading_Writing_Loop.html",location.href);
+    url.searchParams.set("student",student.nameKey);
+    url.searchParams.set("view",String(t.sourceId)===EHAN_LOOP_IDS[1]?"writing":"reading");
+    window.location.href=url.href;return;
+  }
   const drill=WRITING_DRILLS[String(t.sourceId)];
   if(t.type==="writing"&&(t.targetUrl||drill)){
     const url=new URL(t.targetUrl||drill.url,location.href);
