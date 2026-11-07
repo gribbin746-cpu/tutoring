@@ -168,15 +168,62 @@
   document.addEventListener('visibilitychange',()=>{if(!state)return;if(expire(state.writing,Date.now())){save();renderWriting();}});
   window.addEventListener('storage',e=>{if(state&&e.key===key()&&!busy){state=restore(readLocal(),student);if(expire(state.writing,Date.now()))save();go(view);}});
   setInterval(()=>{if(!state)return;if(expire(state.writing,Date.now())){save();if(view==='writing')renderWriting();}if(view==='writing')renderClock();},250);
-  async function init(){
-    $('retryLogin').hidden=true;$('loadingText').textContent='Opening your work…';
-    if(params.get('student')&&params.get('student').toLowerCase()!=='ehan' && 'test'){$('loadingText').textContent='This task is for Ehan. Open your own tasks from the home page.';return;}
-    try{const c=await post('login',{name:'ehan'});if(c.profile?.nameKey!=='ehan')throw new Error('Profile unavailable');student=c.profile.nameKey;$('studentLabel').textContent=(c.profile.displayName||'Ehan')+' · Reading & writing';}
-    catch(_){$('loadingText').textContent='Your profile could not be checked. Try again when you’re connected.';$('retryLogin').hidden=false;return;}
-    state=restore(readLocal(),student);if(expire(state.writing,Date.now()))save();
-    const link='index.html?student='+encodeURIComponent(student);$('homeLink').href=link;$('returnLink').href=link;
-    buildWriting();$('loading').hidden=true;$('lesson').hidden=false;go(params.get('view')==='writing'?'writing':state.reading.marked?'review':'reading');
-    if(state.writing.delivery==='uncertain')status('writingStatus','An earlier submission was not confirmed. Your saved work is here. Download a copy before choosing whether to retry.',true);
+  async function init() {
+    $('retryLogin').hidden = true;
+    $('loadingText').textContent = 'Opening your work…';
+
+    const requestedStudent = (params.get('student') || 'ehan').trim().toLowerCase();
+
+    if (requestedStudent !== 'ehan' && requestedStudent !== 'test') {
+      $('loadingText').textContent = 'This task is for Ehan or the test student.';
+      return;
+    }
+
+    try {
+      const c = await post('login', { name: requestedStudent });
+
+      if (c.profile?.nameKey !== requestedStudent) {
+        throw new Error('Profile unavailable');
+      }
+
+      student = c.profile.nameKey;
+      $('studentLabel').textContent =
+        (c.profile.displayName || requestedStudent) + ' · Reading & writing';
+    } catch (_) {
+      $('loadingText').textContent =
+        'Your profile could not be checked. Try again when you’re connected.';
+      $('retryLogin').hidden = false;
+      return;
+    }
+
+    state = restore(readLocal(), student);
+    if (expire(state.writing, Date.now())) save();
+
+    const link = 'index.html?student=' + encodeURIComponent(student);
+    $('homeLink').href = link;
+    $('returnLink').href = link;
+
+    buildWriting();
+    $('loading').hidden = true;
+    $('lesson').hidden = false;
+
+    go(
+      params.get('view') === 'writing'
+        ? 'writing'
+        : state.reading.marked
+          ? 'review'
+          : 'reading'
+    );
+
+    if (state.writing.delivery === 'uncertain') {
+      status(
+        'writingStatus',
+        'An earlier submission was not confirmed. Your saved work is here. Download a copy before choosing whether to retry.',
+        true
+      );
+    }
   }
-  $('retryLogin').onclick=init;init();
+
+  $('retryLogin').onclick = init;
+  init();
 })();
