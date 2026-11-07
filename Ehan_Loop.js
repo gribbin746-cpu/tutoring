@@ -170,7 +170,7 @@
   setInterval(()=>{if(!state)return;if(expire(state.writing,Date.now())){save();if(view==='writing')renderWriting();}if(view==='writing')renderClock();},250);
   async function init(){
     $('retryLogin').hidden=true;$('loadingText').textContent='Opening your work…';
-    if(params.get('student')&&params.get('student').toLowerCase()!=='ehan'){$('loadingText').textContent='This task is for Ehan. Open your own tasks from the home page.';return;}
+    if(params.get('student')&&params.get('student').toLowerCase()!=='ehan' && 'test'){$('loadingText').textContent='This task is for Ehan. Open your own tasks from the home page.';return;}
     try{const c=await post('login',{name:'ehan'});if(c.profile?.nameKey!=='ehan')throw new Error('Profile unavailable');student=c.profile.nameKey;$('studentLabel').textContent=(c.profile.displayName||'Ehan')+' · Reading & writing';}
     catch(_){$('loadingText').textContent='Your profile could not be checked. Try again when you’re connected.';$('retryLogin').hidden=false;return;}
     state=restore(readLocal(),student);if(expire(state.writing,Date.now()))save();
