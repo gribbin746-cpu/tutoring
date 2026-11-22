@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>HAST Reading Practice 2 | Gribbin Tutoring</title>
+<style>
+:root{font:16px/1.55 system-ui,sans-serif;color:#182736;background:#f5f6f8;--blue:#113d66;--line:#cdd6df;--muted:#4c5e70;--pale:#edf4fa}
+*{box-sizing:border-box}body{margin:0}h1,h2,h3,p{margin:0}h1,h2,h3{line-height:1.2}h1{font-size:clamp(1.55rem,4vw,2.25rem)}h2{font-size:1.4rem}h3{font-size:1.05rem}a{color:var(--blue);text-underline-offset:3px}[hidden]{display:none!important}
+:focus-visible{outline:3px solid #a86711;outline-offset:3px}header.site{background:#103450;color:#fff}header.site div{max-width:1180px;margin:auto;padding:11px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px}header.site a{color:inherit;text-decoration:none;font-weight:650}#clock{font-variant-numeric:tabular-nums;font-weight:700}#clock.late{color:#ffcd91}
+main{width:min(1140px,calc(100% - 32px));margin:24px auto 36px}.meta{margin-top:4px;color:var(--muted);font-size:.9rem}.panel{border:1px solid var(--line);background:#fff;border-radius:9px;padding:18px;min-width:0}.start,.results{margin-top:16px;max-width:670px}.start p+p{margin-top:10px}.start button{margin-top:14px}.grid{display:grid;grid-template-columns:1.12fr 1fr;align-items:start;gap:14px;margin-top:16px}.reading{max-height:calc(100vh - 164px);overflow:auto}.reading p{margin-top:12px;font-family:Georgia,serif;font-size:1.05rem}.reading h3{margin-top:15px}.para{font: .74rem system-ui,sans-serif;color:var(--muted);margin-right:8px}.reading .verse{padding-left:12px;border-left:2px solid var(--line)}.table-wrap{overflow:auto;margin-top:12px}table{border-collapse:collapse;width:100%;font-size:.83rem;line-height:1.35}caption{text-align:left;font-weight:700;padding-bottom:4px}td,th{text-align:left;padding:5px 7px;border:1px solid var(--line)}th{background:var(--pale)}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:6px;padding:7px 11px;color:inherit}button:hover:enabled{background:var(--pale)}button:disabled{opacity:.5;cursor:default}button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}button.primary:hover:enabled{background:#1a527f}.question-top,.actions{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.question-top{font-size:.87rem;color:var(--muted)}#flag[aria-pressed="true"]{background:#fff0d8;color:#614007}#stem{font:650 1.1rem/1.4 system-ui,sans-serif;margin:12px 0}.options{display:grid;gap:7px}.option{display:grid;grid-template-columns:16px 18px 1fr;align-items:baseline;gap:7px;border:1px solid var(--line);padding:8px 10px;border-radius:6px;font-size:.94rem}.option input{margin:0;accent-color:var(--blue)}.option:has(input:checked){background:var(--pale);border-color:#6687a4}.option.correct{background:#e8f4eb;border-color:#86a790}.option.wrong{background:#fcecea;border-color:#ca8f89}#explanation{margin-top:10px;padding:9px 11px;background:#f3f5f7;font-size:.9rem}.actions{margin-top:13px}
+nav{margin:12px 0 0}.numbers{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:4px}.numbers button{font-size:.82rem;padding:4px 2px;min-height:32px;position:relative}.numbers button.answered{background:#e7eef5}.numbers button[aria-current="step"]{border:2px solid var(--blue);font-weight:750}.numbers button.flagged::after{content:"";position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:#a86711}
+#progress,#save-note,#sent{font-size:.85rem;color:var(--muted)}#save-note:not(:empty),#sent:not(:empty){margin-top:8px}.results h2{margin-bottom:10px}.results .actions{justify-content:flex-start}#skills{margin-top:12px;max-width:440px}.foot{margin-top:17px;font-size:.75rem;color:var(--muted)}dialog{width:min(390px,calc(100% - 32px));border:1px solid var(--line);border-radius:9px;padding:18px;color:inherit}dialog p{margin-top:7px}dialog::backdrop{background:#112b45aa}
+@media(max-width:760px){main{width:calc(100% - 24px);margin-top:16px}.grid{grid-template-columns:1fr}.reading{max-height:min(36vh,360px)}.panel{padding:13px}.numbers{grid-template-columns:repeat(9,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header class="site"><div><a id="dashboard" href="https://gribbin746-cpu.github.io/tutoring/">Gribbin Tutoring</a><time id="clock" hidden></time></div></header>
+<main>
+  <h1>HAST Reading Practice 2</h1>
+  <p class="meta">36 questions · 45 minutes</p>
+  <noscript>Enable JavaScript to open the test.</noscript>
+  <section id="start" class="panel start">
+    <p>Choose one answer for each question. You can skip questions and return before time is up.</p>
+    <button id="begin" type="button" class="primary">Start test</button>
+  </section>
+
+  <section id="test" hidden>
+    <div class="grid">
+      <article id="reading" class="panel reading" aria-labelledby="text-title" tabindex="0">
+        <h2 id="text-title"></h2>
+        <div id="passage"></div>
+      </article>
+      <section class="panel" aria-labelledby="stem">
+        <div class="question-top">
+          <span id="qnumber"></span>
+          <button type="button" id="flag" aria-pressed="false">Flag</button>
+        </div>
+        <h2 id="stem" tabindex="-1"></h2>
+        <div id="options" class="options" role="group" aria-label="Answer choices"></div>
+        <p id="explanation" hidden></p>
+        <div class="actions">
+          <button id="previous" type="button">Previous</button>
+          <button id="next" type="button">Next</button>
+        </div>
+      </section>
+    </div>
+    <nav aria-label="Questions"><div id="numbers" class="numbers"></div></nav>
+    <div class="actions">
+      <p id="progress"></p>
+      <button id="finish" type="button" class="primary">Submit test</button>
+    </div>
+  </section>
+
+  <section id="results" class="panel results" aria-labelledby="score" hidden>
+    <h2 id="score" tabindex="-1"></h2>
+    <p id="result-note"></p>
+    <div id="skills"></div>
+    <p id="sent" role="status"></p>
+    <div class="actions">
+      <button id="review" type="button">Review answers</button>
+      <button id="download" type="button">Download result</button>
+      <button id="save-result" type="button" class="primary" hidden>Save to portal</button>
+    </div>
+  </section>
+  <p id="save-note" role="status"></p>
+  <footer class="foot">
+    <a href="https://www.acer.org/shared/hast-2024/HAST-24-SIB-Secondary.pdf" target="_blank" rel="noopener">ACER secondary sample</a>
+    · Ezra Pound, <a href="https://www.poetryfoundation.org/poetrymagazine/poems/12675/in-a-station-of-the-metro" target="_blank" rel="noopener"><cite>In a Station of the Metro</cite></a> (1913).
+  </footer>
+  <dialog id="confirm" aria-labelledby="confirm-heading">
+    <h2 id="confirm-heading">Submit test?</h2>
+    <p id="confirm-note"></p>
+    <form method="dialog" class="actions">
+      <button value="back">Keep working</button>
+      <button value="submit" class="primary">Submit</button>
+    </form>
+  </dialog>
+</main>
+<script>
+"use strict";
+
+const config = {"endpoint": "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec", "paperId": "hast-reading-2", "filename": "Aneen_HAST_Reading_Test_2.html", "title": "HAST Reading Practice 2", "minutes": 45};
+const passages = [{"title": "The last label", "html": "\u003cp>\u003cspan class=\"para\">1\u003c/span>Dad kept the orchard labels in a tobacco tin, sorted by row and tied with string. The labels for the trees he had cut down were still there. He said the next owner ought to know what had grown in the gaps.\u003c/p>\u003cp>\u003cspan class=\"para\">2\u003c/span>On the morning of the sale, Mr Dwyer from the agent’s office walked the rows with me. At the far gate he lifted a loop of wire with his pen. The wood it had held was lying face down. He wrote ‘unmarked apple’ on his sheet. I said the apples went soft in the middle before the skin showed anything. He waited for me to say something he could put in the box.\u003c/p>\u003cp>\u003cspan class=\"para\">3\u003c/span>I found the label in the grass. Dad had written ‘Not for keeping’ under the name. There was no room for the second line on Mr Dwyer’s sheet, so I read him the name and slipped the label into my coat.\u003c/p>\u003cp>\u003cspan class=\"para\">4\u003c/span>At the house I put the label in the tin. There was already one from the far gate, older and split through the middle. It had the name in my own writing, from the year Dad let me do the labels. On the back he had pencilled ‘Good off the tree’. I put both labels back. Then I got a piece of card and wrote the two lines out for Mr Dwyer. I left it under the clip on his board.\u003c/p>"}, {"title": "A cooler seat", "html": "\u003cp>\u003cspan class=\"para\">1\u003c/span>The school wanted to find out which of two shelters would make the lunch benches more comfortable. One had a pale canvas roof. The other had timber slats with narrow gaps. Both shelters were put over identical metal benches in the same courtyard. A third bench stayed in the sun.\u003c/p>\u003cp>\u003cspan class=\"para\">2\u003c/span>The class took readings at noon and two on a clear Tuesday. Air temperature was taken in the shade of a small screen at seat height. Seat temperature was taken in the middle of each bench with the same surface thermometer. At two, sunlight passing between the timber slats reached one end of the seat. The probe still went in the middle.\u003c/p>\u003cp>\u003cspan class=\"para\">3\u003c/span>The principal initially asked for a single winner. The class recommended the canvas for this courtyard if the aim was to keep the seats cool at the times measured. Its report also proposed taking readings at several points along each bench before ordering another shelter. The class left the question of summer performance open. The angle of the sun would change, as would the hours during which pupils used the seats.\u003c/p>\u003cdiv class=\"table-wrap\">\u003ctable>\u003ccaption>Tuesday readings in degrees Celsius\u003c/caption>\u003cthead>\u003ctr>\u003cth scope=\"col\">Bench\u003c/th>\u003cth scope=\"col\">Air at noon\u003c/th>\u003cth scope=\"col\">Seat at noon\u003c/th>\u003cth scope=\"col\">Air at 2 pm\u003c/th>\u003cth scope=\"col\">Seat at 2 pm\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>Canvas\u003c/td>\u003ctd>28\u003c/td>\u003ctd>29\u003c/td>\u003ctd>31\u003c/td>\u003ctd>32\u003c/td>\u003c/tr>\u003ctr>\u003ctd>Slats\u003c/td>\u003ctd>28\u003c/td>\u003ctd>31\u003c/td>\u003ctd>31\u003c/td>\u003ctd>36\u003c/td>\u003c/tr>\u003ctr>\u003ctd>Open\u003c/td>\u003ctd>29\u003c/td>\u003ctd>42\u003c/td>\u003ctd>32\u003c/td>\u003ctd>48\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\u003c/div>"}, {"title": "On the platform", "html": "\u003ch3>Text A · In a Station of the Metro\u003c/h3>\u003cp class=\"verse\">The apparition of these faces in the crowd:\u003cbr>Petals on a wet, black bough.\u003c/p>\u003ch3>Text B · Platform 3\u003c/h3>\u003cp>\u003cspan class=\"para\">1\u003c/span>A storm had stalled the trains. On the platform display, ‘2 min’ hung there for so long that people had stopped looking up when the display clicked. I had counted the blue tiles opposite often enough to know that one, high near the clock, was a shade lighter than its neighbours.\u003c/p>\u003cp>\u003cspan class=\"para\">2\u003c/span>A woman next to me was trying to close a broken umbrella. Every time she gathered one side, another sprang out. The man across from her took a rubber band off his newspaper and held it out. She took it. Neither spoke. The paper spread slowly across the man’s knees.\u003c/p>\u003cp>\u003cspan class=\"para\">3\u003c/span>When the train finally came, the woman and the man boarded through different doors. I caught sight of the paper in the carriage ahead. The man was holding it by both corners while he turned a page with his chin. At the next stop, the paper was gone from the window. There was only a wall of blue tiles again.\u003c/p>"}, {"title": "Ferry notices", "html": "\u003cp>\u003cspan class=\"para\">1\u003c/span>On Saturdays all three ferries leave Landing K and stop at Landing L before finishing at Landing M. Bicycles aboard the 9.05 and 10.05 ferries must be booked by 6 pm on Friday. The 9.35 carries passengers only. Walk-on passengers do not need to book. Everyone must be at the departure gate at least five minutes before the printed departure.\u003c/p>\u003cp>\u003cspan class=\"para\">2\u003c/span>On market Saturdays, Landing L is closed to arrivals and departures until 9.45. If a scheduled stop falls during the closure, the ferry skips L and keeps its printed arrival time at M. The promenade from L to M takes 18 minutes on foot. The shorter route between those landings crosses the market grounds and opens at 10 am.\u003c/p>\u003cdiv class=\"table-wrap\">\u003ctable>\u003ccaption>Saturday ferry timetable\u003c/caption>\u003cthead>\u003ctr>\u003cth scope=\"col\">Service\u003c/th>\u003cth scope=\"col\">Leave K\u003c/th>\u003cth scope=\"col\">Stop at L\u003c/th>\u003cth scope=\"col\">Arrive M\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>Early\u003c/td>\u003ctd>9.05\u003c/td>\u003ctd>9.17\u003c/td>\u003ctd>9.30\u003c/td>\u003c/tr>\u003ctr>\u003ctd>Middle\u003c/td>\u003ctd>9.35\u003c/td>\u003ctd>9.47\u003c/td>\u003ctd>10.00\u003c/td>\u003c/tr>\u003ctr>\u003ctd>Late\u003c/td>\u003ctd>10.05\u003c/td>\u003ctd>10.17\u003c/td>\u003ctd>10.30\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\u003c/div>"}, {"title": "The repair shelf", "html": "\u003ch3>Text A · Letter to the library\u003c/h3>\u003cp>\u003cspan class=\"para\">1\u003c/span>For years our Thursday repair group has brought its own pliers and screwdrivers. Half the calls I get now are from people who know how to tighten a loose handle and cannot justify buying the one tool they need. They ask if they can borrow mine. Why should they have to wait until Thursday?\u003c/p>\u003cp>\u003cspan class=\"para\">2\u003c/span>Start with a small shelf of hand tools. Make the loans last three days and take a photo of each tool before it goes out. We do this with borrowed cameras for the library’s film club. If the shelf does little business, move it on. That would be a cheaper way of finding out who needs tools than paying for another survey.\u003c/p>\u003ch3>Text B · Librarian’s note\u003c/h3>\u003cp>\u003cspan class=\"para\">1\u003c/span>I am willing to set aside a shelf for a trial. A photo would tell staff what had gone out, but would rarely tell them if it still worked properly when it came back. A set of pliers can look much the same with a loose joint. For the first month, loans could leave and return during the Thursday session, when the repair group is already here to check equipment.\u003c/p>\u003cp>\u003cspan class=\"para\">2\u003c/span>We should count how often each tool is borrowed. We should also ask at the desk whether people tried and failed to borrow a tool at other times. Otherwise a quiet month may tell us only that Thursday is a poor day. If the checks prove easy for staff to do, we can spread them across the week.\u003c/p>"}, {"title": "The first record", "html": "\u003cp>\u003cspan class=\"para\">1\u003c/span>The town museum had a photograph of the first flood marker on the old bridge. The date on the back was 1910, in the slanting hand of someone who had written dates on a whole stack of photographs. The water had risen that winter. For years the museum’s card said the marker was put up after the 1910 flood.\u003c/p>\u003cp>\u003cspan class=\"para\">2\u003c/span>Then a roadworker, replacing a plank beneath the board, found two pairs of screw holes. The nearer pair matched the marker in the photograph. The other pair was wider apart. On its own, the second pair could have belonged to a notice or even a bracket for a rope. One of the curators thought it was a clue worth following. She looked for pictures taken from the bank.\u003c/p>\u003cp>\u003cspan class=\"para\">3\u003c/span>In a dated picture from 1908, a pale board can be seen in the right place. The detail is too small to read. A bridge keeper’s account from that year lists a payment for ‘a board showing the height of the last water’. The account does not name the bridge. It lists another payment for work on the downstream bridge on the same page.\u003c/p>\u003cp>\u003cspan class=\"para\">4\u003c/span>The curator replaced the museum card. The current version reads, ‘The marker shown in this photograph was in place by 1910. An earlier mark on this bridge is possible.’ A visitor asked why the card had got longer when the museum knew less. The curator pointed to the word ‘by’.\u003c/p>"}];
+const questions = [{"stem": "Why does Mr Dwyer wait after the narrator describes the apples?", "skill": "Inference", "reason": "In paragraph 2 he has just written ‘unmarked apple’. The narrator’s description of the fruit gives useful information, but it leaves that identification unresolved.", "answer": "A", "options": ["He wants an identifying detail that fits his form.", "He expects the narrator to locate the fallen label.", "He is deciding if the fruit is fit to sell.", "He wants the narrator to explain what caused the damage."], "passage": 0}, {"stem": "Which detail most directly shows that the second label alters the narrator’s decision about what to pass on?", "skill": "Evidence", "reason": "The narrator first gives Mr Dwyer only the name. Writing both lines on a card is the action that changes what information he receives.", "answer": "B", "options": ["The narrator returns the two labels to the tin.", "The narrator writes both lines on a separate card.", "The narrator leaves the agent’s form as it is.", "The narrator finds the tree name in their own writing."], "passage": 0}, {"stem": "What is the principal effect of the tin appearing in the first and last paragraphs?", "skill": "Structure", "reason": "The father keeps information for the next owner. At the end, the narrator preserves that habit and goes further by passing on both observations.", "answer": "A", "options": ["A practice the father once explained is taken up by the narrator.", "The labels excluded from the sale are eventually returned to their proper places.", "A task the agent began is shown to depend on the father’s records.", "An object the narrator overlooked turns out to be valuable to the buyer."], "passage": 0}, {"stem": "What does ‘keeping’ mean on the label in paragraph 3?", "skill": "Vocabulary", "reason": "The apples soften before their skins give a warning. The older label’s ‘Good off the tree’ also concerns when to eat them.", "answer": "B", "options": ["Retaining the fruit for the family.", "Storing the fruit for later use.", "Saving the tree from being cut down.", "Keeping a written record of the tree."], "passage": 0}, {"stem": "What does the description ‘something he could put in the box’ bring out?", "skill": "Language", "reason": "The box can hold a name, but the story later makes clear that the form has no room for advice about the fruit.", "answer": "D", "options": ["The order in which the agent intends to inspect the remaining trees.", "The agent’s preference for explanations from experienced growers.", "The narrator’s difficulty recalling the exact wording of the label.", "The limits of the kind of information the agent is collecting."], "passage": 0}, {"stem": "Which conclusion is most clearly supported by the two labels together?", "skill": "Evidence", "reason": "‘Not for keeping’ concerns storage and ‘Good off the tree’ concerns eating it fresh. The notes can both be true.", "answer": "B", "options": ["The father corrected the narrator’s original identification.", "The father recorded a drawback and a good way to use the same fruit.", "The father changed his mind about how long the apples kept.", "The father thought the old label was clearer than the new one."], "passage": 0}, {"stem": "Which comparison best supports the claim that a single air reading can conceal a difference important to someone sitting down?", "skill": "Evidence", "reason": "At 2 pm the sheltered air readings both show 31°C, while the seats show 32°C and 36°C. This holds the measured air temperature equal.", "answer": "D", "options": ["Under canvas, both the air and the seat are warmer at 2 pm than at noon.", "At noon, the air by the open bench is one degree warmer than the air under canvas.", "At noon, the open bench and the slatted bench have different seat readings.", "At 2 pm, the two sheltered air readings match but their seat readings differ."], "passage": 1}, {"stem": "Why does paragraph 2 point out where the beam and the probe were?", "skill": "Inference", "reason": "Sun reaches an end of the slatted seat while the centre is measured. Consistent probe placement cannot show how hot the unmeasured end became.", "answer": "D", "options": ["The air screen may have shaded part of the slatted seat.", "The difference between shelters may come from a change in probe position.", "The class may have chosen the middle because it expected the poorest result there.", "The reading may miss the hottest patch of the slatted seat."], "passage": 1}, {"stem": "Which statement accurately describes the change in seat temperatures from noon to 2 pm?", "skill": "Data interpretation", "reason": "The slats-to-canvas gap grows from 31 − 29 = 2°C to 36 − 32 = 4°C. The open-to-slats gap grows from 11°C to 12°C.", "answer": "A", "options": ["The gap between the sheltered seats widened by two degrees.", "The slatted seat gained twice as many degrees as the canvas seat.", "The gap between the open and slatted seats narrowed by one degree.", "The canvas seat warmed by two degrees less than the open seat."], "passage": 1}, {"stem": "What is the effect of including the principal’s first request in paragraph 3?", "skill": "Structure", "reason": "The request for an outright winner is followed by a recommendation confined to a particular aim, site and set of observation times.", "answer": "C", "options": ["It shows why the pupils adopted more than one measurement method.", "It introduces the reason the open bench was included in the trial.", "It brings out the narrower conclusion the pupils are prepared to draw.", "It suggests the class expected the two shelters to work about equally."], "passage": 1}, {"stem": "Which extra test most directly addresses the seasonal uncertainty in the report?", "skill": "Inference", "reason": "The report identifies summer sun angle and changed hours of use. Only a summer trial at the relevant hours addresses both.", "answer": "C", "options": ["Repeat the noon readings with a second thermometer beside the first.", "Measure the shaded and unshaded ends of each seat on another clear Tuesday in the same month.", "Repeat the comparisons in summer at the times pupils then use the courtyard.", "Compare a shaded timber bench with a shaded metal bench at the two original times."], "passage": 1}, {"stem": "Which finding can the class state without needing a further trial?", "skill": "Evidence", "reason": "The two pairs of centre readings, 29 versus 31 and 32 versus 36, support the limited claim. Air readings under both shelters were equal.", "answer": "B", "options": ["Most of the slatted seat was in direct sun by 2 pm.", "The centre of the canvas seat was cooler than the centre of the slatted seat at both readings.", "Canvas cooled the air more effectively than the slats did.", "The canvas always kept the seats more comfortable than the slats did."], "passage": 1}, {"stem": "What is the effect of the colon in Text A?", "skill": "Language", "reason": "The petals offer another image for the faces. There is no move outside, explanation of the crowd or correction of the first line.", "answer": "A", "options": ["It places an image beside the faces so the reader can see one through the other.", "It signals that the second line explains why the station is crowded.", "It closes the description of the station before the speaker moves outside.", "It sets up a contrast between a strange sight and an explanation of what really happened."], "passage": 2}, {"stem": "What does ‘apparition’ contribute to the first line?", "skill": "Vocabulary", "reason": "The word carries the sense of an appearing vision. The poem supplies no recognition, fear in the crowd or account of its origin.", "answer": "C", "options": ["A sense that the figures are frightening those around them.", "An impression that the speaker is tracing where the crowd came from.", "A sense that the faces stand out as a sudden, elusive sight.", "A suggestion that the speaker has recognised several familiar people."], "passage": 2}, {"stem": "Which similarity is most strongly supported by both texts?", "skill": "Synthesis", "reason": "The faces come forward out of the crowd in the poem. In Text B, the narrator’s focus shifts to two people and what they do. A delay belongs only to Text B.", "answer": "D", "options": ["The station becomes unfamiliar after a change in the weather.", "A trouble with transport makes people notice one another.", "The speaker learns what a stranger’s earlier actions were meant to achieve.", "A mass of people briefly gives way to a particular sight."], "passage": 2}, {"stem": "Which detail in Text B most clearly shows the small cost of the man’s gesture?", "skill": "Evidence", "reason": "The later awkward way of holding and turning the paper shows what the man lost by giving up the band.", "answer": "D", "options": ["He offers the rubber band without speaking.", "The umbrella springs open when the woman gathers it.", "The two people enter through separate doors.", "He has to use his chin to turn a page."], "passage": 2}, {"stem": "What happens to the function of the blue tiles between their first and last appearances?", "skill": "Structure", "reason": "The narrator counts the tiles while waiting. They reappear after the train journey’s brief glimpse of the man ends.", "answer": "A", "options": ["They shift from the narrator’s way of filling time to what is visible once the stranger is out of view.", "They mark first the expected arrival time and later how long the delay actually was.", "They first suggest a flaw in the station and then show how it has been repaired.", "They start as a clue to where the strangers are sitting and end by showing they have left."], "passage": 2}, {"stem": "How does Text B develop its observation differently from Text A?", "skill": "Synthesis", "reason": "The prose delays the effect of the gift until the newspaper reappears. The poem gives its two linked images together, with no later event.", "answer": "D", "options": ["It gathers several descriptions into a single image at the moment of seeing.", "It gives an account of what the two strangers thought about each other.", "It uses details of the setting to explain why travellers turn into a crowd.", "It lets a later glimpse change what the reader understands about a gesture."], "passage": 2}, {"stem": "Which statement about the early boat on a market Saturday is supported by the notice?", "skill": "Evidence", "reason": "The scheduled L stop is during the closure, so it is skipped and the printed arrival at M is kept.", "answer": "C", "options": ["It reaches L at 9.17 and passengers may get off there only.", "It waits until L opens and then stops there.", "It arrives at M at 9.30 without stopping at L.", "It leaves K at the usual time but reaches M earlier."], "passage": 3}, {"stem": "On a market Saturday, Noor wants to reach L as early as possible. She can board at K before 9 am and walk if needed. When can she first arrive at L?", "skill": "Application", "reason": "The middle ferry reaches an open L at 9.47. The early ferry gets to M at 9.30, and the available walk takes 18 minutes, making that route one minute slower.", "answer": "B", "options": ["9.45 by walking from M as soon as L reopens.", "9.47 on the middle ferry.", "9.48 by walking from M after the early ferry.", "9.17 on the early ferry."], "passage": 3}, {"stem": "Eli and his bicycle get to K at 9.25 on a market Saturday. He made a valid booking for the late ferry. What is his earliest scheduled arrival at M with his bicycle?", "skill": "Application", "reason": "He is too late for the early ferry, the middle ferry takes no bicycles, and 10.17 is the late ferry’s L stop.", "answer": "B", "options": ["10.17.", "10.30.", "10.00.", "9.30."], "passage": 3}, {"stem": "Why does the phrase ‘keeps its printed arrival time’ matter when using the table?", "skill": "Text structure", "reason": "The special notice overrides the L column when a stop is skipped. It explicitly retains the M column.", "answer": "A", "options": ["It tells readers which time to trust even when one of the listed stops is cancelled.", "It explains why closing L changes the required gate time at K.", "It tells readers which printed times were calculated before the market was arranged.", "It shows that passengers at M can use the table to plan the return ferry."], "passage": 3}, {"stem": "A passenger reaches K’s gate at 9.31. It is an ordinary Saturday and they have no bicycle. Which service can they board next?", "skill": "Application", "reason": "The middle boat leaves at 9.35. A passenger needs to be at the correct gate by 9.30, regardless of booking or bicycle rules.", "answer": "A", "options": ["The late service.", "No service, because the published boats require a booking.", "The early service at L, because the stop is running.", "The middle service, because it has not departed."], "passage": 3}, {"stem": "Which change would allow Noor to reach L by 9.45 in the situation described above?", "skill": "Inference", "reason": "From M at 9.30 the shorter walk would get Noor there at 9.44. The early ferry’s L stop is at 9.17, so opening L at 9.30 alone is too late.", "answer": "C", "options": ["Opening L to ferries at 9.30 rather than 9.45.", "Allowing passengers to book bicycles on the middle ferry.", "Opening the shorter walking route at 9.30 and making the walk take 14 minutes.", "Letting walk-on passengers arrive at the gate only two minutes early."], "passage": 3}, {"stem": "What do the writers agree the library should do first?", "skill": "Viewpoint", "reason": "Both support a small trial. They differ on when tools can go out, how to check them and how to interpret a low count.", "answer": "A", "options": ["Try lending a limited number of tools and find out how people use the service.", "Ask residents exactly which tools they will borrow before making a shelf.", "Use the same borrowing rules for tools and cameras during a trial.", "Keep loans to the repair session until there is enough demand to extend them."], "passage": 4}, {"stem": "What is the significance of the loose joint in Text B?", "skill": "Evidence", "reason": "The note says pliers may look much the same with a loose joint. The example concerns the difference between apparent and actual condition.", "answer": "D", "options": ["It suggests a way a photo could establish who damaged a tool.", "It gives a reason to lend pliers only to specialist repairers.", "It shows that repair volunteers need a better set of tools.", "It illustrates a fault an image might fail to reveal."], "passage": 4}, {"stem": "Which finding would most directly challenge a conclusion the letter writer could draw from low borrowing figures?", "skill": "Synthesis", "reason": "Unmet requests show demand that a raw loan count leaves out. The other figures do not establish that anyone who wanted a tool was unable to get one.", "answer": "D", "options": ["The library’s film cameras were borrowed more often than its hand tools.", "The same set of pliers needed to be checked twice in one month.", "Most Thursday borrowers kept their tools for all three days.", "Several people asked for tools on other days and were turned away."], "passage": 4}, {"stem": "What is the main function of the reference to the film club in Text A?", "skill": "Purpose", "reason": "The writer points to something already done at the library. No figures or users’ eligibility rules are given there.", "answer": "C", "options": ["It shows that people call to borrow tools more often than cameras.", "It provides figures from an earlier lending trial in the same building.", "It makes the proposed procedure sound familiar and practical to the library.", "It proposes that tools should be lent only to organised groups."], "passage": 4}, {"stem": "Which policy best addresses the letter’s concern and the note’s concern at the same time?", "skill": "Synthesis", "reason": "More days address access and a functional check addresses tool condition. Each rival leaves one of those problems unresolved.", "answer": "A", "options": ["Offer loans on several days and train desk staff to check each tool in use.", "Offer loans on several days and use loan counts as the sole measure of demand.", "Open the shelf on Thursdays and display more detailed photographs.", "Open the shelf all week but have volunteers check returns only at month’s end."], "passage": 4}, {"stem": "How does the librarian’s first sentence shape the disagreement that follows?", "skill": "Tone", "reason": "The librarian offers space and then examines procedures. The disagreement concerns implementation, not whether to try at all.", "answer": "C", "options": ["It signals that borrowing should be decided entirely by the repair group.", "It rejects the letter’s evidence while promising an immediate change.", "It accepts the trial in principle before questioning how it should run.", "It raises the possibility of a trial while arguing that the shelf is unnecessary."], "passage": 4}, {"stem": "What is the strongest direct support for the revised card’s first sentence?", "skill": "Evidence", "reason": "A dated image of the actual marker establishes that it existed then. Neither holes nor an unlabelled board can date that specific marker.", "answer": "C", "options": ["The nearer screw holes match the marker’s width.", "The bridge keeper paid for a board that marked a water height.", "The dated photograph shows the marker already in place.", "The 1908 photograph shows a pale board at the bridge."], "passage": 5}, {"stem": "Why is the reference to work on the downstream bridge important?", "skill": "Inference", "reason": "The account does not say which bridge received the paid-for board and the page clearly covers more than one location.", "answer": "B", "options": ["It shows the pale board in the photograph was moved downstream.", "It gives a concrete reason to hesitate before assigning the paid-for board to this bridge.", "It shows why the two pairs of screw holes are unlikely to be the same age.", "It indicates that the keeper measured different kinds of water on each bridge."], "passage": 5}, {"stem": "What does replacing the implied date of installation with ‘by 1910’ change?", "skill": "Vocabulary", "reason": "‘By 1910’ allows installation that year or earlier. The dated image still supplies the latest bound.", "answer": "C", "options": ["It makes the record independent of the date written on the photograph.", "It states the earliest likely year when any flood board could have been placed.", "It states a latest possible date without fixing the year it was put up.", "It leaves open whether the marker in the picture was put in place after 1910."], "passage": 5}, {"stem": "Suppose the wider holes are proved to have held a rope bracket. What is still supported?", "skill": "Evidence", "reason": "The 1908 photograph and the keeper’s account still exist. Each is inconclusive for a different reason, so they support a possibility.", "answer": "B", "options": ["The 1910 photograph no longer establishes when its marker was present.", "There is still evidence consistent with an earlier flood board, although it does not settle the matter.", "The pale board in the bank photograph must have been the photographed 1910 marker.", "The board recorded in the account must have gone on the downstream bridge."], "passage": 5}, {"stem": "What is the visitor’s question in the last paragraph mainly there to show?", "skill": "Structure", "reason": "The visitor equates more words with more certainty. The curator’s reply directs attention to the carefully limited wording.", "answer": "B", "options": ["Why the evidence in the last paragraph is weaker than the evidence in the photographs.", "Why stating the limits of evidence can need more words than a firm claim.", "Why a museum visitor has to know the whole history of the bridge to read the card.", "Why the curator wants to explain all her methods to the public."], "passage": 5}, {"stem": "Which new find would most directly establish that the pale board visible in 1908 marked a flood on the old bridge?", "skill": "Evidence", "reason": "A readable inscription would connect the purpose and the particular board at the photographed site and date. A flood or a payment alone cannot identify that board.", "answer": "D", "options": ["A diary saying that the river reached the deck of the old bridge in 1908.", "A receipt dated 1908 for two painted boards sent to the bridge keeper.", "A later sketch showing two flood markers on the two bridges without dates.", "A sharper copy of the same 1908 photograph on which the board’s water-height inscription is readable."], "passage": 5}];
+const letters = ["A", "B", "C", "D"];
+const $ = (id) => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const student = (params.get("student") || "").trim();
+const linked = Boolean(student) && params.get("paper") === config.paperId && /^https?:$/.test(location.protocol);
+const key = "gribbin:reading:" + config.paperId + ":" + (linked ? student.toLowerCase() : "guest");
+let attempt = restore();
+let showing = null;
+let timer = null;
+let sending = false;
+const choices = [];
+
+function restore() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(key) || "null");
+    if (saved && Number.isFinite(saved.started) &&
+        Array.isArray(saved.answers) && saved.answers.length === questions.length &&
+        saved.answers.every((value) => value === null || letters.includes(value)) &&
+        Array.isArray(saved.flags) && saved.flags.length === questions.length &&
+        Number.isInteger(saved.index) && saved.index >= 0 && saved.index < questions.length &&
+        (saved.finished === null || (Number.isFinite(saved.finished) && saved.finished >= saved.started))) return saved;
+  } catch {}
+  return null;
+}
+
+function persist() {
+  try {
+    localStorage.setItem(key, JSON.stringify(attempt));
+  } catch {
+    $("save-note").textContent = "This browser can’t save your answers between visits.";
+  }
+}
+
+function stopAt() {
+  return attempt.started + config.minutes * 60000;
+}
+
+function formatTime(seconds) {
+  return Math.floor(seconds / 60) + ":" + String(seconds % 60).padStart(2, "0");
+}
+
+function stats() {
+  const skills = {};
+  const wrong = [];
+  let correct = 0;
+  let answered = 0;
+  questions.forEach((q, index) => {
+    const picked = attempt.answers[index];
+    if (picked !== null) answered += 1;
+    const group = skills[q.skill] ?? (skills[q.skill] = {c: 0, t: 0});
+    group.t += 1;
+    if (picked === q.answer) {
+      group.c += 1;
+      correct += 1;
+    } else {
+      wrong.push({q: index + 1, picked, correct: q.answer, skill: q.skill,
+        issue: picked === null ? "Unanswered" : q.skill, explanation: q.reason});
+    }
+  });
+  return {correct, answered, skills, wrong};
+}
+
+function updateNumbers() {
+  let answered = 0;
+  attempt.answers.forEach((value, index) => {
+    if (value !== null) answered += 1;
+    const button = numberButtons[index];
+    button.classList.toggle("answered", value !== null);
+    button.classList.toggle("flagged", attempt.flags[index]);
+    const state = value === null ? "unanswered" : "answered";
+    button.setAttribute("aria-label", "Question " + (index + 1) + ", " + state + (attempt.flags[index] ? ", flagged" : ""));
+    if (index === attempt.index) button.setAttribute("aria-current", "step");
+    else button.removeAttribute("aria-current");
+  });
+  $("progress").textContent = answered + " of " + questions.length + " answered";
+}
+
+function renderQuestion() {
+  const q = questions[attempt.index];
+  const locked = attempt.finished !== null;
+  if (showing !== q.passage) {
+    const text = passages[q.passage];
+    $("text-title").textContent = text.title;
+    $("passage").innerHTML = text.html;
+    $("reading").scrollTop = 0;
+    showing = q.passage;
+  }
+  $("qnumber").textContent = "Question " + (attempt.index + 1) + " of " + questions.length;
+  $("stem").textContent = q.stem;
+  $("flag").hidden = locked;
+  $("flag").setAttribute("aria-pressed", String(attempt.flags[attempt.index]));
+  $("flag").textContent = attempt.flags[attempt.index] ? "Flagged" : "Flag";
+  $("previous").disabled = attempt.index === 0;
+  $("next").disabled = attempt.index === questions.length - 1;
+  choices.forEach(({label, input, copy}, index) => {
+    const letter = letters[index];
+    const picked = attempt.answers[attempt.index] === letter;
+    copy.textContent = q.options[index];
+    input.checked = picked;
+    input.disabled = locked;
+    label.classList.toggle("correct", locked && q.answer === letter);
+    label.classList.toggle("wrong", locked && picked && q.answer !== letter);
+  });
+  $("explanation").hidden = !locked;
+  $("explanation").textContent = locked ? "Answer " + q.answer + ". " + q.reason : "";
+  $("finish").textContent = locked ? "Results" : "Submit test";
+  updateNumbers();
+}
+
+function openTest() {
+  $("start").hidden = true;
+  $("results").hidden = true;
+  $("test").hidden = false;
+  $("clock").hidden = attempt.finished !== null;
+  renderQuestion();
+  if (attempt.finished === null) {
+    clearInterval(timer);
+    timer = setInterval(tick, 250);
+    tick();
+  }
+}
+
+function tick() {
+  if (!attempt || attempt.finished !== null) return;
+  const left = Math.max(0, Math.ceil((stopAt() - Date.now()) / 1000));
+  $("clock").textContent = formatTime(left);
+  $("clock").classList.toggle("late", left <= 300);
+  if (!left) finish(true);
+}
+
+function move(index) {
+  if (index < 0 || index >= questions.length) return;
+  attempt.index = index;
+  persist();
+  renderQuestion();
+  $("stem").focus();
+}
+
+function markAnswer(letter) {
+  if (attempt.finished !== null) return;
+  if (Date.now() >= stopAt()) {
+    finish(true);
+    return;
+  }
+  attempt.answers[attempt.index] = letter;
+  persist();
+  updateNumbers();
+}
+
+function begin() {
+  if (!attempt) {
+    attempt = {
+      started: Date.now(), finished: null, index: 0, answers: Array(questions.length).fill(null),
+      flags: Array(questions.length).fill(false), sent: false, saveUncertain: false,
+    };
+    persist();
+  }
+  openTest();
+  if (attempt.finished === null) $("stem").focus();
+}
+
+function finish(expired = false) {
+  if (attempt.finished !== null) return;
+  const now = Date.now();
+  attempt.finished = Math.min(now, stopAt());
+  attempt.expired = expired || now >= stopAt();
+  persist();
+  if ($("confirm").open) {
+    $("confirm").returnValue = "back";
+    $("confirm").close();
+  }
+  renderResults();
+  if (linked) void sendResult();
+}
+
+function renderResults() {
+  clearInterval(timer);
+  $("clock").hidden = true;
+  $("start").hidden = true;
+  $("test").hidden = true;
+  $("results").hidden = false;
+  const result = stats();
+  $("score").textContent = result.correct + " / " + questions.length;
+  $("result-note").textContent = (attempt.expired ? "Time’s up. " : "") + result.answered + " answered · " + formatTime(elapsed());
+  const table = document.createElement("table");
+  const body = document.createElement("tbody");
+  for (const [skill, score] of Object.entries(result.skills)) {
+    const row = document.createElement("tr");
+    const name = document.createElement("th");
+    name.scope = "row";
+    name.textContent = skill;
+    const count = document.createElement("td");
+    count.textContent = score.c + " / " + score.t;
+    row.append(name, count);
+    body.append(row);
+  }
+  table.setAttribute("aria-label", "Scores by skill");
+  table.append(body);
+  $("skills").replaceChildren(table);
+  syncSendState();
+  $("score").focus();
+}
+
+function elapsed() {
+  return Math.ceil((attempt.finished - attempt.started) / 1000);
+}
+
+function readingPayload() {
+  const result = stats();
+  return {
+    nameKey: student,
+    paperId: config.paperId,
+    score: result.correct, outOf: questions.length, timeUsedSec: elapsed(),
+    perSkillJson: result.skills,
+    answersJson: Object.fromEntries(attempt.answers.map((letter, index) => [index + 1, letter])),
+    wrongJson: result.wrong,
+  };
+}
+
+function syncSendState() {
+  $("save-result").hidden = !linked || attempt.sent;
+  $("save-result").disabled = sending;
+  $("sent").textContent = attempt.sent ? "Saved to Gribbin." :
+    sending ? "Saving…" : attempt.saveUncertain ? "Save unconfirmed. You can also download the result." : "";
+}
+
+async function callPortal(action, payload) {
+  const response = await fetch(config.endpoint, {
+    method: "POST", headers: {"Content-Type": "text/plain"}, redirect: "follow",
+    signal: AbortSignal.timeout(20000),
+    body: JSON.stringify({action, payload}),
+  });
+  if (!response.ok) throw Error("Save was not confirmed");
+  const data = await response.json();
+  if (!data.success) throw Error("Save was not confirmed");
+  return data.data;
+}
+
+function hasResult(context) {
+  return (context?.assignments || []).some((task) =>
+    task.sourceId === config.paperId && String(task.status).toLowerCase() === "submitted"
+  ) || (context?.readingHistory || []).some((result) => result.paperId === config.paperId);
+}
+
+async function sendResult() {
+  if (!linked || attempt.finished === null || attempt.sent || sending) return;
+  sending = true;
+  syncSendState();
+  try {
+    const context = await callPortal("login", {name: student});
+    if (!hasResult(context)) {
+      const assigned = (context?.assignments || []).some((task) =>
+        task.sourceId === config.paperId && task.type === "reading"
+      );
+      if (!assigned || !context.profile?.nameKey) throw Error("Assignment unavailable");
+      await callPortal("submitReading", {...readingPayload(), nameKey: context.profile.nameKey});
+    }
+    attempt.sent = true;
+    attempt.saveUncertain = false;
+  } catch {
+    attempt.saveUncertain = true;
+  } finally {
+    sending = false;
+    persist();
+    syncSendState();
+  }
+}
+
+function downloadResult() {
+  const result = readingPayload();
+  const heading = config.title + "\n" + result.score + " / " + result.outOf + " · " + formatTime(result.timeUsedSec);
+  const answers = questions.map((q, i) => (i + 1) + ". " + (attempt.answers[i] || "—") + "  (key " + q.answer + ")");
+  const file = new Blob([[heading, "", ...answers].join("\n")], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(file);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = config.paperId + "-result.txt";
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+letters.forEach((letter) => {
+  const label = document.createElement("label");
+  label.className = "option";
+  const input = document.createElement("input");
+  input.type = "radio";
+  input.name = "answer";
+  input.value = letter;
+  input.addEventListener("change", () => markAnswer(letter));
+  const name = document.createElement("strong");
+  name.textContent = letter;
+  const copy = document.createElement("span");
+  label.append(input, name, copy);
+  $("options").append(label);
+  choices.push({label, input, copy});
+});
+const numberButtons = questions.map((_, index) => {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = String(index + 1);
+  button.addEventListener("click", () => move(index));
+  $("numbers").append(button);
+  return button;
+});
+
+$("begin").addEventListener("click", begin);
+$("previous").addEventListener("click", () => move(attempt.index - 1));
+$("next").addEventListener("click", () => move(attempt.index + 1));
+$("flag").addEventListener("click", () => {
+  if (attempt.finished !== null) return;
+  if (Date.now() >= stopAt()) return finish(true);
+  attempt.flags[attempt.index] = !attempt.flags[attempt.index];
+  persist();
+  renderQuestion();
+});
+$("finish").addEventListener("click", () => {
+  if (attempt.finished !== null) return renderResults();
+  if (Date.now() >= stopAt()) return finish(true);
+  const remaining = questions.length - stats().answered;
+  $("confirm-note").textContent = remaining ? remaining + " unanswered." : "All questions answered.";
+  $("confirm").returnValue = "back";
+  $("confirm").showModal();
+});
+$("confirm").addEventListener("close", () => {
+  if ($("confirm").returnValue === "submit") finish();
+});
+$("review").addEventListener("click", () => {
+  openTest();
+  $("stem").focus();
+});
+$("download").addEventListener("click", downloadResult);
+$("save-result").addEventListener("click", sendResult);
+if (linked) $("dashboard").href = "index.html?student=" + encodeURIComponent(student);
+
+if (attempt?.finished != null) renderResults();
+else if (attempt) {
+  $("begin").textContent = "Resume test";
+  if (Date.now() >= stopAt()) finish(true);
+}
+</script>
+</body>
+</html>
