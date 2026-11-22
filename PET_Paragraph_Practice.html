@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>PET Paragraph Practice | Gribbin Tutoring</title>
+  <style>
+    :root {
+      --navy: #172837;
+      --ink: #172a35;
+      --muted: #4d6069;
+      --accent: #255e53;
+      --accent-dark: #174339;
+      --tint: #e6f0eb;
+      --paper: #fffefa;
+      --canvas: #f4f3ed;
+      --rule: #c8d3ce;
+      --radius: 14px;
+      font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--canvas); }
+    [hidden] { display: none !important; }
+    a { color: var(--accent-dark); text-underline-offset: 3px; }
+    :focus-visible { outline: 3px solid #b35c13; outline-offset: 3px; }
+    button, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .site-header { background: var(--navy); color: #fffefa; }
+    .header-inner, main { width: min(1140px, calc(100% - 48px)); margin-inline: auto; }
+    .header-inner { display: flex; align-items: center; min-height: 52px; }
+    .site-name { color: inherit; font-size: .96rem; font-weight: 650; text-decoration: none; }
+    .site-name:hover { text-decoration: underline; }
+    main { padding-block: 28px 36px; }
+    h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 600; line-height: 1.14; margin: 0; }
+    h1 { font-size: clamp(1.95rem, 4vw, 2.8rem); letter-spacing: -.025em; margin-bottom: 18px; }
+    h2 { font-size: clamp(1.45rem, 3vw, 1.95rem); letter-spacing: -.018em; }
+    p { margin: 0; }
+    .exercise-nav { margin-bottom: 14px; }
+    .exercise-nav ol { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 0; margin: 0; }
+    .exercise-link {
+      width: 100%; height: 100%; display: flex; align-items: center; gap: 8px; padding: 10px;
+      font-size: .87rem; line-height: 1.25; font-weight: 660; text-align: left; color: var(--ink);
+      background: var(--paper); border: 1px solid var(--rule); border-radius: 9px;
+    }
+    .exercise-link:hover { background: var(--tint); }
+    .exercise-link[aria-current="step"] { background: var(--accent-dark); color: white; border-color: var(--accent-dark); }
+    .exercise-number { flex: none; font-variant-numeric: tabular-nums; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr); gap: 16px; align-items: start; }
+    .card { background: var(--paper); border: 1px solid var(--rule); border-radius: var(--radius); padding: clamp(16px, 2.7vw, 28px); min-width: 0; }
+    .context, .example-question, .save-state { color: var(--muted); font-size: .9rem; }
+    .context { margin-top: 8px; }
+    .example-question { margin-top: 8px; }
+    blockquote {
+      margin: 12px 0 0; padding: 14px 16px; border-left: 3px solid var(--accent);
+      background: #f0f4ef; font: 1.15rem/1.55 Georgia, "Times New Roman", serif;
+    }
+    .gloss { margin-top: 8px; font-size: .86rem; color: var(--muted); }
+    .question { font-size: 1.07rem; font-weight: 700; margin-top: 19px; padding-top: 17px; border-top: 1px solid var(--rule); }
+    details { margin-top: 18px; border-top: 1px solid var(--rule); padding-top: 13px; }
+    summary { cursor: pointer; font-weight: 650; color: var(--accent-dark); }
+    .scaffold-rows { display: grid; grid-template-columns: max-content 1fr; gap: 8px 12px; font-size: .9rem; margin: 10px 0 8px; }
+    .scaffold-rows dt { font-weight: 700; }
+    .scaffold-rows dd { margin: 0; }
+    fieldset { min-width: 0; border: 0; padding: 0; margin: 0; }
+    .save-state { margin-bottom: 12px; }
+    .step + .step { margin-top: 12px; }
+    label { display: block; font-weight: 700; margin-bottom: 4px; }
+    textarea { display: block; width: 100%; min-height: 66px; resize: vertical; padding: 8px 10px; border: 1px solid #aebfb7; border-radius: 8px; color: var(--ink); background: white; font-size: 1rem; }
+    textarea[readonly] { background: #f0f4ef; }
+    .preview { border: 1px solid var(--rule); padding: 10px 12px; border-radius: 8px; background: #f0f4ef; min-height: 46px; margin-top: 10px; overflow-wrap: anywhere; white-space: pre-wrap; }
+    #preview-details { margin-top: 15px; }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .toolbar-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .action { border: 1px solid var(--rule); background: var(--paper); color: var(--ink); border-radius: 8px; padding: 8px 11px; font-weight: 650; font-size: .87rem; min-height: 42px; }
+    .action:hover:enabled { background: var(--tint); }
+    .action.primary { background: var(--accent-dark); border-color: var(--accent-dark); color: white; }
+    .action.primary:hover:enabled { background: var(--accent); }
+    .action:disabled { cursor: default; opacity: .54; }
+    .status { font-size: .83rem; color: var(--muted); margin-top: 8px; }
+    .status:empty { display: none; }
+    .source-note { margin-top: 20px; padding-top: 10px; border-top: 1px solid var(--rule); font-size: .76rem; color: var(--muted); }
+    .source-note a { color: inherit; }
+    @media (max-width: 760px) {
+      .workspace { grid-template-columns: 1fr; }
+      .exercise-link { justify-content: center; }
+      .short-title { display: none; }
+    }
+    @media (max-width: 460px) {
+      .header-inner, main { width: calc(100% - 28px); }
+      main { padding-top: 23px; }
+      .header-inner { min-height: 50px; }
+      .exercise-nav ol { gap: 5px; }
+      .exercise-link { padding: 8px 4px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a id="dashboard" class="site-name" href="https://gribbin746-cpu.github.io/tutoring/">Gribbin Tutoring</a>
+    </div>
+  </header>
+
+  <main>
+    <h1>PET Paragraph Practice</h1>
+    <noscript>This exercise needs JavaScript to display the extracts and save your writing.</noscript>
+    <div id="exercise" hidden>
+      <nav class="exercise-nav" aria-label="Choose an extract">
+        <ol id="exercise-list"></ol>
+      </nav>
+
+      <div class="workspace">
+        <article class="card" aria-labelledby="extract-title">
+          <h2 id="extract-title" tabindex="-1"></h2>
+          <p id="context" class="context"></p>
+          <blockquote id="extract"></blockquote>
+          <p id="gloss" class="gloss" hidden></p>
+          <p id="question" class="question"></p>
+
+          <details>
+            <summary>Example</summary>
+            <p class="example-question">How does Grahame show that Mole prefers being outdoors?</p>
+            <dl class="scaffold-rows">
+              <dt>Point</dt>
+              <dd>Grahame presents the outdoors as a place of relief for Mole after the discomfort of cleaning.</dd>
+              <dt>Evidence</dt>
+              <dd>Grahame describes the moment Mole steps outside in the line “soft breezes caressed his heated brow”.</dd>
+              <dt>Technique</dt>
+              <dd>Grahame personifies the breeze by giving it the human action of caressing.</dd>
+            </dl>
+          </details>
+        </article>
+
+        <section class="card" aria-label="Write your response">
+          <fieldset aria-label="PET response" aria-describedby="question">
+            <p id="save-state" class="save-state" role="status" hidden></p>
+
+            <div class="step">
+              <label for="point">Point</label>
+              <textarea id="point" rows="2"></textarea>
+            </div>
+
+            <div class="step">
+              <label for="evidence">Evidence</label>
+              <textarea id="evidence" rows="2"></textarea>
+            </div>
+
+            <div class="step">
+              <label for="technique">Technique</label>
+              <textarea id="technique" rows="2"></textarea>
+            </div>
+          </fieldset>
+
+          <details id="preview-details" hidden>
+            <summary>Preview</summary>
+            <p id="preview" class="preview"></p>
+          </details>
+
+          <div class="toolbar">
+            <div class="toolbar-group">
+              <button id="previous" class="action" type="button">Previous</button>
+              <button id="next" class="action" type="button">Next</button>
+            </div>
+            <div class="toolbar-group">
+              <button id="download" class="action" type="button">Download</button>
+              <button id="submit" class="action primary" type="button" hidden>Submit to tutor</button>
+            </div>
+          </div>
+          <p id="status" class="status" role="status"></p>
+        </section>
+      </div>
+    </div>
+    <footer class="source-note" aria-label="Text sources">
+      Project Gutenberg ·
+      Anna Sewell, <a href="https://www.gutenberg.org/files/271/271-h/271-h.htm" target="_blank" rel="noopener"><cite>Black Beauty</cite></a> ·
+      Lewis Carroll, <a href="https://www.gutenberg.org/files/928/928-h/928-h.htm" target="_blank" rel="noopener"><cite>Alice’s Adventures in Wonderland</cite></a> ·
+      L. M. Montgomery, <a href="https://www.gutenberg.org/files/45/45-h/45-h.htm" target="_blank" rel="noopener"><cite>Anne of Green Gables</cite></a> ·
+      Robert Louis Stevenson, <a href="https://www.gutenberg.org/cache/epub/30393/pg30393-images.html" target="_blank" rel="noopener"><cite>Treasure Island</cite></a> ·
+      E. Nesbit, <a href="https://www.gutenberg.org/cache/epub/1874/pg1874-images.html" target="_blank" rel="noopener"><cite>The Railway Children</cite></a> ·
+      Kenneth Grahame, <a href="https://www.gutenberg.org/files/289/289-h/289-h.htm" target="_blank" rel="noopener"><cite>The Wind in the Willows</cite></a>.
+    </footer>
+  </main>
+
+  <script>
+    "use strict";
+
+    const passages = [
+      {
+        title: "Black Beauty",
+        context: "Black Beauty, a horse, recalls the field where he lived when he was young.",
+        extract: "a large pleasant meadow with a pond of clear water in it. Some shady trees leaned over it",
+        question: "How does Sewell make Black Beauty’s first home seem peaceful?",
+      },
+      {
+        title: "Alice’s Adventures in Wonderland",
+        shortTitle: "Alice in Wonderland",
+        context: "Alice has been sitting beside her sister. When a White Rabbit checks a watch, she jumps up to follow it.",
+        extract: "burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole",
+        question: "How does Carroll present Alice’s curiosity as powerful enough to make her act?",
+      },
+      {
+        title: "Anne of Green Gables",
+        context: "On the way to Green Gables, Anne tells Matthew about the parts of her appearance she wishes she could change.",
+        extract: "“I can imagine them away. I can imagine that I have a beautiful rose-leaf complexion and lovely starry violet eyes.”",
+        question: "How does Montgomery use Anne’s own words to present her as imaginative?",
+      },
+      {
+        title: "Treasure Island",
+        context: "Jim Hawkins remembers the day an unfamiliar sailor arrived at his family’s inn.",
+        extract: "his hands ragged and scarred, with black, broken nails; and the sabre-cut across one cheek, a dirty, livid white",
+        gloss: "A sabre is a sword. Livid white describes the scar’s strikingly pale colour here.",
+        question: "How does Stevenson give the sailor a rough, weathered appearance?",
+      },
+      {
+        title: "The Railway Children",
+        context: "At the start of the book, the narrator looks back at the children’s life before the railway became important to them.",
+        extract: "They were just ordinary suburban children, and they lived with their Father and Mother in an ordinary red-brick-fronted villa",
+        question: "How does Nesbit make the children’s early life sound familiar and unremarkable?",
+      },
+    ];
+
+    const portal = {"endpoint": "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec", "assignmentId": "writing-pet-practice-20261122", "title": "PET Paragraph Practice"};
+    const query = new URLSearchParams(location.search);
+    const student = (query.get("student") || "").trim();
+    const fromPortal = Boolean(student) && query.get("paper") === portal.assignmentId;
+    const storageKey = "gribbin-tutoring:pet-paragraph-practice:v1" +
+      (fromPortal ? ":" + encodeURIComponent(student.toLowerCase()) + ":" + portal.assignmentId : "");
+    let submitting = false;
+    let submitted = false;
+    const fieldNames = ["point", "evidence", "technique"];
+    const fields = fieldNames.map((name) => document.getElementById(name));
+    const get = (id) => document.getElementById(id);
+    const status = get("status");
+    let current = 0;
+    let drafts = passages.map(() => ({ point: "", evidence: "", technique: "" }));
+
+    try {
+      const previousSession = JSON.parse(localStorage.getItem(storageKey) || "null");
+      if (Array.isArray(previousSession?.drafts)) {
+        drafts = drafts.map((draft, index) => {
+          for (const name of fieldNames) {
+            const value = previousSession.drafts[index]?.[name];
+            if (typeof value === "string") draft[name] = value;
+          }
+          return draft;
+        });
+      }
+      if (Number.isInteger(previousSession?.current)
+          && previousSession.current >= 0 && previousSession.current < passages.length) {
+        current = previousSession.current;
+      }
+    } catch {
+      // Start with empty drafts when saved data cannot be read.
+    }
+
+    function save() {
+      let storageAvailable = true;
+      try {
+        localStorage.setItem(storageKey, JSON.stringify({ current, drafts }));
+      } catch {
+        storageAvailable = false;
+      }
+      const saveState = get("save-state");
+      saveState.hidden = storageAvailable;
+      saveState.textContent = storageAvailable ? "" : "Drafts aren’t saving. Download a copy before leaving.";
+    }
+
+    function paragraphFor(draft) {
+      return fieldNames.map((name) => draft[name].trim()).filter(Boolean).join(" ");
+    }
+
+    function refreshSubmission() {
+      if (!fromPortal) return;
+      const completed = drafts.filter((draft) => fieldNames.every((name) => draft[name].trim())).length;
+      get("submit").disabled = submitting || submitted || completed < passages.length;
+      get("submit").textContent = submitted
+        ? "Submitted"
+        : submitting ? "Submitting…" : "Submit to tutor (" + completed + "/" + passages.length + ")";
+      fields.forEach((field) => { field.readOnly = submitted || submitting; });
+    }
+
+    function updatePreview() {
+      const paragraph = paragraphFor(drafts[current]);
+      get("preview").textContent = paragraph;
+      get("preview-details").hidden = !paragraph;
+      get("download").disabled = !drafts.some((draft) => paragraphFor(draft));
+      refreshSubmission();
+    }
+
+    const exerciseButtons = passages.map((passage, index) => {
+      const item = document.createElement("li");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "exercise-link";
+      button.setAttribute("aria-label", `Extract ${index + 1}, ${passage.title}`);
+      button.setAttribute("aria-controls", "extract-title");
+      const number = document.createElement("span");
+      number.className = "exercise-number";
+      number.textContent = String(index + 1);
+      const title = document.createElement("span");
+      title.className = "short-title";
+      title.textContent = passage.shortTitle || passage.title;
+      button.append(number, title);
+      button.addEventListener("click", () => openPassage(index, true));
+      item.append(button);
+      get("exercise-list").append(item);
+      return button;
+    });
+
+    function openPassage(index, moveFocus = false) {
+      current = index;
+      const passage = passages[index];
+      get("extract-title").textContent = passage.title;
+      get("context").textContent = passage.context;
+      get("extract").textContent = passage.extract;
+      get("question").textContent = passage.question;
+      get("gloss").textContent = passage.gloss || "";
+      get("gloss").hidden = !passage.gloss;
+      fields.forEach((field) => { field.value = drafts[index][field.id]; });
+      exerciseButtons.forEach((button, buttonIndex) => {
+        if (buttonIndex === index) button.setAttribute("aria-current", "step");
+        else button.removeAttribute("aria-current");
+      });
+      get("previous").disabled = index === 0;
+      get("next").disabled = index === passages.length - 1;
+      if (!submitted && !submitting) status.textContent = "";
+      updatePreview();
+      save();
+      if (moveFocus) get("extract-title").focus();
+    }
+
+    fields.forEach((field) => {
+      field.addEventListener("input", () => {
+        drafts[current][field.id] = field.value;
+        updatePreview();
+        save();
+        status.textContent = "";
+      });
+    });
+
+    get("previous").addEventListener("click", () => openPassage(current - 1, true));
+    get("next").addEventListener("click", () => openPassage(current + 1, true));
+
+    function collectResponses() {
+      return passages.flatMap((passage, index) => {
+        const paragraph = paragraphFor(drafts[index]);
+        return paragraph ? [`${index + 1}. ${passage.title}\n${passage.question}\n\n${paragraph}`] : [];
+      }).join("\n\n");
+    }
+
+    get("download").addEventListener("click", () => {
+      const file = new Blob(["PET Paragraph Practice\n\n", collectResponses()], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(file);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "PET_Paragraph_Responses.txt";
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      status.textContent = "Your responses are ready in your downloads.";
+    });
+
+    async function callPortal(action, payload) {
+      const response = await fetch(portal.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ action, payload }),
+        redirect: "follow",
+        signal: AbortSignal.timeout(25000),
+      });
+      if (!response.ok) throw new Error("The portal did not confirm the request.");
+      const result = await response.json();
+      if (!result.success) throw new Error("The portal did not confirm the request.");
+      return result.data;
+    }
+
+    async function getAssignment() {
+      const context = await callPortal("login", { name: student });
+      const assignment = (context.assignments || []).find((task) =>
+        task.type === "writing" && String(task.sourceId) === portal.assignmentId
+      );
+      return { studentKey: context.profile?.nameKey, assignment };
+    }
+
+    function markSubmitted() {
+      submitted = true;
+      status.textContent = "Submitted. Your tutor can see all five responses.";
+      refreshSubmission();
+    }
+
+    async function submitResponses() {
+      if (get("submit").disabled) return;
+      submitting = true;
+      refreshSubmission();
+      status.textContent = "Checking your assignment…";
+      let requestStarted = false;
+      try {
+        const { studentKey, assignment } = await getAssignment();
+        if (!studentKey || !assignment) {
+          status.textContent = "Open this assignment from your Gribbin dashboard to submit. Your draft is still here.";
+          return;
+        }
+        if (String(assignment.status).toLowerCase() === "submitted") {
+          markSubmitted();
+          return;
+        }
+        requestStarted = true;
+        status.textContent = "Sending your responses…";
+        const wordCount = drafts.reduce((total, draft) => total + paragraphFor(draft).split(/\s+/).length, 0);
+        await callPortal("submitWriting", {
+          nameKey: studentKey,
+          promptId: portal.assignmentId,
+          promptTitle: portal.title,
+          wordCount,
+          timeUsedSec: 0,
+          responseText: collectResponses(),
+        });
+        markSubmitted();
+      } catch {
+        if (requestStarted) {
+          const checked = await getAssignment().catch(() => null);
+          if (String(checked?.assignment?.status).toLowerCase() === "submitted") {
+            markSubmitted();
+            return;
+          }
+        }
+        status.textContent = "Submission wasn’t confirmed. Your draft is still here. Try again or download a copy.";
+      } finally {
+        submitting = false;
+        refreshSubmission();
+      }
+    }
+
+    if (fromPortal) {
+      get("dashboard").href = "index.html?student=" + encodeURIComponent(student);
+      get("submit").hidden = false;
+      get("submit").addEventListener("click", submitResponses);
+    }
+    get("exercise").hidden = false;
+    openPassage(current);
+    if (fromPortal) {
+      getAssignment().then(({ assignment }) => {
+        if (String(assignment?.status).toLowerCase() === "submitted") markSubmitted();
+      }).catch(() => {});
+    }
+  </script>
+</body>
+</html>
