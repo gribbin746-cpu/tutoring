@@ -8,446 +8,555 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --navy:#0a2a4e; --navy-deep:#06203f; --navy-ink:#0a2540;
-  --blue:#1f6fc9; --blue-2:#0e4f9e; --blue-soft:#e8f1fc;
-  --bg:#eef1f7; --panel:#ffffff; --panel-2:#fbfcfe;
-  --border:#dde3ec; --line:#edf1f6; --ink:#16202c; --muted:#5c6878;
-  --ok:#157a3a; --ok-bg:#e7f5ed; --warn:#a96512; --warn-bg:#fbf0df; --err:#b62d23; --err-bg:#fbeae8;
-  --gold:#b0892f; --gold-deep:#8f6d22; --gold-soft:#f4ecd7; --gold-line:rgba(176,137,47,.45);
-  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-  --display:"Fraunces",Georgia,"Times New Roman",serif;
-  --read:"Newsreader",Georgia,"Times New Roman",serif;
-  --shadow:0 1px 2px rgba(10,37,64,.05),0 14px 32px -20px rgba(10,37,64,.22);
-  --shadow-lg:0 24px 60px -24px rgba(10,37,64,.4);
-  --ring:0 0 0 3px rgba(31,111,201,.18);
+:root {
+  color-scheme: light;
+  --navy: #102e4b;
+  --navy-ink: #10283f;
+  --blue: #245b8a;
+  --blue-2: #214d76;
+  --bg: #f4f6f8;
+  --ink: #182938;
+  --muted: #536476;
+  --border: #d6e0e8;
+  --line: #e7edf2;
+  --soft: #edf3f8;
+  --gold: #ac863a;
+  --gold-soft: #faf1dc;
+  --ok: #226543;
+  --ok-bg: #eaf4ed;
+  --warn: #805318;
+  --warn-bg: #fbf1df;
+  --err: #9c312d;
+  --err-bg: #faecea;
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --display: Georgia, "Times New Roman", serif;
+  --read: Georgia, "Times New Roman", serif;
 }
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%}
-body{font-family:var(--sans);color:var(--ink);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
-  background:
-    radial-gradient(1100px 520px at 50% -8%, #eaf1fb 0%, rgba(234,241,251,0) 60%),
-    radial-gradient(900px 600px at 100% 0%, #eef0f8 0%, rgba(238,240,248,0) 55%),
-    linear-gradient(180deg,#eef1f7 0%, #e7ebf3 100%);
-  background-attachment:fixed;}
-.hidden{display:none!important}
-button{font-family:inherit;cursor:pointer}
-small{font-size:12px}
-:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:6px}
-
-/* ---------- header ---------- */
-header{height:64px;position:relative;display:flex;align-items:center;justify-content:space-between;padding:0 24px;color:#fff;
-  background:linear-gradient(118deg,#06203f 0%, #0a2f5c 52%, #11447f 100%);
-  box-shadow:0 6px 24px -10px rgba(6,32,63,.7)}
-header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
-  background:linear-gradient(90deg,transparent, var(--gold-line) 18%, var(--gold) 50%, var(--gold-line) 82%, transparent)}
-.brand{display:flex;align-items:center;gap:13px;font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:.005em}
-.brand .logo{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
-  font-family:var(--display);font-weight:600;font-size:21px;color:#fff;
-  background:linear-gradient(150deg,#1b5db0,#0a2f5c);
-  border:1px solid rgba(255,255,255,.25);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.35), inset 0 0 0 3px rgba(176,137,47,.0), 0 4px 12px -4px rgba(0,0,0,.5)}
-.brand .sub{font-family:var(--sans);font-size:10px;font-weight:600;opacity:.66;letter-spacing:.18em;text-transform:uppercase;align-self:center}
-.hstatus{display:flex;align-items:center;gap:8px;font-size:12px;opacity:.92}
-.dot{width:8px;height:8px;border-radius:50%;background:#8298b6}
-.dot.ok{background:#5fe08e;animation:pulse 2.6s infinite}
-.dot.bad{background:#ff8377}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(95,224,142,.5)}70%{box-shadow:0 0 0 7px rgba(95,224,142,0)}100%{box-shadow:0 0 0 0 rgba(95,224,142,0)}}
-
-.wrap{max-width:840px;margin:0 auto;padding:30px 18px 90px}
-
-/* ---------- cards ---------- */
-.card{position:relative;background:linear-gradient(180deg,#ffffff 0%, #fcfdff 100%);
-  border:1px solid var(--border);border-radius:20px;padding:26px 28px;margin:0 0 20px;
-  box-shadow:var(--shadow)}
-
-/* ---------- typography ---------- */
-h1{font-family:var(--display);font-weight:600;font-size:29px;line-height:1.1;margin:0 0 8px;letter-spacing:-.01em}
-.eyebrow{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 16px}
-.eyebrow::before{content:"";width:20px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--gold-soft));flex:none}
-p.sub{color:var(--muted);margin:0 0 18px;font-size:14.5px}
-label{display:block;font-size:12.5px;font-weight:650;color:#37414e;margin:0 0 7px;letter-spacing:.01em}
-
-input[type=text],input[type=password],input[type=date],textarea,select{width:100%;border:1.5px solid var(--border);border-radius:12px;
-  padding:12px 14px;font-size:15px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .15s, box-shadow .15s}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:var(--ring)}
-textarea{min-height:340px;line-height:1.7;font-family:var(--read);font-size:17px;resize:vertical}
-
-/* ---------- buttons ---------- */
-.btn{border:0;border-radius:12px;padding:12px 22px;font-weight:700;font-size:14.5px;color:#fff;letter-spacing:.01em;
-  background:linear-gradient(135deg,#13569f 0%, #0a2f5c 100%);
-  box-shadow:0 1px 0 rgba(255,255,255,.18) inset, 0 8px 18px -10px rgba(10,47,92,.9);
-  transition:transform .12s, box-shadow .16s, filter .16s}
-.btn:hover{transform:translateY(-1px);filter:brightness(1.06);box-shadow:0 1px 0 rgba(255,255,255,.22) inset, 0 12px 22px -10px rgba(10,47,92,.95)}
-.btn:active{transform:translateY(0)}
-.btn:disabled{opacity:.5;cursor:default;transform:none;box-shadow:none;filter:none}
-.btn.ghost{background:#fff;color:var(--navy-ink);border:1.5px solid var(--border);box-shadow:none}
-.btn.ghost:hover{background:#f3f7fc;border-color:#cdd8e6;transform:none;filter:none}
-.btn.sm{padding:9px 17px;font-size:13.5px;border-radius:11px}
-.btn.tiny{padding:6px 13px;font-size:12.5px;border-radius:9px;box-shadow:none}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.spacer{flex:1}
-.linkbtn{background:none;border:0;color:var(--blue-2);font-size:13.5px;font-weight:650;padding:0;cursor:pointer}
-.linkbtn:hover{text-decoration:underline;text-underline-offset:2px}
-.foot{text-align:center;color:var(--muted);font-size:12.5px;margin-top:10px}
-
-/* ---------- messages / pills ---------- */
-.msg{border-radius:12px;padding:11px 15px;font-size:13.5px;margin:14px 0 0;border:1px solid transparent}
-.msg.ok{background:var(--ok-bg);color:var(--ok);border-color:#bfe3cb}
-.msg.err{background:var(--err-bg);color:var(--err);border-color:#f0c5c0}
-.msg.info{background:#eaf1fa;color:#2c5483;border-color:#cfe0f3}
-.pill{display:inline-block;background:var(--blue-soft);color:#1d5390;font-size:11.5px;font-weight:700;padding:3px 12px;border-radius:999px;border:1px solid #d4e6fa}
-.spin{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px}
-@keyframes sp{to{transform:rotate(360deg)}}
-
-/* ---------- login hero ---------- */
-.hero{overflow:hidden;border:0;color:#fff;
-  background:linear-gradient(135deg,#06203f 0%, #0c356a 60%, #11457f 100%)}
-.hero::after{content:"";position:absolute;right:-70px;top:-80px;width:260px;height:260px;border-radius:50%;
-  background:radial-gradient(circle at center,rgba(120,170,235,.28),transparent 68%);pointer-events:none}
-.hero::before{content:"N";position:absolute;right:14px;bottom:-58px;font-family:var(--display);font-weight:600;
-  font-size:230px;line-height:1;color:rgba(255,255,255,.05);pointer-events:none}
-.hero .eyebrow{color:rgba(255,255,255,.72)}
-.hero .eyebrow::before{background:linear-gradient(90deg,var(--gold),rgba(244,236,215,.4))}
-.hero h1{font-size:34px;letter-spacing:-.015em}
-.hero p.sub{color:rgba(255,255,255,.84)}
-.hero label{color:rgba(255,255,255,.86)}
-.hero input{background:rgba(255,255,255,.97);border-color:transparent}
-.hero input:focus{box-shadow:0 0 0 3px rgba(176,137,47,.4)}
-.hero .btn{background:linear-gradient(135deg,#fff,#eaf1fb);color:var(--navy-ink);box-shadow:0 10px 24px -10px rgba(0,0,0,.5)}
-.hero .foot{color:rgba(255,255,255,.72)}
-.hero .foot .linkbtn{color:#cfe0f6}
-
-/* ---------- dashboard greeting + stats ---------- */
-.greet{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.greet h1{margin-bottom:6px}
-#dashYear.pill{background:var(--gold-soft);color:var(--gold-deep);border-color:#e7d6ab}
-.statstrip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px;padding-top:20px;border-top:1px solid var(--line)}
-.ministat{position:relative;padding:2px 2px 2px 16px}
-.ministat::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:3px;border-radius:3px;background:linear-gradient(180deg,var(--gold),var(--gold-soft))}
-.ministat .mv{font-family:var(--display);font-weight:600;font-size:30px;line-height:1;letter-spacing:-.01em;color:var(--navy-ink)}
-.ministat .ml{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;margin-top:7px}
-
-/* ---------- task list ---------- */
-.tasklist{display:flex;flex-direction:column;gap:12px}
-.task{display:flex;align-items:center;gap:15px;border:1px solid var(--border);border-radius:15px;padding:15px 18px;
-  background:linear-gradient(180deg,#fff,#fcfdff);position:relative;overflow:hidden;
-  transition:box-shadow .16s, transform .12s, border-color .16s}
-.task::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue)}
-.task.overdue::before{background:linear-gradient(180deg,#d9483d,#b62d23)}
-.task.soon::before{background:linear-gradient(180deg,#cf8a2a,#a96512)}
-.task.open::before{background:linear-gradient(180deg,#2f86d8,#1f6fc9)}
-.task.done::before{background:linear-gradient(180deg,#2f9d5b,#157a3a)}
-.task:hover{box-shadow:var(--shadow);transform:translateY(-1px);border-color:#cfd9e6}
-.task.done{background:#fbfdfb}
-.task.done:hover{transform:none;box-shadow:none}
-.task .ticon{width:42px;height:42px;border-radius:12px;flex:none;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(150deg,#eaf2fc,#dce9f8);color:var(--blue-2);border:1px solid #d6e5f7}
-.task .ticon svg{width:21px;height:21px}
-.task.done .ticon{background:linear-gradient(150deg,#e7f5ed,#d7eede);color:var(--ok);border-color:#c4e6cf}
-.task .tmid{flex:1;min-width:0}
-.task .ttitle{font-weight:700;font-size:15.5px;margin:0 0 3px;letter-spacing:-.005em}
-.task.done .ttitle{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
-.task .tmeta{font-size:12.5px;color:var(--muted)}
-.due{font-weight:700}
-.due.overdue{color:var(--err)}.due.soon{color:var(--warn)}
-.emptyline{color:var(--muted);font-size:14px;padding:8px 2px}
-
-/* ---------- inbox / feedback ---------- */
-.fb{border:1px solid var(--border);border-radius:15px;margin:0 0 12px;overflow:hidden;background:#fff;transition:box-shadow .16s}
-.fb[open]{box-shadow:var(--shadow)}
-.fb summary{cursor:pointer;list-style:none;padding:16px 18px;display:flex;align-items:center;gap:12px}
-.fb summary::-webkit-details-marker{display:none}
-.fb .fbtitle{font-weight:700;letter-spacing:-.005em}
-.fb .chev{margin-left:auto;color:var(--muted);transition:transform .2s}
-.fb[open] .chev{transform:rotate(90deg)}
-.fb .fbbody{padding:0 18px 18px}
-.fbblock{background:#f7f9fd;border-left:3px solid var(--navy);border-radius:0 12px 12px 0;padding:14px 16px;
-  font-family:var(--read);font-size:16.5px;line-height:1.7;white-space:pre-wrap;color:#222a35;margin:8px 0 0}
-.words{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
-.word{background:linear-gradient(180deg,#f7efd9,#f1e6c8);color:var(--gold-deep);border:1px solid #e7d6ab;border-radius:10px;
-  padding:5px 13px;font-size:14.5px;font-weight:500;font-family:var(--read)}
-
-.vault{display:flex;flex-wrap:wrap;gap:10px}
-
-/* ---------- skills ---------- */
-.skillbar{display:flex;flex-direction:column;gap:11px;margin-top:4px}
-.skillrow{display:grid;grid-template-columns:1fr 60px;gap:12px;align-items:center;font-size:13px}
-.bar{height:9px;border-radius:99px;background:#e9edf3;overflow:hidden;margin-top:5px;box-shadow:inset 0 1px 2px rgba(10,37,64,.08)}
-.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#2f86d8,#1f6fc9);transition:width .5s ease}
-
-/* ---------- revision archive ---------- */
-.rev{border:1px solid var(--border);border-radius:15px;margin:0 0 12px;background:#fff;overflow:hidden;transition:box-shadow .16s}
-.rev[open]{box-shadow:var(--shadow)}
-.rev summary{cursor:pointer;list-style:none;padding:16px 18px;display:flex;align-items:center;gap:14px}
-.rev summary::-webkit-details-marker{display:none}
-.rev .score{font-family:var(--display);font-weight:600;font-size:21px;font-variant-numeric:tabular-nums;min-width:64px}
-.rev .chev{margin-left:auto;color:var(--muted);transition:transform .2s}
-.rev[open] .chev{transform:rotate(90deg)}
-.rev .revbody{padding:2px 18px 18px}
-.autopsy{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}
-.autopsy th,.autopsy td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
-.autopsy th{color:var(--muted);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700}
-.autopsy .pick{color:var(--err);font-weight:700}
-.autopsy .corr{color:var(--ok);font-weight:700}
-
-/* ---------- writing ---------- */
-.wbar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;color:var(--muted);font-size:13px}
-.wbar .clock{font-family:var(--display);font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink);font-size:17px}
-.wbar .clock.warn{color:var(--err)}
-.prompt{background:linear-gradient(180deg,#f7f9fd,#f1f5fb);border-left:3px solid var(--navy);border-radius:0 14px 14px 0;
-  padding:16px 18px;margin:0 0 18px;font-family:var(--read);font-size:17.5px;line-height:1.6;color:#1f2733}
-.prompt p{margin:0 0 11px}
-.prompt p:last-child{margin-bottom:0}
-.prompt ul{margin:9px 0 0;padding-left:22px}
-.prompt li{margin:0 0 8px}
-.prompt li:last-child{margin-bottom:0}
-
-/* ---------- planning scratch box (private, never counted, never submitted) ---------- */
-.plan{margin:0 0 18px}
-.plan .planlabel{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;font-weight:600;color:var(--muted);margin:0 0 7px;line-height:1.5}
-.plan .planlabel .tag{flex:none;background:var(--gold-soft);color:var(--gold-deep);font-size:10px;font-weight:800;padding:3px 10px;border-radius:999px;border:1px solid #e7d6ab;text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
-#wPlan{min-height:120px;background:linear-gradient(180deg,#fffdf7,#fbf8ef);border:1.5px dashed #e2d9c3;
-  font-family:var(--read);font-size:16px;line-height:1.7;color:#3c382f}
-#wPlan:focus{border-style:solid;border-color:var(--gold);box-shadow:0 0 0 3px rgba(176,137,47,.16)}
-#wPlan::placeholder{color:#b3a888}
-
-/* ---------- admin ---------- */
-.acard{border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:22px;
-  background:linear-gradient(180deg,#fdfefe,#f8fafd)}
-.ahead{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;margin-bottom:18px;
-  border-bottom:1px solid var(--line);position:relative}
-.ahead::after{content:"";position:absolute;left:0;bottom:-1px;width:54px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--gold),var(--gold-soft))}
-.aname{font-family:var(--display);font-size:20px;font-weight:600;color:var(--navy-ink);text-transform:capitalize}
-.astats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:13px;margin-bottom:8px}
-.statbox{background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px 15px}
-.statlabel{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:6px}
-.statval{font-family:var(--display);font-size:24px;font-weight:600;line-height:1;color:var(--navy-ink)}
-.asection{font-size:11px;font-weight:800;color:var(--muted);margin:24px 0 11px;text-transform:uppercase;letter-spacing:.09em}
-.aitem{background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px 17px;margin-bottom:11px}
-.aitemhead{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:5px}
-.aitemtitle{font-weight:700;letter-spacing:-.005em}
-.aitemmeta{color:var(--muted);font-size:12.5px}
-.fbedit{margin-top:13px;border-top:1px dashed var(--border);padding-top:13px}
-.fbedit textarea{min-height:92px;font-family:var(--sans);font-size:14px;line-height:1.5}
-.fbedit input{margin-top:9px}
-.pushrow{margin-top:11px}
-.revopt{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:#37414e;font-weight:600}
-.revopt input[type=checkbox]{width:auto;margin:0}
-.revopt input[type=number]{width:56px;padding:5px 7px;border-radius:8px}
-.assignbox{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-
-/* score editor */
-.scorewrap{margin-top:13px;border-top:1px dashed var(--border);padding-top:13px}
-.scoreset{margin:8px 0 4px}
-.scoresetname{font-size:11px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin:8px 0 7px}
-.scorerow2{display:grid;grid-template-columns:1fr 72px auto;gap:9px;align-items:center;margin:0 0 7px;font-size:13.5px}
-.scorerow2 select{padding:7px 9px;border-radius:9px}
-.scorerow2 small{color:var(--muted)}
-.scoretotal{margin-top:10px;font-size:14px;font-weight:700}
-.scoretotal b{font-family:var(--display);color:var(--navy);font-size:19px}
-
-/* student score card (the jewel) */
-.scorecard{position:relative;background:linear-gradient(150deg,#0a2f5c,#06203f);color:#fff;border-radius:14px;
-  padding:18px 20px;margin:0 0 12px;overflow:hidden;box-shadow:0 16px 34px -18px rgba(6,32,63,.8)}
-.scorecard::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;
-  background:linear-gradient(90deg,transparent,var(--gold) 30%,var(--gold) 70%,transparent)}
-.scorecardtop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
-.scorecardtop span:first-child{font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.7;font-weight:700}
-.scorecardtot{font-family:var(--display);font-size:30px;font-weight:600;letter-spacing:-.01em}
-.scorecardtot small{font-size:15px;opacity:.65;font-weight:400}
-.screvs{display:grid;grid-template-columns:1fr 1fr;gap:7px 18px}
-.screv{display:flex;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.13);padding:5px 0;font-size:13.5px}
-.screv span{opacity:.86}
-.screv b{font-weight:700;font-variant-numeric:tabular-nums}
-
-/* ---------- toast ---------- */
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);
-  background:linear-gradient(135deg,#0c356a,#06203f);color:#fff;padding:14px 22px;border-radius:13px;font-size:14px;font-weight:600;
-  box-shadow:var(--shadow-lg);opacity:0;transition:opacity .25s, transform .25s;z-index:60;display:flex;align-items:center;gap:10px;max-width:90vw;
-  border:1px solid rgba(176,137,47,.35)}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast .tk{width:19px;height:19px;border-radius:50%;background:#5fe08e;display:flex;align-items:center;justify-content:center;flex:none}
-.toast .tk svg{width:11px;height:11px;color:#06203f}
-
-@media(max-width:620px){
-  .assignbox{grid-template-columns:1fr}
-  .statstrip{grid-template-columns:1fr;gap:16px}
-  .screvs{grid-template-columns:1fr}
-  h1{font-size:26px}.hero h1{font-size:29px}
-  .wrap{padding:24px 14px 80px}
-  .card{padding:22px 20px;border-radius:18px}
+* { box-sizing: border-box; }
+html { min-height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+.hidden, [hidden] { display: none !important; }
+:focus-visible { outline: 3px solid #926914; outline-offset: 3px; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { color: var(--navy-ink); line-height: 1.22; }
+h1 { font: 600 clamp(1.9rem, 4vw, 2.55rem)/1.15 var(--display); letter-spacing: -.025em; }
+h2 { font: 600 1.45rem/1.2 var(--display); }
+h3 { font-size: 1.02rem; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .58; }
+summary { cursor: pointer; }
+small { color: var(--muted); font-size: .8em; font-weight: 500; }
+label { display: block; color: var(--navy-ink); font-size: .86rem; font-weight: 680; margin-bottom: 5px; }
+input:not([type=checkbox]), select, textarea {
+  width: 100%; min-width: 0; min-height: 42px; padding: 8px 10px; border: 1px solid #b9c7d3;
+  border-radius: 7px; background: #fff; color: var(--ink);
 }
-/* ---------- inline annotation ---------- */
-.draftsurface{font-family:var(--read);font-size:16.5px;line-height:1.9;white-space:pre-wrap;color:#222a35;
-  background:#fffdf7;border:1px solid #ece4cf;border-radius:12px;padding:15px 17px;margin-top:4px;
-  user-select:text;-webkit-user-select:text;cursor:text;counter-reset:cm}
-mark.cmark{background:linear-gradient(180deg,#fdf0c4,#f8e6a8);color:inherit;border-radius:3px;padding:0 1px;
-  box-shadow:inset 0 -2px 0 rgba(176,137,47,.5);counter-increment:cm}
-mark.cmark::after{content:counter(cm);font-family:var(--sans);font-size:9px;font-weight:800;color:var(--gold-deep);
-  vertical-align:super;margin-left:1px}
-.cmtlist{margin-top:12px;display:flex;flex-direction:column;gap:9px}
-.cmtitem{display:flex;gap:11px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 13px}
-.cmnum{flex:none;width:22px;height:22px;border-radius:50%;background:var(--gold-soft);color:var(--gold-deep);
-  font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:var(--sans);margin-top:1px}
-.cmtbody{flex:1;min-width:0}
-.cmtq{font-family:var(--read);font-size:14.5px;color:var(--muted);font-style:italic;margin-bottom:3px}
-.cmtn{font-size:14px;color:var(--ink)}
-.cmtitem .linkbtn{flex:none;color:var(--err)}
+input[type=checkbox] { accent-color: var(--navy); width: 16px; height: 16px; margin: 0; flex: none; }
+textarea { display: block; resize: vertical; }
+a, .linkbtn { color: var(--blue-2); text-underline-offset: 3px; }
+.masthead { background: var(--navy); color: #fff; border-bottom: 2px solid var(--gold); }
+.masthead-inner { min-height: 57px; margin: auto; max-width: 1296px; padding: 0 22px; display: flex; gap: 18px; align-items: center; justify-content: space-between; }
+.brand { display: flex; gap: 10px; align-items: center; font: 600 1.2rem var(--display); }
+.logo { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid #bda16a; border-radius: 6px; color: #f5e8c7; }
+.hstatus { color: #ffdbd5; display: flex; gap: 6px; align-items: center; font-size: .8rem; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: #ff9a8c; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 48px; }
+.wrap[data-view="vAdmin"] { max-width: 1296px; }
+.wrap[data-view="vWriting"] { max-width: 920px; }
+.card { min-width: 0; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: clamp(15px, 2.3vw, 25px); }
+.card + .card { margin-top: 14px; }
+.auth-card { max-width: 445px; margin: clamp(12px, 7vh, 74px) auto 0; padding: clamp(21px, 4vw, 33px); border-top: 3px solid var(--gold); }
+.auth-card h1 { margin-bottom: 20px; }
+.auth-actions { margin-top: 12px; }
+.auth-actions .btn { width: 100%; }
+.auth-footer { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 12px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 42px; padding: 8px 14px; border: 1px solid var(--navy); border-radius: 7px; background: var(--navy); color: #fff; font-size: .91rem; font-weight: 680; line-height: 1.25; }
+.btn:hover:enabled { background: #235178; }
+.btn.ghost { border-color: var(--border); background: #fff; color: var(--navy-ink); }
+.btn.ghost:hover:enabled { background: var(--soft); }
+.btn.sm { min-height: 38px; padding: 7px 12px; font-size: .86rem; }
+.btn.tiny { min-height: 34px; padding: 5px 10px; font-size: .82rem; }
+.linkbtn { min-height: 32px; padding: 3px 0; border: 0; background: none; font-size: .88rem; font-weight: 650; }
+.linkbtn:hover { text-decoration: underline; }
+.row, .page-heading, .panel-heading, .writing-top { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.page-heading, .panel-heading, .writing-top { justify-content: space-between; }
+.page-heading { margin-bottom: 14px; }
+.panel-heading { gap: 8px 16px; }
+.page-meta, .aitemmeta, .emptyline, .sub { color: var(--muted); font-size: .86rem; }
+.page-meta { margin-top: 4px; }
+.emptyline { padding-block: 13px; }
+.msg { margin: 10px 0; padding: 8px 11px; border-radius: 6px; background: var(--soft); color: var(--navy); font-size: .88rem; }
+.msg.ok { background: var(--ok-bg); color: var(--ok); }
+.msg.err { background: var(--err-bg); color: var(--err); }
+.spin { flex: none; width: 12px; height: 12px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.section-nav { display: flex; flex-wrap: wrap; gap: 3px 12px; border-bottom: 1px solid var(--border); margin: 0 0 14px; }
+.section-nav button { display: flex; gap: 6px; align-items: center; min-height: 42px; padding: 7px 6px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--muted); font-weight: 650; font-size: .9rem; }
+.section-nav button:hover { color: var(--navy); }
+.section-nav button[aria-current] { border-bottom-color: var(--gold); color: var(--navy); }
+.count, .pill { display: inline-block; min-width: 21px; padding: 1px 6px; border-radius: 5px; background: var(--soft); color: var(--navy); text-align: center; font-size: .76rem; font-weight: 700; white-space: nowrap; }
+.pill.pending { color: var(--warn); background: var(--warn-bg); }
+.pill.sent { color: var(--ok); background: var(--ok-bg); }
+.student-panel h2 { margin-bottom: 8px; }
+.task { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.tasklist > .task:last-child, .completed .task:last-child { border-bottom: 0; }
+.ticon { width: 35px; height: 35px; flex: none; display: grid; place-items: center; border-radius: 7px; background: var(--soft); color: var(--blue-2); }
+.ticon svg { width: 18px; height: 18px; }
+.tmid { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.ttitle { font-weight: 680; }
+.tmeta { color: var(--muted); font-size: .8rem; }
+.due.overdue { color: var(--err); }
+.due.soon { color: var(--warn); }
+.completed { margin-top: 12px; }
+.completed > summary { padding-block: 8px; color: var(--navy); font-weight: 650; }
+.completed .task { padding-block: 9px; }
+.fb, .rev, .record { border-top: 1px solid var(--line); }
+.fb summary, .rev summary { display: flex; align-items: center; gap: 10px; padding: 11px 0; list-style: none; }
+.fb summary::-webkit-details-marker, .rev summary::-webkit-details-marker { display: none; }
+.fbtitle { flex: 1; font-weight: 680; min-width: 0; overflow-wrap: anywhere; }
+.fbbody, .revbody { padding: 0 0 13px; }
+.chev { flex: none; margin-left: auto; color: var(--muted); }
+[open] > summary .chev { transform: rotate(90deg); }
+.fbblock { background: #f8fafc; border-left: 2px solid var(--gold); padding: 10px 13px; margin: 8px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.words, .vault { display: flex; gap: 6px; flex-wrap: wrap; }
+.word { display: inline-block; padding: 3px 8px; background: var(--gold-soft); color: var(--warn); border-radius: 4px; }
+.score { color: var(--navy); font-weight: 700; white-space: nowrap; }
+.skillrow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 6px 0; font-size: .9rem; }
+.bar { margin-top: 4px; height: 5px; background: var(--soft); border-radius: 6px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--blue); }
+.autopsy { border-collapse: collapse; width: 100%; margin: 6px 0; font-size: .83rem; }
+.autopsy th, .autopsy td { border-bottom: 1px solid var(--line); text-align: left; padding: 6px; overflow-wrap: anywhere; }
+.autopsy th { color: var(--muted); }
+.autopsy .corr { color: var(--ok); }
+.autopsy .pick { color: var(--err); }
+.asection, .eyebrow { color: var(--navy); font-size: .89rem; font-weight: 700; margin: 12px 0 6px; }
+.writing-top { position: sticky; top: 0; z-index: 1; margin: -5px 0 11px; padding: 5px 0 8px; background: #fff; border-bottom: 1px solid var(--line); }
+.writing-card h1 { margin: 4px 0 14px; }
+.wbar { display: flex; flex-wrap: wrap; gap: 12px; font-size: .85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.clock { font-weight: 750; color: var(--navy); }
+.clock.warn { color: var(--err); }
+.prompt { background: #f8fafc; border-left: 2px solid var(--gold); padding: 11px 14px; margin: 0 0 14px; font: 1.08rem/1.55 var(--read); }
+.prompt p + p { margin-top: 8px; }
+.prompt:empty { display: none; }
+.plan { margin-bottom: 12px; }
+.plan summary { font-weight: 650; color: var(--navy); padding-block: 6px; }
+.plan summary .page-meta { margin-left: 5px; font-weight: 400; }
+#wPlan { min-height: 96px; }
+#wText { min-height: 290px; font: 1.1rem/1.65 var(--read); }
+.write-actions { margin-top: 12px; }
+.console-layout { display: grid; grid-template-columns: minmax(180px, 222px) minmax(0, 1fr); gap: 14px; align-items: start; }
+.roster { position: sticky; top: 12px; padding: 13px; }
+.roster-list { display: grid; gap: 3px; margin-top: 9px; max-height: min(62vh, 560px); overflow: auto; }
+.roster-choice { width: 100%; min-height: 36px; border: 0; border-radius: 6px; padding: 6px 8px; text-align: left; display: flex; justify-content: space-between; align-items: center; gap: 5px; color: var(--ink); background: transparent; font-size: .87rem; overflow-wrap: anywhere; }
+.roster-choice[aria-current] { color: var(--navy); background: var(--soft); font-weight: 720; box-shadow: inset 2px 0 var(--gold); }
+.roster-choice:hover { background: var(--soft); }
+.roster-choice .count { background: var(--gold-soft); color: var(--warn); }
+.console-work { min-width: 0; }
+.console-card .panel-heading { margin-bottom: 10px; }
+.admin-nav { margin-bottom: 9px; }
+.admin-filters { display: grid; grid-template-columns: minmax(155px, 1fr) minmax(116px, .55fr) minmax(122px, .60fr); gap: 9px; margin-bottom: 10px; }
+.admin-filters input, .admin-filters select, .roster input { font-size: .9rem; min-height: 38px; }
+.record { padding: 11px 0; }
+.record-top, .record-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px 14px; }
+.record-top { flex-wrap: wrap; }
+.record-title { font-weight: 690; overflow-wrap: anywhere; }
+.record-meta { color: var(--muted); font-size: .82rem; margin-top: 2px; overflow-wrap: anywhere; }
+.record-actions { justify-content: flex-end; flex-wrap: wrap; }
+.record details { margin-top: 7px; }
+.record details summary { color: var(--blue-2); font-size: .85rem; }
+.record .table-wrap { overflow-x: auto; }
+.record .table-wrap th:last-child, .record .table-wrap td:last-child { min-width: 65px; }
+#adminReadingSkills { margin: 9px 0; }
+#adminReadingSkills details { border: 1px solid var(--line); border-radius: 7px; padding: 7px 10px; }
+#adminReadingSkills summary { font-weight: 650; color: var(--navy); }
+.editor-title { margin: 8px 0 3px; }
+.editor-grid { display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr); gap: 16px; margin-top: 13px; align-items: start; }
+.editor-controls label + input { margin-bottom: 6px; }
+.editor-controls textarea { min-height: 105px; margin-bottom: 10px; }
+.draftsurface, .annotdraft { background: #f8fafc; border: 1px solid var(--line); border-radius: 7px; padding: 11px 13px; white-space: pre-wrap; overflow-wrap: anywhere; font: 1.04rem/1.62 var(--read); }
+.draftsurface { max-height: min(59vh, 570px); overflow: auto; }
+.cmark { background: #f6e6aa; color: inherit; }
+.cmtlist, .annotnotes { margin-top: 8px; }
+.cmtitem, .annotnotes li { display: flex; gap: 7px; align-items: flex-start; padding: 5px 0; font-size: .85rem; }
+.annotnotes { list-style: none; padding-left: 0; }
+.cmtbody { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.cmtq { color: var(--muted); }
+.cmnum { flex: none; font-size: .77rem; font-weight: 700; padding: 1px 6px; background: var(--gold-soft); color: var(--warn); border-radius: 4px; }
+.scorewrap { border-top: 1px solid var(--line); padding-top: 8px; }
+.scoresetname { font-size: .83rem; font-weight: 720; margin: 8px 0 4px; }
+.scorerow2 { display: grid; grid-template-columns: minmax(0,1fr) 56px auto; align-items: center; gap: 6px; font-size: .83rem; margin-bottom: 4px; }
+.scorerow2 select { min-height: 31px; padding: 3px 4px; }
+.scoretotal { margin-top: 8px; font-weight: 700; }
+.marking-notes, .testnotes, .rubric-toggle { margin-top: 8px; }
+.scorecard { background: var(--soft); border-radius: 7px; padding: 9px 12px; margin-bottom: 7px; }
+.scorecardtop, .screv { display:flex; justify-content:space-between; gap: 8px; }
+.scorecardtot { font-weight: 750; }
+.screvs { font-size: .84rem; }
+.revopt { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; margin-top: 8px; font-weight: 540; }
+.revopt input[type=number] { width: 57px; min-height: 31px; padding: 3px 5px; }
+.pushrow { margin-top: 9px; }
+dialog { width: min(540px, calc(100% - 22px)); padding: 18px; border: 1px solid var(--border); border-radius: 10px; color: var(--ink); }
+dialog::backdrop { background: #12283999; }
+.assignbox { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; margin-top: 10px; }
+.assign-details { margin-top: 12px; }
+.assign-details summary { color: var(--navy); font-weight: 670; }
+.assign-link { grid-column: 1/-1; }
+.cmtpop { position: absolute; z-index: 4; background: #fff; border: 1px solid var(--border); border-top: 2px solid var(--gold); border-radius: 7px; padding: 9px; box-shadow: 0 6px 20px #142e4630; }
+.cmtpop textarea { min-height: 65px; }
+.cmtpopq { color: var(--muted); font-size: .83rem; overflow-wrap: anywhere; }
+.cmtpopbtns { display: flex; gap: 6px; margin-top: 6px; }
+.toast { position: fixed; z-index: 5; left: 50%; bottom: 20px; transform: translateX(-50%); display: none; max-width: calc(100% - 24px); padding: 8px 13px; border-radius: 7px; background: var(--navy); color: #fff; font-size: .88rem; }
+.toast.show { display: block; }
+@media (max-width: 760px) {
+  .wrap { padding: 18px 13px 35px; }
+  .masthead-inner { padding-inline: 13px; }
+  .console-layout, .editor-grid { grid-template-columns: 1fr; }
+  .roster { position: static; }
+  .roster-list { grid-template-columns: repeat(auto-fit, minmax(108px, 1fr)); max-height: 125px; }
+  .draftsurface { max-height: 420px; }
+}
+@media (max-width: 500px) {
+  .admin-filters { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .admin-filters > div:first-child { grid-column: 1/-1; }
+  .section-nav { column-gap: 7px; }
+  .section-nav button { padding-inline: 4px; font-size: .85rem; }
+  .task { gap: 7px; }
+  .ticon { width: 28px; height: 28px; }
+}
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+/* Noof palette and type */
+:root {
+  --navy: #0a2a4e;
+  --navy-ink: #0a2540;
+  --blue: #1f6fc9;
+  --blue-2: #0e4f9e;
+  --bg: #eef1f7;
+  --ink: #16202c;
+  --muted: #546275;
+  --border: #dbe3ed;
+  --line: #e9eef5;
+  --soft: #ebf2fb;
+  --gold: #b0892f;
+  --gold-soft: #f4ecd7;
+  --display: "Fraunces", Georgia, "Times New Roman", serif;
+  --read: "Newsreader", Georgia, "Times New Roman", serif;
+  --lift: 0 1px 2px #0a254009, 0 17px 32px -22px #1535574f;
+}
+body {
+  background: radial-gradient(ellipse 850px 400px at 35% 0%, #eaf1fb, transparent),
+    linear-gradient(180deg, #f0f3f9, #e8edf5) fixed;
+}
+.masthead {
+  position: relative;
+  border-bottom: 0;
+  background: linear-gradient(115deg, #06203f, #0a2f5c 57%, #11447f);
+  box-shadow: 0 10px 23px -17px #06203fb3;
+}
+.masthead::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #b0892fab 22%, #b0892f 51%, #b0892fab 78%, transparent);
+}
+.masthead-inner { min-height: 63px; }
+.brand { gap: 11px; font-size: 1.3rem; }
+.logo {
+  width: 37px; height: 37px; border-radius: 10px; color: #fff; border-color: #ffffff47;
+  background: linear-gradient(148deg, #1b5db0, #0a2f5c);
+  box-shadow: inset 0 1px #ffffff36;
+}
+.wrap { padding-top: 33px; }
+.card { border-radius: 17px; box-shadow: var(--lift); }
+.auth-card { border-top-color: var(--gold); }
+.student-signin, .dashboard-hero {
+  background: radial-gradient(ellipse 420px 240px at 100% 0%, #2b61a070, transparent),
+    linear-gradient(115deg, #081f3d, #0b3569 100%);
+  border: 1px solid #193f6b;
+  color: #fff;
+}
+.student-signin { border-top: 3px solid #bd974a; }
+.student-signin h1, .student-signin label, .dashboard-hero h1 { color: #fff; }
+.student-signin .auth-footer { border-color: #ffffff39; }
+.student-signin .linkbtn { color: #dceafc; }
+.student-signin .btn { background: #fff; border-color: #fff; color: var(--navy); }
+.student-signin .btn:hover:enabled { background: #eaf1fb; }
+.student-signin :focus-visible, .dashboard-hero :focus-visible { outline-color: #e3c374; }
+.btn {
+  border-radius: 9px;
+  background: linear-gradient(145deg, #174d83, #0a2f5c);
+  box-shadow: 0 2px 7px -4px #0a2f5c6b;
+}
+.btn:hover:enabled { background: linear-gradient(145deg, #235c94, #113c65); }
+.btn.ghost { box-shadow: none; }
+.section-nav { column-gap: 18px; padding-inline: 5px; }
+.section-nav button { padding-inline: 7px; }
+.section-nav button[aria-current] { color: var(--navy); border-color: var(--gold); }
+.count { background: #e5edf9; border-radius: 99px; padding-inline: 7px; }
 
-.cmtpop{position:absolute;z-index:80;background:#fff;border:1px solid var(--border);border-radius:13px;
-  box-shadow:var(--shadow-lg);padding:13px 14px}
-.cmtpopq{font-family:var(--read);font-size:13.5px;font-style:italic;color:var(--muted);margin-bottom:9px;
-  max-height:48px;overflow:hidden;border-left:2px solid var(--gold);padding-left:9px}
-.cmtpop textarea{min-height:70px;font-family:var(--sans);font-size:14px;line-height:1.5}
-.cmtpopbtns{display:flex;gap:8px;margin-top:10px}
+/* Student dashboard */
+.dashboard-hero { margin-bottom: 16px; padding: clamp(18px, 3vw, 29px); }
+.dashboard-hero .page-heading { margin: 0 0 16px; }
+.dashboard-hero .page-heading h1 { font-size: clamp(2.1rem, 5vw, 3rem); }
+.dashboard-hero #dashYear { color: #f6e6c1; font-size: .85rem; }
+.dashboard-hero .btn.ghost {
+  background: #ffffff0d; border-color: #b6ccec7a; color: #fff;
+}
+.dashboard-hero .btn.ghost:hover:enabled { background: #ffffff26; }
+.dashboard-stats {
+  display: grid; grid-template-columns: repeat(auto-fit,minmax(128px,1fr)); gap: 9px 15px;
+  border-top: 1px solid #ffffff26; padding-top: 13px;
+}
+.dashboard-stats > * {
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+  min-height: 58px; border: 0; border-left: 2px solid #c29b4b; padding: 3px 0 3px 12px;
+  text-align: left; color: #fff; background: none;
+}
+.dashboard-stats button:hover { background: #ffffff0f; }
+.dashboard-stats strong { font: 600 1.58rem/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.dashboard-stats span { margin-top: 4px; color: #e0eafa; font-size: .79rem; }
+.task-panel-heading { margin-bottom: 8px; }
+.task-panel-heading h2 { margin: 0; }
+.task-panel-heading select { width: auto; min-width: 120px; min-height: 36px; font-size: .87rem; }
+.tasklist { display: grid; gap: 7px; }
+.task, .tasklist > .task:last-child, .completed .task:last-child {
+  border: 1px solid var(--border); border-left: 3px solid #638fbe; border-radius: 10px; padding: 9px 11px;
+}
+.task.overdue { border-left-color: #b74e47; }
+.task.soon { border-left-color: #b0892f; }
+.task.done { border-left-color: #75a68a; background: #fafcfb; }
+.task .ticon { border: 1px solid #d9e6f5; background: linear-gradient(145deg,#f0f6ff,#e0ecf9); }
+.task .ticon svg { width: 17px; height: 17px; }
+.completed { margin-top: 3px; }
+.completed .task { margin-top: 6px; }
 
-/* student annotated draft */
-.annotwrap{margin:8px 0 4px}
-.annotdraft{font-family:var(--read);font-size:16.5px;line-height:1.9;white-space:pre-wrap;color:#222a35;
-  background:#fffdf7;border:1px solid #ece4cf;border-radius:12px;padding:15px 17px;counter-reset:cm}
-.annotnotes{list-style:none;counter-reset:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
-.annotnotes li{display:flex;gap:11px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:14px}
-.annotnotes .cmnum{margin-top:0}
-
-@media (prefers-reduced-motion: reduce){
-  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+/* Tutor console */
+.console-heading { padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.console-heading h1 { border-left: 3px solid var(--gold); padding-left: 11px; }
+.roster { padding: 12px; }
+.roster-choice { border-radius: 8px; }
+.roster-choice[aria-current] { background: #e9f0fa; }
+.console-card .panel-heading { margin-bottom: 6px; }
+.list-controls {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 0 7px;
+}
+.list-controls:has(#recordCount:empty):has(#markNext[hidden]) { display: none; }
+.list-pagination, .editor-nav {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;
+}
+.list-pagination { padding-top: 10px; border-top: 1px solid var(--line); }
+.editor-nav { padding-block: 3px 8px; margin-bottom: 10px; border-bottom: 1px solid var(--line); }
+.record { padding-block: 12px; }
+.record:hover { background: #f9fbfe; }
+.draftsurface, .annotdraft { background: #f7f9fd; border-color: #e0e8f2; }
+.scorecard { border-left: 2px solid var(--gold); }
+@media (max-width: 760px) {
+  .wrap { padding-top: 19px; }
+  .masthead-inner { min-height: 55px; }
+}
+@media (max-width: 500px) {
+  .dashboard-stats { grid-template-columns: repeat(auto-fit,minmax(92px,1fr)); gap: 9px; }
+  .dashboard-stats > * { padding-left: 7px; }
+  .section-nav { column-gap: 6px; padding-inline: 0; }
+  .section-nav button { padding-inline: 4px; }
+  .task, .tasklist > .task:last-child, .completed .task:last-child { padding-inline: 7px; }
 }
 </style>
 </head>
 <body>
-<header>
-  <div class="brand">
-    <span class="logo">N</span>
-    <span>Noof<span class="sub" style="margin-left:8px">Selective prep</span></span>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brand"><span class="logo" aria-hidden="true">N</span><span>Noof</span></div>
+    <div id="connection" class="hstatus" role="status" hidden><span class="dot" id="connDot" aria-hidden="true"></span><span id="connText"></span></div>
   </div>
-  <div class="hstatus"><span class="dot" id="connDot"></span><span id="connText">connecting</span></div>
 </header>
 
-<div class="wrap">
-
-  <section id="vLogin">
-    <div class="card hero">
-      <p class="eyebrow">Student sign in</p>
-      <h1>Let's get to work</h1>
-      <p class="sub">Type your first name to open your dashboard.</p>
-      <label for="nameInput">Your name</label>
-      <input type="text" id="nameInput" placeholder="e.g. Noof" autocomplete="off" autocapitalize="words" spellcheck="false">
-      <div class="row" style="margin-top:14px"><button class="btn" id="loginBtn">Enter</button></div>
-      <div id="loginMsg"></div>
-      <div class="foot">Tutor? <button class="linkbtn" id="toAdmin">Open tutor console</button></div>
+<main class="wrap">
+  <section id="vLogin" aria-labelledby="studentLoginTitle">
+    <div class="card auth-card student-signin">
+      <h1 id="studentLoginTitle">Student sign in</h1>
+      <form id="studentForm">
+        <label for="nameInput">First name</label>
+        <input type="text" id="nameInput" autocomplete="off" autocapitalize="words" spellcheck="false">
+        <div class="auth-actions"><button class="btn" id="loginBtn" type="submit">Open dashboard</button></div>
+      </form>
+      <div id="loginMsg" role="status"></div>
+      <div class="auth-footer"><button type="button" class="linkbtn" id="toAdmin">Tutor sign in</button></div>
     </div>
   </section>
 
-  <section id="vDash" class="hidden">
-    <div class="card">
-      <div class="greet">
-        <div>
-          <p class="eyebrow" id="dashDate">Today</p>
-          <h1 id="dashName">Hi</h1>
-          <span class="pill" id="dashYear">Year</span>
-        </div>
-        <button class="btn ghost sm" id="switchBtn">Not you? Switch</button>
+  <section id="vDash" class="hidden" aria-labelledby="dashName">
+    <div class="card dashboard-hero">
+      <div class="page-heading">
+        <div><h1 id="dashName"></h1><div class="page-meta" id="dashYear"></div></div>
+        <button class="btn ghost sm" type="button" id="switchBtn">Switch student</button>
       </div>
-      <div class="statstrip" id="statStrip"></div>
+      <div class="dashboard-stats">
+        <button type="button" id="studentTasksShortcut"><strong id="studentTaskCount"></strong><span>Open tasks</span></button>
+        <button type="button" id="studentReadingShortcut"><strong id="studentPaperCount"></strong><span>Reading results</span></button>
+        <div id="studentAverageTile" hidden><strong id="studentReadingAverage"></strong><span>Reading average</span></div>
+      </div>
     </div>
-
-    <div class="card">
-      <p class="eyebrow">To do</p>
+    <nav class="section-nav" id="studentNav" aria-label="Student dashboard">
+      <button type="button" data-student-view="tasks">Tasks</button>
+      <button type="button" data-student-view="feedback">Feedback <span id="studentFeedbackCount" class="count"></span></button>
+      <button type="button" data-student-view="reading">Reading</button>
+      <button type="button" data-student-view="vocab">Vocabulary</button>
+    </nav>
+    <div class="card student-panel" data-student-pane="tasks">
+      <div class="panel-heading task-panel-heading">
+        <h2>Assigned tasks</h2>
+        <select id="taskTypeFilter" aria-label="Task type">
+          <option value="all">All types</option>
+          <option value="reading">Reading</option>
+          <option value="writing">Writing</option>
+          <option value="revision">Revisions</option>
+        </select>
+      </div>
       <div class="tasklist" id="taskList"></div>
     </div>
-
-    <div class="card" id="inboxCard">
-      <p class="eyebrow">Feedback from your tutor</p>
+    <div class="card student-panel" id="inboxCard" data-student-pane="feedback" hidden>
+      <h2>Tutor feedback</h2>
       <div id="inboxList"></div>
     </div>
-
-    <div class="card" id="vaultCard">
-      <p class="eyebrow">Vocabulary vault</p>
-      <p class="sub" style="margin-bottom:12px">Words your tutor wants you to use. Aim to weave one or two into your next piece.</p>
+    <div data-student-pane="reading" hidden>
+      <div class="card student-panel" id="revCard">
+        <h2>Reading results</h2>
+        <div id="revList"></div>
+      </div>
+      <div class="card student-panel" id="skillsCard">
+        <h2>Reading skills</h2>
+        <div class="skillbar" id="skillsList"></div>
+      </div>
+    </div>
+    <div class="card student-panel" id="vaultCard" data-student-pane="vocab" hidden>
+      <h2>Vocabulary</h2>
       <div class="vault" id="vaultList"></div>
     </div>
-
-    <div class="card" id="skillsCard">
-      <p class="eyebrow">Your skills so far</p>
-      <p class="sub" style="margin-bottom:12px">Across every reading paper you've done. Weakest at the top, so you know what to drill next.</p>
-      <div class="skillbar" id="skillsList"></div>
-    </div>
-
-    <div class="card" id="revCard">
-      <p class="eyebrow">Revision archive</p>
-      <p class="sub" style="margin-bottom:12px">Your past reading papers. Open one to see exactly which questions to review.</p>
-      <div id="revList"></div>
-    </div>
-
-    <div id="dashMsg"></div>
   </section>
 
-  <section id="vWriting" class="hidden">
-    <div class="card">
-      <div class="row">
-        <button class="btn ghost sm" id="writingBack">Back</button>
-        <div class="spacer"></div>
+  <section id="vWriting" class="hidden" aria-labelledby="wTitle">
+    <div class="card writing-card">
+      <div class="writing-top">
+        <button class="btn ghost sm" id="writingBack" type="button">Back to tasks</button>
         <div class="wbar">
-          <span id="wTimeWrap">Time left <span class="clock" id="wClock">30:00</span></span>
-          <span>Words <span class="clock" id="wCount">0</span></span>
+          <span id="wTimeWrap"><span class="clock" id="wClock" aria-label="Time left">30:00</span></span>
+          <span><span id="wCount">0</span> words</span>
         </div>
       </div>
-      <p class="eyebrow" style="margin-top:16px" id="wCat">Writing task</p>
+      <div class="page-meta" id="wCat"></div>
       <h1 id="wTitle">Writing task</h1>
       <div class="prompt" id="wPrompt"></div>
       <div id="revContext" class="hidden"></div>
-      <div class="plan">
-        <div class="planlabel"><span class="tag">Planning</span> Just for you. This box is private, it is never sent to your tutor and it does not add to your word count.</div>
-        <textarea id="wPlan" placeholder="Plan your ideas here first. Jot a structure, brainstorm words, sketch your opening. This space is only for you." spellcheck="false"></textarea>
-      </div>
-      <textarea id="wText" placeholder="Start writing here. Your work saves as you type." spellcheck="false"></textarea>
-      <div class="row" style="margin-top:14px"><button class="btn" id="wSubmit">Submit to tutor</button></div>
-      <div id="wMsg"></div>
+      <details class="plan" id="planDrawer">
+        <summary>Planning <span class="page-meta">Private</span></summary>
+        <textarea id="wPlan" aria-label="Planning notes" spellcheck="false"></textarea>
+      </details>
+      <label for="wText">Response</label>
+      <textarea id="wText" spellcheck="false"></textarea>
+      <div class="row write-actions"><button class="btn" id="wSubmit" type="button">Submit to tutor</button></div>
+      <div id="wMsg" role="status"></div>
     </div>
   </section>
 
-  <section id="vAdmin" class="hidden">
-    <div class="card">
-      <div class="row"><button class="btn ghost sm" id="adminBack">Back</button></div>
-      <p class="eyebrow" style="margin-top:14px">Tutor console</p>
-      <h1>Sign in</h1>
-      <p class="sub">Enter the admin password to load every student.</p>
-      <label for="adminPass">Admin password</label>
-      <input type="password" id="adminPass" autocomplete="off" spellcheck="false">
-      <div class="row" style="margin-top:14px"><button class="btn" id="adminLoadBtn">Load console</button></div>
-      <div id="adminMsg"></div>
+  <section id="vAdmin" class="hidden" aria-label="Tutor console">
+    <div class="card auth-card" id="adminLogin">
+      <h1>Tutor sign in</h1>
+      <form id="adminForm">
+        <label for="adminPass">Password</label>
+        <input type="password" id="adminPass" autocomplete="current-password" spellcheck="false">
+        <div class="auth-actions"><button class="btn" id="adminLoadBtn" type="submit">Sign in</button></div>
+      </form>
+      <div id="adminMsg" role="status"></div>
+      <div class="auth-footer"><button class="linkbtn" id="adminBack" type="button">Back to student sign in</button></div>
     </div>
 
     <div id="adminConsole" class="hidden">
-      <div class="card">
-        <p class="eyebrow">Assign a task</p>
-        <div class="assignbox">
-          <div><label>Student</label><select id="asStudent"></select></div>
-          <div><label>Type</label><select id="asType"><option value="reading">Reading</option><option value="writing">Writing</option></select></div>
-          <div id="asReadingWrap"><label>Reading paper</label><select id="asPaper"></select><input type="text" id="asUrl" placeholder="Selective_Reading_Mock_Test.html" spellcheck="false"></div>
-          <div id="asPromptWrap" class="hidden"><label>Prompt from bank</label><select id="asPrompt"></select></div>
-          <div><label>Title shown to student</label><input type="text" id="asTitle" placeholder="e.g. Reading paper 2" spellcheck="false"></div>
-          <div><label>Source id <small>(paper id or prompt id, used to auto tick off)</small></label><input type="text" id="asSource" placeholder="reading-mock-2" spellcheck="false"></div>
-          <div><label>Due date</label><input type="date" id="asDue" spellcheck="false"></div>
+      <div class="page-heading console-heading">
+        <h1>Tutor console</h1>
+        <div class="row">
+          <button type="button" class="btn ghost sm" id="adminRefresh">Refresh</button>
+          <button type="button" class="btn ghost sm" id="adminLogout">Sign out</button>
         </div>
-        <div class="row" style="margin-top:14px"><button class="btn" id="asSubmit">Assign task</button></div>
-        <div id="asMsg"></div>
       </div>
-      <div id="adminData"></div>
+      <div id="adminNotice" role="status"></div>
+      <div class="console-layout">
+        <aside class="card roster">
+          <label for="rosterSearch">Find a student</label>
+          <input type="search" id="rosterSearch" autocomplete="off">
+          <div id="rosterList" class="roster-list" aria-label="Students"></div>
+        </aside>
+        <div class="console-work">
+          <div class="card console-card">
+            <div class="panel-heading">
+              <h2 id="adminStudentName">All students</h2>
+              <button class="btn sm" id="openAssign" type="button">Assign task</button>
+            </div>
+            <div id="adminResults">
+              <nav class="section-nav admin-nav" id="adminNav" aria-label="Tutor records">
+                <button type="button" data-admin-view="writing">Writing <span class="count" id="adminWritingCount"></span></button>
+                <button type="button" data-admin-view="reading">Reading <span class="count" id="adminReadingCount"></span></button>
+                <button type="button" data-admin-view="tasks">Assignments <span class="count" id="adminTaskCount"></span></button>
+              </nav>
+              <div class="admin-filters">
+                <div><label id="recordSearchLabel" for="recordSearch">Search writing</label><input type="search" id="recordSearch" autocomplete="off"></div>
+                <div id="recordStatusWrap"><label for="recordStatus">Status</label><select id="recordStatus"></select></div>
+                <div><label for="recordSort">Sort by</label><select id="recordSort"></select></div>
+              </div>
+              <div class="list-controls">
+                <span id="recordCount" class="aitemmeta"></span>
+                <button type="button" class="btn ghost tiny" id="markNext" hidden>Mark next</button>
+              </div>
+              <div id="adminReadingSkills" hidden></div>
+              <div id="adminData"></div>
+              <div class="list-pagination" id="recordPages" hidden>
+                <button type="button" class="btn ghost tiny" id="prevRecordPage">Previous page</button>
+                <span id="recordPageNumber" class="aitemmeta"></span>
+                <button type="button" class="btn ghost tiny" id="nextRecordPage">Next page</button>
+              </div>
+            </div>
+            <div id="adminEditor" hidden></div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+</main>
 
-</div>
+<dialog id="assignDialog" aria-labelledby="assignTitle">
+  <div class="panel-heading"><h2 id="assignTitle">Assign task</h2><button type="button" class="linkbtn" id="closeAssign">Close</button></div>
+  <form id="assignForm">
+    <div class="assignbox">
+      <div><label for="asStudent">Student</label><select id="asStudent" required></select></div>
+      <div><label for="asType">Type</label><select id="asType"><option value="reading">Reading</option><option value="writing">Writing</option></select></div>
+      <div id="asReadingWrap">
+        <label for="asPaper">Reading paper</label>
+        <select id="asPaper"></select>
+      </div>
+      <div id="asPromptWrap" class="hidden"><label for="asPrompt">Writing prompt</label><select id="asPrompt"></select></div>
+      <div><label for="asDue">Due date <small>Optional</small></label><input type="date" id="asDue"></div>
+    </div>
+    <details class="assign-details" id="asDetails">
+      <summary>Task details</summary>
+      <div class="assignbox">
+        <div><label for="asTitle">Title</label><input type="text" id="asTitle" spellcheck="false"></div>
+        <div><label for="asSource">Source ID</label><input type="text" id="asSource" spellcheck="false"></div>
+        <div class="assign-link"><label for="asUrl">Page link <small>Optional</small></label><input type="text" id="asUrl" spellcheck="false"></div>
+      </div>
+    </details>
+    <div class="row write-actions"><button class="btn" id="asSubmit" type="submit">Assign</button></div>
+    <div id="asMsg" role="status"></div>
+  </form>
+</dialog>
 
 <div class="cmtpop hidden" id="cmtPop">
   <div class="cmtpopq" id="cmtPopQuote"></div>
-  <textarea id="cmtPopText" placeholder="Comment on the highlighted words..." spellcheck="false"></textarea>
-  <div class="cmtpopbtns"><button class="btn tiny" id="cmtPopAdd">Add comment</button><button class="btn ghost tiny" id="cmtPopCancel">Cancel</button></div>
+  <label for="cmtPopText">Comment</label>
+  <textarea id="cmtPopText" spellcheck="false"></textarea>
+  <div class="cmtpopbtns"><button type="button" class="btn tiny" id="cmtPopAdd">Add</button><button type="button" class="btn ghost tiny" id="cmtPopCancel">Cancel</button></div>
 </div>
-
-<div class="toast" id="toast"><span class="tk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><span id="toastText"></span></div>
-
+<div class="toast" id="toast" role="status"><span id="toastText"></span></div>
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyY7uCEPmhqsTrgaKwMR0M-i0X1nsDmov-HoxdnAlGEzDJMjZdhbgsOEjDwDaBETym_9g/exec";
 
@@ -535,7 +644,7 @@ function scoreEditor(bid,existing,promptId,responseText){
       let opts='<option value="">\u2013</option>';
       for(let i=0;i<=c.max;i++){ opts+='<option value="'+i+'"'+(String(sc[c.key])===String(i)?' selected':'')+'>'+i+'</option>'; }
       html+='<div class="scorerow2"><span>'+esc(c.label)+'</span>'+
-        '<select id="sc-'+bid+'-'+c.key+'" onchange="recalcScore(\''+bid+'\')">'+opts+'</select>'+
+        '<select aria-label="'+escAttr(c.label)+'" id="sc-'+bid+'-'+c.key+'" onchange="recalcScore(\''+bid+'\')">'+opts+'</select>'+
         '<small>/ '+c.max+'</small></div>';
     });
     html+='</div>';
@@ -580,12 +689,22 @@ async function callBackend(action, payload={}){
   if(!parsed.success) throw new Error(parsed.error || "Something went wrong.");
   return parsed.data;
 }
-function setConn(ok){ $("connDot").className="dot "+(ok?"ok":"bad"); $("connText").textContent=ok?"connected":"offline"; }
-function msg(el,type,text){ el.innerHTML='<div class="msg '+type+'">'+text+'</div>'; }
+function setConn(ok){ $("connection").hidden=ok; $("connText").textContent=ok?"":"Offline"; }
+function msg(el,type,text){
+  const notice=document.createElement("div");
+  notice.className="msg "+type;
+  notice.textContent=text;
+  el.replaceChildren(notice);
+}
 function clearMsg(el){ el.innerHTML=""; }
 function busy(btn,on,label){ if(on){btn.dataset.label=btn.textContent;btn.disabled=true;btn.innerHTML='<span class="spin"></span>'+(label||"Working");}else{btn.disabled=false;btn.textContent=btn.dataset.label||btn.textContent;} }
 function esc(s){ return (s==null?"":String(s)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function showView(id){ ["vLogin","vDash","vWriting","vAdmin"].forEach(v=>$(v).classList.toggle("hidden",v!==id)); window.scrollTo(0,0); }
+function showView(id){
+  ["vLogin","vDash","vWriting","vAdmin"].forEach(v=>$(v).classList.toggle("hidden",v!==id));
+  document.querySelector("main").dataset.view=id;
+  if(id!=="vAdmin") hideCmtPop();
+  window.scrollTo(0,0);
+}
 
 /* ===== safe localStorage (works on the live site, no-ops if blocked) ===== */
 function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
@@ -609,11 +728,14 @@ function navHome(){ history.replaceState({v:"home"},"",location.pathname); }
 function navPush(v){ history.pushState({v},"",location.pathname); }
 window.addEventListener("popstate",e=>{
   const v=(e.state&&e.state.v)||"home";
-  if(v==="writing"){ showView("vWriting"); return; }
+  if(!$("vWriting").classList.contains("hidden") && v!=="writing"){ saveDraft(); stopWTimer(); }
+  if(v==="writing" && student && activePrompt){
+    showView("vWriting");
+    if(wStarted && !wSubmitted && !wUnlimited && !revMode && wLeft>0) startWTimer();
+    return;
+  }
   if(v==="admin"){ showView("vAdmin"); return; }
-  // home
-  if(!$("vWriting").classList.contains("hidden")){ saveDraft(); stopWTimer(); }
-  if(student) showView("vDash"); else showView("vLogin");
+  showView(student?"vDash":"vLogin");
 });
 
 let toastTimer=null;
@@ -657,108 +779,223 @@ async function doLogin(silent){
     return false;
   }finally{ if(!silent) busy($("loginBtn"),false); }
 }
-$("loginBtn").onclick=()=>doLogin(false);
-$("nameInput").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(false); });
+$("studentForm").addEventListener("submit", event => { event.preventDefault(); void doLogin(false); });
 
-function renderDashboard(){
-  $("dashDate").textContent=new Date().toLocaleDateString("en-AU",{weekday:"long",day:"numeric",month:"long"});
-  $("dashName").textContent="Hi, "+student.displayName;
-  $("dashYear").textContent="Year "+student.yearLevel;
-  renderStatStrip(); renderTasks(); renderInbox(); renderVault(); renderSkills(); renderRevision();
+let studentView = "tasks";
+let completedOpen = false;
+
+function selectStudentView(section) {
+  studentView = section;
+  $("studentNav").querySelectorAll("[data-student-view]").forEach(button => {
+    if (button.dataset.studentView === section) button.setAttribute("aria-current", "true");
+    else button.removeAttribute("aria-current");
+  });
+  document.querySelectorAll("[data-student-pane]").forEach(panel => {
+    panel.hidden = panel.dataset.studentPane !== section;
+  });
 }
-function renderStatStrip(){
-  const a=studentTasks(), rh=ctx.readingHistory||[];
-  const open=a.filter(t=>String(t.status).toLowerCase()!=="submitted").length;
-  const avg=rh.length?Math.round(rh.reduce((s,r)=>s+(r.outOf?r.score/r.outOf*100:0),0)/rh.length):null;
-  $("statStrip").innerHTML=
-    '<div class="ministat"><div class="mv">'+open+'</div><div class="ml">Tasks to do</div></div>'+
-    '<div class="ministat"><div class="mv">'+rh.length+'</div><div class="ml">Papers done</div></div>'+
-    '<div class="ministat"><div class="mv">'+(avg==null?"&ndash;":avg+"%")+'</div><div class="ml">Reading average</div></div>';
-}
-function renderTasks(){
-  const list=$("taskList"); list.innerHTML="";
-  const tasks=studentTasks();
-  const open=tasks.filter(t=>String(t.status).toLowerCase()!=="submitted");
-  const done=tasks.filter(t=>String(t.status).toLowerCase()==="submitted");
-  if(open.length===0) list.innerHTML='<div class="emptyline">Nothing due right now. Nice work staying on top of it.</div>';
-  open.forEach(t=>list.appendChild(taskEl(t,false)));
-  if(done.length){
-    const lab=document.createElement("div"); lab.className="emptyline"; lab.style.marginTop="6px"; lab.textContent="Completed";
-    list.appendChild(lab);
-    done.slice().reverse().forEach(t=>list.appendChild(taskEl(t,true)));
+
+$("studentNav").addEventListener("click", event => {
+  const button = event.target.closest("[data-student-view]");
+  if (button) selectStudentView(button.dataset.studentView);
+});
+$("studentTasksShortcut").onclick = () => selectStudentView("tasks");
+$("studentReadingShortcut").onclick = () => selectStudentView("reading");
+$("taskTypeFilter").addEventListener("change", renderTasks);
+
+function renderDashboard() {
+  $("dashName").textContent = student.displayName || student.nameKey;
+  $("dashYear").textContent = student.yearLevel ? "Year " + student.yearLevel : "";
+  $("studentFeedbackCount").textContent = (ctx.feedbackInbox || []).length;
+  const history = ctx.readingHistory || [];
+  const marks = history.filter(row => row.score != null && row.score !== "" &&
+    Number(row.outOf) > 0 && Number.isFinite(Number(row.score)));
+  $("studentPaperCount").textContent = history.length;
+  $("studentAverageTile").hidden = marks.length === 0;
+  if (marks.length) {
+    const average = marks.reduce((sum, row) => sum + Number(row.score) / Number(row.outOf), 0) / marks.length;
+    $("studentReadingAverage").textContent = Math.round(average * 100) + "%";
   }
+  renderTasks();
+  renderInbox();
+  renderVault();
+  renderSkills();
+  renderRevision();
+  selectStudentView(studentView);
 }
+
+function renderTasks() {
+  const list = $("taskList");
+  const allTasks = studentTasks();
+  const filter = $("taskTypeFilter").value || "all";
+  const tasks = filter === "all" ? allTasks : allTasks.filter(task => task.type === filter);
+  const pending = tasks.filter(task => !submittedTask(task)).sort((a, b) => {
+    const first = Date.parse(a.dueDate) || Infinity;
+    const second = Date.parse(b.dueDate) || Infinity;
+    return first - second || 0;
+  });
+  const completed = tasks.filter(submittedTask).reverse();
+  $("studentTaskCount").textContent = allTasks.filter(task => !submittedTask(task)).length;
+  list.replaceChildren(...pending.map(task => taskEl(task, false)));
+  if (!pending.length) {
+    const notice = document.createElement("p");
+    notice.className = "emptyline";
+    notice.textContent = filter === "all" ? "No open tasks." : "No open tasks of this type.";
+    list.append(notice);
+  }
+  if (!completed.length) return;
+  const group = document.createElement("details");
+  group.className = "completed";
+  group.open = completedOpen;
+  const label = document.createElement("summary");
+  label.textContent = "Completed (" + completed.length + ")";
+  group.append(label, ...completed.map(task => taskEl(task, true)));
+  group.addEventListener("toggle", () => { completedOpen = group.open; });
+  list.append(group);
+}
+
 const EHAN_LOOP_IDS=["reading-word-cloze-ehan-20261106","writing-asat-docix-ehan-20261106"];
-function studentTasks(){
-  const tasks=(ctx.assignments||[]).slice();
-  if(String(student.nameKey).toLowerCase()!=="ehan")return tasks;
-  let saved={};try{saved=JSON.parse(lsGet("noof_ehan_loop_v1_ehan")||"{}");}catch(_){}
-  const writingDone=saved.writing&&saved.writing.delivery==="sent";
-  const readingDone=writingDone||(saved.reading&&saved.reading.delivery==="sent")||(ctx.readingHistory||[]).some(r=>String(r.paperId)===EHAN_LOOP_IDS[0]);
-  const additions=[{type:"reading",sourceId:EHAN_LOOP_IDS[0],title:"Word cloze · 30 questions & mistake review",status:readingDone?"submitted":"open",targetUrl:"Ehan_Reading_Writing_Loop.html?view=reading"},{type:"writing",sourceId:EHAN_LOOP_IDS[1],title:"ASAT · Rewrite your Docix speech",status:writingDone?"submitted":"open",targetUrl:"Ehan_Reading_Writing_Loop.html?view=writing"}];
-  additions.reverse().forEach(t=>{if(!tasks.some(a=>String(a.sourceId)===t.sourceId))tasks.unshift(t);});
-  return tasks;
+function studentTasks() {
+  const tasks = (ctx.assignments || []).slice();
+  if (rowKey(student.nameKey) !== "ehan") return tasks;
+  const saved = safe(lsGet("noof_ehan_loop_v1_ehan")) || {};
+  const writingDone = saved.writing?.delivery === "sent";
+  const readingDone = writingDone || saved.reading?.delivery === "sent" ||
+    (ctx.readingHistory || []).some(r => String(r.paperId) === EHAN_LOOP_IDS[0]);
+  const localTasks = [
+    {type:"reading", sourceId:EHAN_LOOP_IDS[0], title:"Word cloze · 30 questions & mistake review", status:readingDone?"submitted":"pending"},
+    {type:"writing", sourceId:EHAN_LOOP_IDS[1], title:"ASAT · Rewrite your Docix speech", status:writingDone?"submitted":"pending"},
+  ];
+  return localTasks.filter(item => !tasks.some(task => String(task.sourceId) === item.sourceId)).concat(tasks);
 }
-function taskEl(t,isDone){
-  const el=document.createElement("div");
-  const ds=dueState(t.dueDate);
-  el.className="task "+(isDone?"done":ds.cls);
-  const isRev=t.type==="revision";
-  const isTest=String(t.sourceId)===PERSUASIVE_TEST_ID;
-  const ic=(t.type==="writing"||isRev)?(isRev?IC_REV:IC_WRITE):IC_READ;
-  const drill=WRITING_DRILLS[String(t.sourceId)];
-  const typeLabel=isRev?"Revision":drill?drill.label:isTest?"Writing test":(t.type==="writing"?"Writing task":"Reading paper");
-  const meta=isDone?"Submitted":isTest?"No time limit":'<span class="due '+ds.cls+'">'+ds.label+"</span>";
-  el.innerHTML='<div class="ticon">'+ic+'</div><div class="tmid"><p class="ttitle">'+esc(t.title)+'</p>'+
-    '<div class="tmeta">'+typeLabel+' &middot; '+meta+'</div></div>';
-  const isEhanLoop=EHAN_LOOP_IDS.includes(String(t.sourceId));
-  if(!isDone||isTest||isEhanLoop){ const b=document.createElement("button"); b.className="btn sm";
-    const saved=isTest?testDraft():null;
-    b.textContent=isDone?"View answers":saved&&Object.values(saved.answers||{}).some(a=>String(a).trim())?"Resume":"Start";
-    b.onclick=()=>startTask(t); el.appendChild(b); }
-  return el;
+
+function taskEl(task, done) {
+  const row = document.createElement("div");
+  const due = dueState(task.dueDate);
+  row.className = "task " + (done ? "done" : due.cls);
+  const source = String(task.sourceId || "");
+  const isTest = source === PERSUASIVE_TEST_ID;
+  const drill = WRITING_DRILLS[source];
+  const isReading = task.type === "reading";
+  const kind = task.type === "revision" ? "Revision" : drill?.label || (isTest ? "Writing test" : isReading ? "Reading" : "Writing");
+  const icon = isReading ? IC_READ : task.type === "revision" ? IC_REV : IC_WRITE;
+  const meta = done ? "Submitted" : task.dueDate
+    ? '<span class="due ' + due.cls + '">' + esc(due.label) + '</span>' : isTest ? "Untimed" : "";
+  row.innerHTML = '<div class="ticon" aria-hidden="true">' + icon + '</div><div class="tmid"><p class="ttitle">' +
+    esc(task.title) + '</p><p class="tmeta">' + kind + (meta ? " · " + meta : "") + '</p></div>';
+
+  const feedback = (ctx.feedbackInbox || []).find(f => task.type === "revision"
+    ? String(f.submissionId) === source
+    : String(f.promptId) === source || (!f.promptId && f.promptTitle === task.title));
+  function action(text, execute) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "btn sm" + (done ? " ghost" : "");
+    button.textContent = text;
+    button.addEventListener("click", execute);
+    row.append(button);
+  }
+  if (!done) {
+    action(taskActionLabel(task, source), () => startTask(task));
+  } else if (feedback) {
+    action("Feedback", () => {
+      selectStudentView("feedback");
+      const item = Array.from($("inboxList").querySelectorAll("details"))
+        .find(detail => detail.dataset.submission === String(feedback.submissionId || feedback.promptTitle));
+      if (item) {
+        item.open = true;
+        item.querySelector("summary").focus();
+        item.scrollIntoView({block:"nearest"});
+      }
+    });
+  } else if (isTest || EHAN_LOOP_IDS.includes(source)) {
+    action("View answers", () => startTask(task));
+  }
+  return row;
 }
-function startTask(t){
-  if(EHAN_LOOP_IDS.includes(String(t.sourceId))){
-    const url=new URL("Ehan_Reading_Writing_Loop.html",location.href);
-    url.searchParams.set("student",student.nameKey);
-    url.searchParams.set("view",String(t.sourceId)===EHAN_LOOP_IDS[1]?"writing":"reading");
-    window.location.href=url.href;return;
+
+function taskActionLabel(task, source) {
+  const name = rowKey(student.nameKey);
+  if (source === "hast-reading-2") {
+    const attempt = safe(lsGet("gribbin:reading:" + source + ":" + name));
+    if (Number.isFinite(attempt?.finished)) return "Results";
+    if (Number.isFinite(attempt?.started)) return "Resume";
   }
-  const drill=WRITING_DRILLS[String(t.sourceId)];
-  if(t.type==="writing"&&(t.targetUrl||drill)){
-    const url=new URL(t.targetUrl||drill.url,location.href);
-    url.searchParams.set("student",student.nameKey);
-    url.searchParams.set("paper",String(t.sourceId||""));
-    window.location.href=url.href;return;
+  if (source === "writing-pet-practice-20261122") {
+    const state = safe(lsGet("gribbin-tutoring:pet-paragraph-practice:v1:" + encodeURIComponent(name) + ":" + source));
+    if (Array.isArray(state?.drafts) && state.drafts.some(draft =>
+      ["point", "evidence", "technique"].some(key => String(draft?.[key] ?? "").trim()))) return "Resume";
   }
-  if(String(t.sourceId)===PERSUASIVE_TEST_ID){
-    const url=t.targetUrl||PERSUASIVE_TEST_URL;
-    window.location.href=url+(url.includes("?")?"&":"?")+"student="+encodeURIComponent(student.nameKey)+"&paper="+encodeURIComponent(PERSUASIVE_TEST_ID);return;
+  if (source === PERSUASIVE_TEST_ID) {
+    const saved = testDraft();
+    if (saved && Object.values(saved.answers || {}).some(answer => String(answer ?? "").trim())) return "Resume";
   }
-  if(t.type==="revision"){ openRevision(t); return; }
-  if(t.type==="writing"){
-    const p=(ctx.prompts||[]).find(p=>String(p.promptId)===String(t.sourceId));
-    openWriting(p||{promptId:t.sourceId||"writing-task",title:t.title,text:"Your tutor will share the prompt. Write your best response to the title above.",category:"Writing",minutes:30});
-  }else{
-    const url=t.targetUrl||"Selective_Reading_Mock_Test.html";
-    const join=url.indexOf("?")>=0?"&":"?";
-    window.location.href=url+join+"student="+encodeURIComponent(student.nameKey)+"&paper="+encodeURIComponent(t.sourceId||"");
+  if (task.type !== "reading") {
+    const part = task.type === "revision" ? "rev_" + source : source;
+    const draft = safe(lsGet("noof_draft_" + student.nameKey + "_" + part));
+    if (String(draft?.text ?? "").trim() || String(draft?.plan ?? "").trim()) return "Resume";
+  }
+  return "Open";
+}
+
+function openLinkedTask(target, parameters) {
+  try {
+    const url = new URL(target, location.href);
+    if (!["http:", "https:"].includes(url.protocol) && !(location.protocol === "file:" && url.protocol === "file:")) {
+      throw Error("Unsupported link");
+    }
+    for (const [key, value] of Object.entries(parameters)) url.searchParams.set(key, value);
+    window.location.href = url.href;
+  } catch {
+    toast("This task link could not be opened.");
   }
 }
-$("switchBtn").onclick=()=>{ clearSession(); ctx=null; student=null; $("nameInput").value=""; clearMsg($("loginMsg"));
-  history.replaceState(null,"",location.pathname); showView("vLogin"); };
+
+function startTask(task) {
+  const source = String(task.sourceId || "");
+  const name = student.nameKey;
+  if (EHAN_LOOP_IDS.includes(source)) {
+    return openLinkedTask("Ehan_Reading_Writing_Loop.html", {student:name, view:source === EHAN_LOOP_IDS[1] ? "writing" : "reading"});
+  }
+  const drill = WRITING_DRILLS[source];
+  if (source === PERSUASIVE_TEST_ID || (task.type === "writing" && (task.targetUrl || drill))) {
+    return openLinkedTask(task.targetUrl || drill?.url || PERSUASIVE_TEST_URL, {student:name, paper:source});
+  }
+  if (task.type === "revision") return openRevision(task);
+  if (task.type === "writing") {
+    const prompt = (ctx.prompts || []).find(item => String(item.promptId) === source);
+    return openWriting(prompt || {promptId:source || "writing-task", title:task.title, text:"", category:"Writing", minutes:30});
+  }
+  openLinkedTask(task.targetUrl || "Selective_Reading_Mock_Test.html", {student:name, paper:source});
+}
+
+$("switchBtn").onclick = () => {
+  clearSession();
+  ctx = null;
+  student = null;
+  activePrompt = null;
+  studentView = "tasks";
+  completedOpen = false;
+  $("taskTypeFilter").value = "all";
+  $("nameInput").value = "";
+  clearMsg($("loginMsg"));
+  navHome();
+  showView("vLogin");
+  $("nameInput").focus();
+};
 
 function renderInbox(){
-  const fb=ctx.feedbackInbox||[];
-  $("inboxCard").classList.toggle("hidden",fb.length===0);
-  const list=$("inboxList"); list.innerHTML="";
+  const fb=(ctx.feedbackInbox||[]).slice().sort((a,b)=>(Date.parse(b.date)||0)-(Date.parse(a.date)||0));
+  const list=$("inboxList");
+  list.innerHTML=fb.length?"":'<p class="emptyline">No feedback yet.</p>';
   fb.forEach(f=>{
     const d=document.createElement("details"); d.className="fb";
-    let words=(f.targetWords&&f.targetWords.length)?'<div class="words">'+f.targetWords.map(w=>'<span class="word">'+esc(w)+'</span>').join("")+'</div>':"";
+    d.dataset.submission=String(f.submissionId||f.promptTitle);
+    const targetWords=Array.isArray(f.targetWords)?f.targetWords:String(f.targetWords||"").split(",").map(w=>w.trim()).filter(Boolean);
+    const words=targetWords.length?'<div class="words">'+targetWords.map(w=>'<span class="word">'+esc(w)+'</span>').join("")+'</div>':"";
     let body="";
     if(f.score) body+=scoreBlock(f.score);
-    if(Array.isArray(f.comments) && f.comments.length && f.responseText) body+=annotatedDraft(f.responseText, f.comments);
+    if(f.responseText) body+='<details class="student-draft"><summary>Submitted work</summary>'+annotatedDraft(f.responseText, Array.isArray(f.comments)?f.comments:[])+'</details>';
     if(f.feedback && String(f.feedback).trim()) body+='<div class="fbblock">'+esc(f.feedback)+'</div>';
     body+=words;
     const summaryRight = f.score ? ('<span class="pill">'+esc(f.score.total)+'/'+esc(f.score.max)+'</span>') : ('<span class="aitemmeta">'+fmtDate(f.date)+'</span>');
@@ -785,8 +1022,7 @@ function annotatedDraft(text, comments){
 }
 function renderVault(){
   const v=ctx.vocab||[];
-  $("vaultCard").classList.toggle("hidden",v.length===0);
-  $("vaultList").innerHTML=v.map(w=>'<span class="word">'+esc(w)+'</span>').join("");
+  $("vaultList").innerHTML=v.length?v.map(w=>'<span class="word">'+esc(w)+'</span>').join(""):'<p class="emptyline">No vocabulary yet.</p>';
 }
 /* aggregate per-skill stats across a list of perSkill objects */
 function aggSkills(perSkillObjs){
@@ -814,15 +1050,15 @@ function renderSkills(){
   $("skillsList").innerHTML=agg.map(skillBarRow).join("");
 }
 function renderRevision(){
-  const rh=ctx.readingHistory||[];
-  $("revCard").classList.toggle("hidden",rh.length===0);
-  const list=$("revList"); list.innerHTML="";
+  const rh=(ctx.readingHistory||[]).slice().sort((a,b)=>(Date.parse(b.date)||0)-(Date.parse(a.date)||0));
+  const list=$("revList"); list.innerHTML=rh.length?"":'<p class="emptyline">No reading results yet.</p>';
   rh.forEach(r=>{
     const pct=r.outOf?Math.round(r.score/r.outOf*100):0;
     const col=pct>=80?"var(--ok)":pct>=50?"var(--warn)":"var(--err)";
     const d=document.createElement("details"); d.className="rev";
-    d.innerHTML='<summary><span class="score" style="color:'+col+'">'+r.score+'/'+r.outOf+'</span>'+
-      '<span><div style="font-weight:700">'+esc(r.paperId)+'</div><div class="aitemmeta">'+fmtDate(r.date)+' &middot; '+pct+'%</div></span>'+CHEV+'</summary>'+
+    const title=r.title||(ctx.assignments||[]).find(task=>String(task.sourceId)===String(r.paperId))?.title||r.paperId;
+    d.innerHTML='<summary><span class="score" style="color:'+col+'">'+esc(r.score)+'/'+esc(r.outOf)+'</span>'+
+      '<span><div style="font-weight:700">'+esc(title)+'</div><div class="aitemmeta">'+fmtDate(r.date)+' &middot; '+pct+'%</div></span>'+CHEV+'</summary>'+
       '<div class="revbody">'+revBody(r)+'</div>';
     list.appendChild(d);
   });
@@ -836,7 +1072,7 @@ function revBody(r){
       wrong.map(w=>'<tr><td>'+esc(w.q)+'</td><td>'+esc(w.skill||"")+'</td>'+
         '<td class="pick">'+esc(w.picked!=null?w.picked:"-")+'</td><td class="corr">'+esc(w.correct!=null?w.correct:"-")+'</td></tr>').join("")+'</table>';
   }else{
-    html+='<div class="aitemmeta" style="margin-top:6px">Per question detail was not captured for this paper.</div>';
+    html+='<p class="aitemmeta">'+(Array.isArray(r.wrong)?"No missed questions.":"Question details unavailable.")+'</p>';
   }
   if(r.perSkill&&typeof r.perSkill==="object"){
     const rows=Object.keys(r.perSkill).map(k=>{
@@ -871,7 +1107,7 @@ function openWriting(p){
   $("wTimeWrap").classList.remove("hidden");
   stopWTimer(); activePrompt=p; wUnlimited=p.minutes===0||p.minutes==="0"||String(p.minutes).toLowerCase()==="unlimited";
   wTotal=wUnlimited?0:(Number(p.minutes)||30)*60; wLeft=wTotal;
-  $("wCat").textContent=(p.category||"Writing task")+(wUnlimited?" · no time limit":"");
+  $("wCat").textContent=p.category||"Writing";
   $("wTitle").textContent=p.title; $("wPrompt").innerHTML=renderPrompt(p.text);
   $("wText").value=""; $("wText").readOnly=false; $("wText").style.opacity="1"; $("wCount").textContent="0";
   $("wPlan").value=""; $("wPlan").readOnly=false; $("wPlan").style.opacity="1";
@@ -885,9 +1121,10 @@ function openWriting(p){
     if($("wText").value.trim() || $("wPlan").value.trim()){
       if(typeof dr.left==="number") wLeft=dr.left;
       wStarted=true; if(!wUnlimited)startWTimer();
-      msg($("wMsg"),"info",wUnlimited?"Saved draft restored.":"We restored your saved draft and your timer carried on from where you left off.");
+      msg($("wMsg"),"info","Draft restored.");
     }
   }
+  $("planDrawer").open=Boolean($("wPlan").value.trim());
   renderClock();
   navPush("writing");
   showView("vWriting");
@@ -930,7 +1167,8 @@ function openRevision(task){
   $("wText").value=base||"";
   $("wPlan").value=(dr&&dr.plan)?dr.plan:"";
   $("wCount").textContent=(base||"").trim().split(/\s+/).filter(Boolean).length;
-  if(dr&&dr.text&&dr.text.trim()) msg($("wMsg"),"info","We restored your saved revision.");
+  $("planDrawer").open=Boolean($("wPlan").value.trim());
+  if(dr&&dr.text&&dr.text.trim()) msg($("wMsg"),"info","Draft restored.");
   navPush("writing");
   showView("vWriting");
 }
@@ -973,12 +1211,10 @@ async function submitWriting(auto){
     wSubmitted=true;
     clearDraft();
     lockWriting();
-    msg($("wMsg"),"ok", revMode
-      ? "Revision submitted. Your tutor can see your updated piece."
-      : ("Submitted and locked. Your tutor can see your work now."+(auto?" The timer ran out, so it sent automatically.":"")));
+    msg($("wMsg"),"ok",revMode?"Revision submitted.":auto?"Time’s up. Response submitted.":"Response submitted.");
     try{ ctx=await callBackend("login",{name:student.nameKey}); student=ctx.profile; renderDashboard(); }catch(_){}
   }catch(e){
-    msg($("wMsg"),"err",e.message+" Your writing is still here, you can submit again.");
+    msg($("wMsg"),"err",e.message+" Your draft is still here.");
     busy($("wSubmit"),false);
   }
 }
@@ -987,156 +1223,625 @@ window.addEventListener("pagehide",saveDraft);
 document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden")saveDraft();});
 window.addEventListener("beforeunload",e=>{ saveDraft(); if(!wSubmitted && ($("wText").value.trim()||$("wPlan").value.trim()) && !$("vWriting").classList.contains("hidden")){ e.preventDefault(); e.returnValue=""; } });
 
-$("toAdmin").onclick=()=>{ clearMsg($("adminMsg")); $("adminConsole").classList.add("hidden"); navPush("admin"); showView("vAdmin"); };
-$("adminBack").onclick=()=>{ history.back(); };
-$("adminLoadBtn").onclick=async()=>{
-  const password=$("adminPass").value;
-  if(!password){ msg($("adminMsg"),"err","Enter the password."); return; }
-  clearMsg($("adminMsg")); busy($("adminLoadBtn"),true,"Loading");
-  try{
-    const data=await callBackend("getResults",{password});
-    adminCache={...data,password};
-    buildAssignForm(); renderAdmin();
-    $("adminConsole").classList.remove("hidden"); clearMsg($("adminMsg"));
-  }catch(e){ msg($("adminMsg"),"err",/Unauthorized/i.test(e.message)?"Wrong password.":e.message); }
-  finally{ busy($("adminLoadBtn"),false); }
+const adminView = {
+  student: "", section: "writing", editor: "", page: 0, filters: {
+    writing: {query: "", status: "all", order: "newest"},
+    reading: {query: "", status: "all", order: "newest"},
+    tasks: {query: "", status: "all", order: "newest"},
+  },
 };
-function buildAssignForm(){
-  $("asStudent").innerHTML=(adminCache.students||[]).map(s=>'<option value="'+esc(s.name_key)+'">'+esc(s.display_name||s.name_key)+'</option>').join("");
-  $("asPrompt").innerHTML=(adminCache.prompts||[]).map(p=>'<option value="'+esc(p.prompt_id)+'">'+esc(p.title)+'</option>').join("");
-  const papers=adminCache.readingPapers||[];
-  if(papers.length){
-    $("asPaper").classList.remove("hidden"); $("asUrl").classList.add("hidden");
-    $("asPaper").innerHTML=papers.map(p=>'<option value="'+esc(p.paper_id)+'">'+esc(p.title||p.paper_id)+'</option>').join("");
-  }else{
-    $("asPaper").classList.add("hidden"); $("asUrl").classList.remove("hidden");
-  }
-  applyPaper(); syncAssignType();
-}
-function applyPaper(){
-  const p=(adminCache.readingPapers||[]).find(p=>String(p.paper_id)===$("asPaper").value);
-  if(p){ $("asTitle").value=p.title||p.paper_id; $("asSource").value=p.paper_id; }
-}
-function syncAssignType(){
-  const writing=$("asType").value==="writing";
-  $("asReadingWrap").classList.toggle("hidden",writing);
-  $("asPromptWrap").classList.toggle("hidden",!writing);
-  if(writing){ const p=(adminCache.prompts||[]).find(p=>String(p.prompt_id)===$("asPrompt").value);
-    if(p){ if(!$("asTitle").value) $("asTitle").value=p.title; $("asSource").value=p.prompt_id; } }
-}
-$("asType").onchange=syncAssignType;
-$("asPaper").onchange=applyPaper;
-$("asPrompt").onchange=()=>{ const p=(adminCache.prompts||[]).find(p=>String(p.prompt_id)===$("asPrompt").value);
-  if(p){ $("asTitle").value=p.title; $("asSource").value=p.prompt_id; } };
-$("asSubmit").onclick=async()=>{
-  const taskType=$("asType").value;
-  let targetUrl="";
-  if(taskType==="reading"){
-    const papers=adminCache.readingPapers||[];
-    const p=papers.find(p=>String(p.paper_id)===$("asPaper").value);
-    targetUrl=(papers.length&&p)?(p.file_url||""):$("asUrl").value.trim();
-  }
-  if(taskType==="writing"&&$("asSource").value.trim()===PERSUASIVE_TEST_ID)targetUrl=PERSUASIVE_TEST_URL;
-  if(taskType==="writing"&&WRITING_DRILLS[$("asSource").value.trim()])targetUrl=WRITING_DRILLS[$("asSource").value.trim()].url;
-  const body={password:adminCache.password,studentKey:$("asStudent").value,taskType,
-    title:$("asTitle").value.trim(),targetUrl:targetUrl,
-    sourceId:$("asSource").value.trim(),dueDate:$("asDue").value};
-  if(!body.title){ msg($("asMsg"),"err","Give the task a title."); return; }
-  busy($("asSubmit"),true,"Assigning");
-  try{
-    await callBackend("assignTask",body);
-    const data=await callBackend("getResults",{password:adminCache.password});
-    adminCache={...data,password:adminCache.password}; renderAdmin();
-    msg($("asMsg"),"ok","Task assigned to "+body.studentKey+"."); $("asTitle").value=""; $("asDue").value="";
-  }catch(e){ msg($("asMsg"),"err",e.message); } finally{ busy($("asSubmit"),false); }
+const draftEdits = new Map();
+const submissionOrder = [["newest", "Newest first"], ["oldest", "Oldest first"], ["name", "Student A–Z"], ["title", "Title A–Z"]];
+const adminLists = {
+  writing: {search: "Search submissions", status: [["all", "All submissions"], ["unmarked", "Needs feedback"], ["sent", "Feedback sent"]], order: submissionOrder},
+  reading: {search: "Search reading results", status: [], order: [...submissionOrder, ["low", "Lowest score"], ["high", "Highest score"]]},
+  tasks: {search: "Search assignments", status: [["all", "All assignments"], ["pending", "Pending"], ["overdue", "Overdue"], ["submitted", "Submitted"]], order: [["newest", "Newest assigned"], ["oldest", "Oldest assigned"], ["due", "Due date"], ...submissionOrder.slice(2)]},
 };
-function renderAdmin(){
-  const wrap=$("adminData"); wrap.innerHTML="";
-  adminComments={}; adminDraftText={}; adminScoreSchemas={};
-  const reading=adminCache.reading||[],writing=adminCache.writing||[],assigns=adminCache.assignments||[];
-  const keys={};
-  (adminCache.students||[]).forEach(s=>keys[String(s.name_key).toLowerCase()]={display:s.display_name||s.name_key,reading:[],writing:[],tasks:[]});
-  const bucket=k=>{ k=String(k||"").toLowerCase(); if(!keys[k]) keys[k]={display:k,reading:[],writing:[],tasks:[]}; return keys[k]; };
-  reading.forEach(r=>bucket(r.name_key).reading.push(r));
-  writing.forEach(w=>bucket(w.name_key).writing.push(w));
-  assigns.forEach(a=>bucket(a.student_key).tasks.push(a));
-  if(Object.keys(keys).length===0){ wrap.innerHTML="<div class='card'><p class='sub'>No students yet.</p></div>"; return; }
-  Object.keys(keys).forEach(k=>{
-    const stu=keys[k];
-    const totRead=stu.reading.length,totWrite=stu.writing.length;
-    const avg=totRead?Math.round(stu.reading.reduce((s,r)=>s+(Number(r.score)/Number(r.out_of||30)*100),0)/totRead):0;
-    const openTasks=stu.tasks.filter(t=>String(t.status).toLowerCase()!=="submitted").length;
-    let h='<div class="card"><div class="acard"><div class="ahead"><div class="aname">'+esc(stu.display)+'</div>'+
-      '<span class="pill">'+(totRead+totWrite)+' activities</span></div><div class="astats">'+
-      statBox("Reading papers",totRead)+statBox("Average",avg+'<small style="font-size:13px;color:var(--muted)">%</small>')+
-      statBox("Writing drafts",totWrite)+statBox("Open tasks",openTasks)+'</div>';
-    if(stu.tasks.length){
-      h+='<div class="asection">Assigned tasks</div>';
-      stu.tasks.slice().reverse().forEach(t=>{
-        const done=String(t.status).toLowerCase()==="submitted";
-        h+='<div class="aitem"><div class="aitemhead"><span class="aitemtitle">'+esc(t.title)+'</span>'+
-          '<span class="aitemmeta">'+(done?"Submitted":"Pending")+'</span></div>'+
-          '<div class="aitemmeta">'+esc(t.task_type)+' &middot; due '+(fmtDate(isoLike(t.due_date))||"none")+' &middot; id '+esc(t.source_id||"-")+'</div>'+
-          '<div class="pushrow"><button class="btn ghost tiny" onclick="delTask(\''+esc(t.task_id)+'\')">Remove</button></div></div>';
-      });
+const rowKey = value => String(value ?? "").trim().toLowerCase();
+const byName = (a, b) => String(a ?? "").localeCompare(String(b ?? ""), "en-AU", {numeric: true, sensitivity: "base"});
+const submittedTask = task => rowKey(task.status) === "submitted";
+
+function feedbackSent(row) {
+  const score = safe(row.score_json);
+  const comments = safe(row.comments_json);
+  return Boolean(String(row.tutor_feedback ?? "").trim() || String(row.target_words ?? "").trim() ||
+    (score && Object.keys(score.scores || {}).length) || (Array.isArray(comments) && comments.length));
+}
+
+function needsFeedback(row) {
+  return !feedbackSent(row) && Boolean(row.submission_id);
+}
+
+function adminRecords(data) {
+  const roster = new Map();
+  const papers = new Map((data.readingPapers || []).map(p => [rowKey(p.paper_id), p.title || p.paper_id]));
+  const prompts = new Map((data.prompts || []).map(p => [rowKey(p.prompt_id), p.title || p.prompt_id]));
+  function register(raw, display, year) {
+    const key = rowKey(raw);
+    if (key && !roster.has(key)) {
+      roster.set(key, {key, raw: String(raw).trim(), display: String(display || raw).trim(), year, unmarked: 0});
     }
-    if(totRead){
-      h+='<div class="asection">Reading history and error autopsy</div>';
-      stu.reading.slice().reverse().forEach((r,i)=>{
-        const pct=Math.round(Number(r.score)/Number(r.out_of||30)*100);
-        const col=pct>=80?"var(--ok)":pct>=50?"var(--warn)":"var(--err)";
-        const id="aut-"+k+"-"+i; const wrong=safe(r.wrong_json);
-        let autopsy='<div class="aitemmeta" style="margin-top:6px">Per question detail was not captured.</div>';
-        if(Array.isArray(wrong)&&wrong.length){
-          autopsy='<table class="autopsy"><tr><th>Q</th><th>Skill</th><th>Chose</th><th>Answer</th></tr>'+
-            wrong.map(w=>'<tr><td>'+esc(w.q)+'</td><td>'+esc(w.skill||"")+'</td>'+
-            '<td class="pick">'+esc(w.picked!=null?w.picked:"-")+'</td><td class="corr">'+esc(w.correct!=null?w.correct:"-")+'</td></tr>').join("")+'</table>';
-        }
-        h+='<div class="aitem"><div class="aitemhead"><span class="aitemtitle">'+esc(r.paper_id)+'</span>'+
-          '<span class="aitemmeta">'+fmtDate(isoLike(r.timestamp))+'</span></div>'+
-          '<div><strong style="color:'+col+'">'+r.score+'/'+r.out_of+'</strong> '+
-          '<span class="aitemmeta">('+pct+'%) &middot; '+Math.floor(r.time_used_sec/60)+'m '+(r.time_used_sec%60)+'s</span></div>'+
-          '<button class="linkbtn" style="margin-top:8px" onclick="tog(\''+id+'\')">Error autopsy</button>'+
-          '<div id="'+id+'" style="display:none;margin-top:8px">'+autopsy+'</div></div>';
-      });
-    }
-    if(totRead){
-      const agg=aggSkills(stu.reading.map(r=>safe(r.per_skill_json)));
-      if(agg.length){
-        h+='<div class="asection">Skill focus across all papers</div>';
-        h+='<div class="aitem"><div class="skillbar">'+agg.map(skillBarRow).join("")+'</div></div>';
-      }
-    }
-    if(totWrite){
-      h+='<div class="asection">Writing and feedback</div>';
-      stu.writing.slice().reverse().forEach((w,i)=>{
-        const bid="w-"+k+"-"+i; const sid=esc(w.submission_id||"");
-        adminDraftText[bid]=String(w.response_text==null?"":w.response_text);
-        adminComments[bid]=(safe(w.comments_json)||[]).filter(c=>c&&c.end>c.start);
-        h+='<div class="aitem"><div class="aitemhead"><span class="aitemtitle">'+esc(w.prompt_title)+'</span>'+
-          '<span class="aitemmeta">'+fmtDate(isoLike(w.timestamp))+'</span></div>'+
-          '<div class="aitemmeta">'+esc(w.word_count)+' words &middot; '+(String(w.prompt_id)===PERSUASIVE_TEST_ID?'No time limit':Math.floor(w.time_used_sec/60)+'m '+(w.time_used_sec%60)+'s')+'</div>'+
-          '<button class="linkbtn" style="margin-top:8px" onclick="tog(\''+bid+'\')">Annotate draft</button>'+
-          '<div id="'+bid+'" style="display:none">'+
-            '<div class="aitemmeta" style="margin:8px 0 6px">Select any words in the draft to attach a comment.</div>'+
-            '<div id="draft-'+bid+'" class="draftsurface"></div>'+
-            '<div id="cmts-'+bid+'" class="cmtlist"></div>'+
-          '</div>'+
-          '<div class="fbedit"><label>Overall feedback for student</label>'+
-          '<textarea id="fb-'+bid+'" placeholder="What they did well, and the one thing to fix next time." spellcheck="false">'+esc(w.tutor_feedback||"")+'</textarea>'+
-          '<label style="margin-top:8px">Target words for the vault <small>(comma separated)</small></label>'+
-          '<input type="text" id="tw-'+bid+'" value="'+esc(w.target_words||"")+'" placeholder="resilient, nevertheless, momentum" spellcheck="false">'+
-          scoreEditor(bid, safe(w.score_json), w.prompt_id, w.response_text)+
-          '<label class="revopt"><input type="checkbox" id="rev-'+bid+'"'+(String(w.prompt_id)===PERSUASIVE_TEST_ID?'':' checked')+'> Set a revision task, due in <input type="number" id="revd-'+bid+'" value="7" min="1"> days</label>'+
-          '<div class="pushrow"><button class="btn sm" onclick="pushFeedback(\''+sid+'\',\''+bid+'\',this)">Push to student</button>'+
-          (w.tutor_feedback?' <span class="pill">sent</span>':'')+'</div></div></div>';
-      });
-    }
-    h+='</div></div>';
-    wrap.insertAdjacentHTML("beforeend",h);
+    return key;
+  }
+  (data.students || []).forEach(s => register(s.name_key, s.display_name, s.year_level));
+  const writing = (data.writing || []).flatMap(row => {
+    const key = register(row.name_key);
+    if (!key) return [];
+    const unmarked = needsFeedback(row);
+    if (unmarked) roster.get(key).unmarked += 1;
+    return [{row, key, status: feedbackSent(row) ? "sent" : unmarked ? "unmarked" : "archived",
+      title: row.prompt_title || prompts.get(rowKey(row.prompt_id)) || "Writing", date: row.timestamp}];
   });
-  Object.keys(adminDraftText).forEach(bid=>{ renderDraftHighlights(bid); renderCommentList(bid); });
+  const reading = (data.reading || []).flatMap(row => {
+    const key = register(row.name_key);
+    return key ? [{row, key, title: papers.get(rowKey(row.paper_id)) || row.paper_id || "Reading", date: row.timestamp}] : [];
+  });
+  const tasks = (data.assignments || []).flatMap(row => {
+    const key = register(row.student_key);
+    if (!key) return [];
+    const due = isoLike(row.due_date);
+    const status = submittedTask(row) ? "submitted" : due && dueState(due).cls === "overdue" ? "overdue" : "pending";
+    return [{row, key, title: row.title || "Assignment", date: row.assigned_date, due, status}];
+  });
+  return {roster, writing, reading, tasks};
 }
+let records = null;
+let visibleRecords = [];
+let currentSubmission = null;
+let editorPosition = 0;
+let adminStateRevision = 0;
+const recordsPerPage = 24;
+
+function filteredRecords(section, view = adminView, data = records) {
+  const {query, status, order} = view.filters[section];
+  const words = rowKey(query).split(/\s+/).filter(Boolean);
+  const stamp = value => +new Date(isoLike(value) || 0) || 0;
+  const pct = entry => Number(entry.row.out_of) > 0 ? Number(entry.row.score) / Number(entry.row.out_of) : -1;
+  return data[section].filter(entry => {
+    if (view.student && entry.key !== view.student) return false;
+    if (status !== "all" && !(status === "pending" ? entry.status !== "submitted" : entry.status === status)) return false;
+    const haystack = rowKey([entry.title, data.roster.get(entry.key).display, entry.key,
+      entry.row.prompt_id, entry.row.paper_id, entry.row.source_id].filter(Boolean).join(" "));
+    return words.every(word => haystack.includes(word));
+  }).sort((a, b) => {
+    const newest = () => stamp(b.date) - stamp(a.date);
+    if (order === "oldest") return -newest();
+    if (order === "name") return byName(data.roster.get(a.key).display, data.roster.get(b.key).display) || newest();
+    if (order === "title") return byName(a.title, b.title) || newest();
+    if (order === "due") return (stamp(a.due) || Infinity) - (stamp(b.due) || Infinity) || newest();
+    if (order === "low") return pct(a) - pct(b) || newest();
+    if (order === "high") return pct(b) - pct(a) || newest();
+    return newest();
+  });
+}
+
+function setOptions(select, choices, selection) {
+  select.replaceChildren(...choices.map(([value, label]) => new Option(String(label), String(value))));
+  if (choices.some(([value]) => String(value) === String(selection))) select.value = selection;
+}
+
+function setAdminData(data, password) {
+  adminCache = {...data, password};
+  indexAdminData();
+}
+
+function indexAdminData() {
+  records = adminRecords(adminCache);
+  if (!records.roster.has(adminView.student)) adminView.student = "";
+}
+
+function renderRoster() {
+  const term = rowKey($("rosterSearch").value);
+  const people = Array.from(records.roster.values())
+    .filter(person => !term || rowKey(person.display).includes(term) || person.key.includes(term))
+    .sort((a,b) => byName(a.display, b.display));
+  const allUnmarked = records.writing.filter(entry => entry.status === "unmarked").length;
+  const choices = [{key: "", display: "All students", unmarked: allUnmarked}, ...people];
+  $("rosterList").replaceChildren(...choices.map(person => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "roster-choice";
+    button.dataset.student = person.key;
+    const name = document.createElement("span");
+    name.textContent = person.display;
+    button.append(name);
+    if (person.key === adminView.student) button.setAttribute("aria-current", "true");
+    if (person.unmarked) {
+      const badge = document.createElement("span");
+      badge.className = "count";
+      badge.textContent = person.unmarked;
+      badge.setAttribute("aria-label", person.unmarked + " need feedback");
+      button.append(badge);
+    }
+    button.addEventListener("click", () => selectStudent(person.key));
+    return button;
+  }));
+  if (!people.length && term) {
+    const note = document.createElement("p");
+    note.className = "emptyline";
+    note.textContent = "No matching students.";
+    $("rosterList").append(note);
+  }
+}
+
+function selectStudent(key) {
+  closeEditor();
+  adminView.student = key;
+  adminView.page = 0;
+  renderAdmin();
+  Array.from($("rosterList").children).find(button => button.dataset.student === key)?.focus();
+}
+
+function renderAdmin() {
+  const person = records.roster.get(adminView.student);
+  $("adminStudentName").textContent = person?.display || "All students";
+  renderRoster();
+  for (const [section, id] of [["writing","adminWritingCount"],["reading","adminReadingCount"],["tasks","adminTaskCount"]]) {
+    $(id).textContent = records[section].filter(row => !person || row.key === person.key).length;
+  }
+  renderAdminFilters();
+  renderAdminList();
+}
+
+function renderAdminFilters() {
+  const section = adminView.section;
+  const options = adminLists[section];
+  const filters = adminView.filters[section];
+  $("adminNav").querySelectorAll("[data-admin-view]").forEach(button => {
+    if (button.dataset.adminView === section) button.setAttribute("aria-current", "true");
+    else button.removeAttribute("aria-current");
+  });
+  $("recordSearchLabel").textContent = options.search;
+  $("recordSearch").value = filters.query;
+  $("recordStatusWrap").hidden = options.status.length === 0;
+  setOptions($("recordStatus"), options.status, filters.status);
+  setOptions($("recordSort"), options.order, filters.order);
+}
+
+function stampLabel(value, year = false) {
+  const readable = isoLike(value);
+  if (!readable) return "";
+  if (!year) return fmtDate(readable);
+  const date = new Date(readable);
+  return Number.isNaN(+date) ? String(value) : date.toLocaleDateString("en-AU", {dateStyle: "medium"});
+}
+
+function duration(seconds) {
+  const n = Number(seconds);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n / 60) + "m " + (n % 60) + "s" : "";
+}
+
+function recordMeta(entry, pieces) {
+  const student = records.roster.get(entry.key)?.display;
+  return [!adminView.student && student, ...pieces].filter(Boolean).map(esc).join(" · ");
+}
+
+function renderAdminList() {
+  const section = adminView.section;
+  visibleRecords = filteredRecords(section);
+  const pages = Math.max(1, Math.ceil(visibleRecords.length / recordsPerPage));
+  adminView.page = Math.min(adminView.page, pages - 1);
+  const offset = adminView.page * recordsPerPage;
+  const entries = visibleRecords.slice(offset, offset + recordsPerPage);
+  $("recordCount").textContent = visibleRecords.length
+    ? (pages > 1 ? (offset + 1) + "–" + (offset + entries.length) + " of " : "") +
+      visibleRecords.length + (visibleRecords.length === 1 ? " result" : " results")
+    : "";
+  $("recordPages").hidden = pages <= 1;
+  $("recordPageNumber").textContent = (adminView.page + 1) + " / " + pages;
+  $("prevRecordPage").disabled = adminView.page === 0;
+  $("nextRecordPage").disabled = adminView.page === pages - 1;
+  $("markNext").hidden = section !== "writing" || !visibleRecords.some(entry => entry.status === "unmarked");
+  $("adminData").innerHTML = visibleRecords.length
+    ? entries.map((entry, index) => renderRecord(section, entry, offset + index)).join("")
+    : '<p class="emptyline">No matching ' + ({writing:"submissions",reading:"reading results",tasks:"assignments"}[section]) + '.</p>';
+  const skills = $("adminReadingSkills");
+  const totals = section === "reading" && visibleRecords.length
+    ? aggSkills(visibleRecords.map(entry => safe(entry.row.per_skill_json))) : [];
+  skills.hidden = totals.length === 0;
+  skills.innerHTML = totals.length ? '<details><summary>Skills across these results</summary>' + totals.map(skillBarRow).join("") + '</details>' : "";
+  if (currentSubmission) updateEditorNav();
+}
+
+function renderRecord(section, entry, index) {
+  const row = entry.row;
+  const date = stampLabel(entry.date, true);
+  let actions, meta, detail = "";
+  if (section === "writing") {
+    const knownUntimed = String(row.prompt_id) === PERSUASIVE_TEST_ID ||
+      (adminCache.prompts || []).some(prompt => String(prompt.prompt_id) === String(row.prompt_id) &&
+        (String(prompt.minutes) === "0" || rowKey(prompt.minutes) === "unlimited"));
+    meta = recordMeta(entry, [date, row.word_count !== "" && row.word_count != null ? row.word_count + " words" : "", knownUntimed ? "Untimed" : duration(row.time_used_sec)]);
+    const label = entry.status === "sent" ? "Feedback sent" : entry.status === "unmarked" ? "Needs feedback" : "Archived";
+    actions = '<span class="pill ' + (entry.status === "sent" ? "sent" : entry.status === "unmarked" ? "pending" : "") + '">' + label + '</span>' +
+      '<button type="button" class="btn ghost tiny" data-edit="' + index + '">' + (entry.status === "unmarked" ? "Mark" : "Open") + '</button>';
+  } else if (section === "reading") {
+    const total = Number(row.out_of);
+    const ratio = total > 0 ? Math.round(Number(row.score) / total * 100) : null;
+    meta = recordMeta(entry, [date, duration(row.time_used_sec)]);
+    actions = row.score != null ? '<span class="pill">' + esc(row.score) + (total > 0 ? ' / ' + total : '') + (ratio !== null ? ' · ' + ratio + '%' : '') + '</span>' : '';
+    const storedWrong = safe(row.wrong_json);
+    const wrong = Array.isArray(storedWrong) ? storedWrong.filter(w => w && typeof w === "object") : null;
+    const aggregate = aggSkills([safe(row.per_skill_json)]);
+    if (Array.isArray(wrong) || aggregate.length) {
+      const showNotes = Array.isArray(wrong) && wrong.some(w => w?.explanation);
+      detail = '<details><summary>Result details</summary>';
+      if (Array.isArray(wrong) && wrong.length) {
+        detail += '<div class="table-wrap"><table class="autopsy"><thead><tr><th scope="col">Q</th><th scope="col">Skill</th><th scope="col">Chose</th><th scope="col">Answer</th>' +
+          (showNotes ? '<th scope="col">Explanation</th>' : '') + '</tr></thead><tbody>' +
+          wrong.map(w => '<tr><td>' + esc(w.q) + '</td><td>' + esc(w.skill) + '</td><td class="pick">' + esc(w.picked ?? "–") +
+            '</td><td class="corr">' + esc(w.correct ?? "–") + '</td>' + (showNotes ? '<td>' + esc(w.explanation) + '</td>' : '') + '</tr>').join("") + '</tbody></table></div>';
+      } else if (Array.isArray(wrong)) {
+        detail += '<p class="aitemmeta">No missed questions.</p>';
+      }
+      if (aggregate.length) detail += '<div class="skillbar">' + aggregate.map(skillBarRow).join("") + '</div>';
+      detail += '</details>';
+    }
+  } else {
+    const label = entry.status === "submitted" ? "Submitted" : entry.status === "overdue" ? "Overdue" : "Pending";
+    const kind = row.task_type ? row.task_type[0].toUpperCase() + row.task_type.slice(1) : "";
+    meta = recordMeta(entry, [kind, entry.due && "Due " + stampLabel(entry.due, true), date && "Assigned " + date]);
+    actions = '<span class="pill ' + (entry.status === "submitted" ? "sent" : "pending") + '">' + label + '</span>' +
+      (row.task_id ? '<button type="button" class="btn ghost tiny" data-remove="' + index + '">Remove</button>' : '');
+  }
+  return '<article class="record"><div class="record-top"><div><p class="record-title">' + esc(entry.title) +
+    '</p><p class="record-meta">' + meta + '</p></div><div class="record-actions">' + actions + '</div></div>' + detail + '</article>';
+}
+
+function draftKeyFor(entry) {
+  const row = entry.row;
+  return row.submission_id || JSON.stringify([entry.key, entry.date, row.prompt_id, row.response_text]);
+}
+
+function adjacentSubmission(direction) {
+  const index = visibleRecords.findIndex(entry => draftKeyFor(entry) === adminView.editor);
+  if (index >= 0) {
+    editorPosition = index;
+    return visibleRecords[index + direction];
+  }
+  return visibleRecords[editorPosition + (direction < 0 ? -1 : 0)];
+}
+
+function updateEditorNav() {
+  $("previousSubmission").disabled = !adjacentSubmission(-1);
+  $("nextSubmission").disabled = !adjacentSubmission(1);
+}
+
+function moveToSubmission(direction) {
+  const next = adjacentSubmission(direction);
+  if (!next) return;
+  closeEditor();
+  openEditor(next);
+}
+
+function openEditor(entry, moveFocus = true) {
+  if (!entry) return;
+  currentSubmission = entry;
+  const row = entry.row;
+  const key = draftKeyFor(entry);
+  adminView.editor = key;
+  editorPosition = Math.max(0, visibleRecords.findIndex(row => draftKeyFor(row) === key));
+  adminView.page = Math.floor(editorPosition / recordsPerPage);
+  const draft = draftEdits.get(key);
+  const bid = "active";
+  const dayInput = draft?.days ?? 7;
+  const comments = draft?.comments || safe(row.comments_json);
+  const revisionsAllowed = String(row.prompt_id) !== PERSUASIVE_TEST_ID;
+  adminDraftText[bid] = String(row.response_text ?? "");
+  adminComments[bid] = Array.isArray(comments) ? comments.filter(c => c && Number.isInteger(c.start) &&
+    Number.isInteger(c.end) && c.start >= 0 && c.end <= adminDraftText[bid].length && c.end > c.start).map((comment, index) =>
+      ({...comment, id: "comment-" + index})) : [];
+  const editor = $("adminEditor");
+  const meta = [records.roster.get(entry.key)?.display, stampLabel(entry.date, true),
+    row.word_count !== "" && row.word_count != null ? row.word_count + " words" : ""].filter(Boolean).map(esc).join(" · ");
+  editor.innerHTML = '<div class="editor-nav"><button type="button" class="btn ghost tiny" id="closeEditor">Back to submissions</button>' +
+    '<div class="row"><button type="button" class="btn ghost tiny" id="previousSubmission" aria-label="Previous submission">Previous</button>' +
+    '<button type="button" class="btn ghost tiny" id="nextSubmission" aria-label="Next submission">Next</button></div></div>' +
+    '<h3 class="editor-title" tabindex="-1" id="editorHeading">' + esc(entry.title) + '</h3><p class="aitemmeta">' + meta + '</p>' +
+    '<div class="editor-grid"><div><h3>Submission</h3>' +
+    (row.submission_id ? '<p class="page-meta">Select text to add a comment.</p>' : '') +
+    '<div id="draft-active" class="draftsurface" tabindex="0"></div><div id="cmts-active" class="cmtlist"></div></div>' +
+    '<div class="editor-controls"><label for="fb-active">Feedback</label><textarea id="fb-active" spellcheck="false">' +
+    esc(draft?.feedback ?? row.tutor_feedback) + '</textarea><label for="tw-active">Vocabulary <small>Comma-separated</small></label>' +
+    '<input type="text" id="tw-active" value="' + escAttr(draft?.targetWords ?? row.target_words) + '" spellcheck="false">' +
+    '<details class="rubric-toggle"><summary>Rubric</summary>' +
+    scoreEditor(bid, draft ? draft.score : safe(row.score_json), row.prompt_id, row.response_text) + '</details>' +
+    '<div class="revopt"><input type="checkbox" id="rev-active"' + ((draft?.revision ?? (revisionsAllowed && needsFeedback(row))) ? " checked" : "") +
+    '><label for="rev-active">Assign revision</label><input aria-label="Revision due in days" type="number" id="revd-active" value="' +
+    escAttr(dayInput) + '" min="1" step="1"><span>days</span></div><div class="pushrow"><button type="button" class="btn sm" id="sendFeedback"' +
+    (row.submission_id ? "" : " disabled") + '>Send feedback</button></div>' +
+    '<div id="editorNotice" role="status">' + (row.submission_id ? "" : '<p class="page-meta">This older submission has no submission ID.</p>') +
+    '</div></div></div>';
+  $("adminResults").hidden = true;
+  editor.hidden = false;
+  renderDraftHighlights(bid);
+  renderCommentList(bid);
+  if (draft?.rubricOpen) editor.querySelector(".rubric-toggle").open = true;
+  $("closeEditor").onclick = () => { closeEditor(); renderAdminList(); $("recordSearch").focus(); };
+  $("previousSubmission").onclick = () => moveToSubmission(-1);
+  $("nextSubmission").onclick = () => moveToSubmission(1);
+  updateEditorNav();
+  $("sendFeedback").onclick = sendEditorFeedback;
+  if (moveFocus) $("editorHeading").focus();
+}
+
+function editorValues() {
+  return {
+    comments: (adminComments.active || []).slice(),
+    feedback: $("fb-active").value,
+    targetWords: $("tw-active").value,
+    score: gatherScore("active"),
+    revision: $("rev-active").checked,
+    days: $("revd-active").value,
+    rubricOpen: Boolean($("adminEditor").querySelector(".rubric-toggle")?.open),
+  };
+}
+
+function closeEditor() {
+  if (currentSubmission && $("fb-active")) draftEdits.set(adminView.editor, editorValues());
+  currentSubmission = null;
+  adminView.editor = "";
+  adminComments = {}; adminDraftText = {}; adminScoreSchemas = {};
+  hideCmtPop();
+  $("adminEditor").replaceChildren();
+  $("adminEditor").hidden = true;
+  $("adminResults").hidden = false;
+}
+
+async function sendEditorFeedback() {
+  if (!currentSubmission?.row.submission_id || !adminCache) return;
+  const target = currentSubmission;
+  const session = adminCache;
+  const key = adminView.editor;
+  const button = $("sendFeedback");
+  const draft = editorValues();
+  if (adminScoreSchemas.active === PERSUASIVE_CRITERIA && draft.score &&
+      Object.keys(draft.score.scores).length !== criteriaFlat(PERSUASIVE_CRITERIA).length) {
+    msg($("editorNotice"), "err", "Enter a mark for every part of the test.");
+    return;
+  }
+  const due = Number(draft.days);
+  if (draft.revision && (!Number.isInteger(due) || due < 1)) {
+    msg($("editorNotice"), "err", "Enter the number of days until the revision is due.");
+    $("revd-active").focus();
+    return;
+  }
+  clearMsg($("editorNotice"));
+  busy(button, true, "Sending");
+  try {
+    const scoreJson = draft.score ? JSON.stringify(draft.score) : "";
+    const commentsJson = draft.comments.length ? JSON.stringify(draft.comments) : "";
+    await callBackend("saveFeedback", {password: session.password, submissionId: target.row.submission_id,
+      feedback: draft.feedback, targetWords: draft.targetWords, scoreJson, commentsJson,
+      requestRevision: draft.revision, revisionDueDays: due || 7});
+    if (adminCache !== session) return;
+    const live = (adminCache.writing || []).find(row => row.submission_id === target.row.submission_id);
+    if (live) Object.assign(live, {tutor_feedback: draft.feedback, target_words: draft.targetWords, score_json: scoreJson, comments_json: commentsJson});
+    adminStateRevision += 1;
+    indexAdminData();
+    if (draftEdits.get(key)?.revision) draftEdits.get(key).revision = false;
+    if (currentSubmission === target) {
+      $("rev-active").checked = false;
+      msg($("editorNotice"), "ok", draft.revision ? "Feedback sent and revision assigned." : "Feedback sent.");
+    } else {
+      msg($("adminNotice"), "ok", draft.revision ? "Feedback sent and revision assigned." : "Feedback sent.");
+    }
+    renderAdmin();
+    if (draft.revision) {
+      try { await reloadConsole(session); }
+      catch (error) { msg($("adminNotice"), "info", "Revision assigned. Refresh to update the list."); }
+    }
+  } catch (error) {
+    if (currentSubmission === target) msg($("editorNotice"), "err", error.message);
+    else if (adminCache === session) msg($("adminNotice"), "err", error.message);
+  } finally {
+    busy(button, false);
+  }
+}
+
+function assignPreset() {
+  const type = $("asType").value;
+  const writing = type === "writing";
+  $("asReadingWrap").classList.toggle("hidden", writing);
+  $("asPromptWrap").classList.toggle("hidden", !writing);
+  const chosen = writing ? $("asPrompt").value : $("asPaper").value;
+  const item = writing
+    ? (adminCache.prompts || []).find(p => String(p.prompt_id) === chosen)
+    : (adminCache.readingPapers || []).find(p => String(p.paper_id) === chosen);
+  $("asTitle").value = item?.title || (item ? chosen : "");
+  $("asSource").value = item ? chosen : "";
+  const knownLink = (adminCache.assignments || []).find(a =>
+    rowKey(a.task_type) === type && String(a.source_id) === chosen && a.target_url
+  )?.target_url;
+  const portalLinks = {
+    [PERSUASIVE_TEST_ID]: PERSUASIVE_TEST_URL,
+    "writing-pet-practice-20261122": "PET_Paragraph_Practice.html",
+  };
+  $("asUrl").value = !item ? "" : writing
+    ? (item.target_url || WRITING_DRILLS[chosen]?.url || portalLinks[chosen] || knownLink || "")
+    : (item.file_url || knownLink || "");
+  $("asDetails").open = !item;
+}
+
+function buildAssignForm() {
+  const learners = (adminCache.students || []).slice().sort((a,b) => byName(a.display_name || a.name_key, b.display_name || b.name_key));
+  setOptions($("asStudent"), [["", "Choose a student"], ...learners.map(s => [s.name_key, s.display_name || s.name_key])],
+    records.roster.get(adminView.student)?.raw || "");
+  setOptions($("asPaper"), [["", "Custom task"], ...(adminCache.readingPapers || []).map(p => [p.paper_id, p.title || p.paper_id])],
+    adminCache.readingPapers?.[0]?.paper_id ?? "");
+  setOptions($("asPrompt"), [["", "Custom task"], ...(adminCache.prompts || []).map(p => [p.prompt_id, p.title || p.prompt_id])],
+    adminCache.prompts?.[0]?.prompt_id ?? "");
+  $("asType").value = adminView.section === "writing" ? "writing" : "reading";
+  $("asDue").value = "";
+  assignPreset();
+}
+
+async function reloadConsole(session) {
+  const revision = ++adminStateRevision;
+  const data = await callBackend("getResults", {password: session.password});
+  if (adminCache !== session || revision !== adminStateRevision) return;
+  Object.assign(session, data, {password: session.password});
+  indexAdminData();
+  renderAdmin();
+}
+
+function validTaskLink(link) {
+  if (!link) return true;
+  try {
+    return ["http:", "https:"].includes(new URL(link, document.baseURI).protocol);
+  } catch {
+    return false;
+  }
+}
+
+async function assignTask(event) {
+  event.preventDefault();
+  if (!adminCache) return;
+  const session = adminCache;
+  const button = $("asSubmit");
+  const body = {password: session.password, studentKey: $("asStudent").value,
+    taskType: $("asType").value, title: $("asTitle").value.trim(),
+    targetUrl: $("asUrl").value.trim(), sourceId: $("asSource").value.trim(), dueDate: $("asDue").value};
+  clearMsg($("asMsg"));
+  if (!body.title || !validTaskLink(body.targetUrl)) {
+    $("asDetails").open = true;
+    msg($("asMsg"), "err", body.title ? "Enter a valid page link." : "Enter a task title.");
+    return;
+  }
+  busy(button, true, "Assigning");
+  try {
+    await callBackend("assignTask", body);
+    if (adminCache !== session) return;
+    $("assignDialog").close();
+    const name = records.roster.get(rowKey(body.studentKey))?.display || body.studentKey;
+    try {
+      await reloadConsole(session);
+      if (adminCache === session) msg($("adminNotice"), "ok", "Task assigned to " + name + ".");
+    } catch {
+      if (adminCache === session) msg($("adminNotice"), "info", "Task assigned. Refresh to update the list.");
+    }
+  } catch (error) { msg($("asMsg"), "err", error.message); }
+  finally { busy(button, false); }
+}
+
+async function removeAssignment(entry, button) {
+  if (!entry?.row.task_id || !confirm("Remove " + entry.title + "?")) return;
+  const session = adminCache;
+  busy(button, true, "Removing");
+  try {
+    await callBackend("deleteTask", {password: session.password, taskId: entry.row.task_id});
+    if (adminCache !== session) return;
+    adminCache.assignments = (adminCache.assignments || []).filter(row => row.task_id !== entry.row.task_id);
+    adminStateRevision += 1;
+    indexAdminData();
+    renderAdmin();
+    msg($("adminNotice"), "ok", "Assignment removed.");
+  } catch (error) {
+    if (adminCache === session) msg($("adminNotice"), "err", error.message);
+  } finally { busy(button, false); }
+}
+
+$("toAdmin").onclick = () => {
+  clearMsg($("adminMsg"));
+  navPush("admin");
+  showView("vAdmin");
+  if (!adminCache) $("adminPass").focus();
+};
+$("adminBack").onclick = () => history.back();
+$("adminForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  const password = $("adminPass").value;
+  if (!password) return msg($("adminMsg"), "err", "Enter your password.");
+  clearMsg($("adminMsg"));
+  busy($("adminLoadBtn"), true, "Signing in");
+  try {
+    const data = await callBackend("getResults", {password});
+    setAdminData(data, password);
+    $("adminPass").value = "";
+    $("adminLogin").classList.add("hidden");
+    $("adminConsole").classList.remove("hidden");
+    renderAdmin();
+    $("rosterSearch").focus();
+  } catch (error) {
+    msg($("adminMsg"), "err", /unauthori[sz]ed/i.test(error.message) ? "Incorrect password." : error.message);
+  } finally { busy($("adminLoadBtn"), false); }
+});
+$("adminLogout").onclick = () => {
+  closeEditor();
+  adminCache = null;
+  records = null;
+  visibleRecords = [];
+  draftEdits.clear();
+  adminStateRevision += 1;
+  adminView.student = "";
+  adminView.section = "writing";
+  adminView.page = 0;
+  for (const filters of Object.values(adminView.filters)) {
+    Object.assign(filters, {query: "", status: "all", order: "newest"});
+  }
+  for (const id of ["adminData", "adminReadingSkills", "rosterList", "asStudent", "asPaper", "asPrompt"]) $(id).replaceChildren();
+  for (const id of ["adminPass", "rosterSearch", "recordSearch", "asTitle", "asSource", "asUrl", "asDue"]) $(id).value = "";
+  for (const id of ["adminNotice", "adminMsg", "asMsg", "cmtPopQuote", "cmtPopText"]) $(id).textContent = "";
+  $("cmtPopText").value = "";
+  $("adminStudentName").textContent = "All students";
+  $("adminConsole").classList.add("hidden");
+  $("adminLogin").classList.remove("hidden");
+  $("adminPass").focus();
+};
+$("adminRefresh").onclick = async () => {
+  if (!adminCache) return;
+  const session = adminCache;
+  const button = $("adminRefresh");
+  clearMsg($("adminNotice"));
+  busy(button, true, "Refreshing");
+  try { await reloadConsole(session); }
+  catch (error) { if (adminCache === session) msg($("adminNotice"), "err", error.message); }
+  finally { busy(button, false); }
+};
+$("rosterSearch").addEventListener("input", renderRoster);
+$("adminNav").addEventListener("click", event => {
+  const button = event.target.closest("[data-admin-view]");
+  if (!button) return;
+  adminView.section = button.dataset.adminView;
+  adminView.page = 0;
+  renderAdminFilters();
+  renderAdminList();
+});
+for (const [id, property, event] of [["recordSearch","query","input"],["recordStatus","status","change"],["recordSort","order","change"]]) {
+  $(id).addEventListener(event, () => {
+    adminView.filters[adminView.section][property] = $(id).value;
+    adminView.page = 0;
+    renderAdminList();
+  });
+}
+$("markNext").onclick = () => {
+  const entry = visibleRecords.find(row => row.status === "unmarked");
+  if (entry) openEditor(entry);
+};
+function changeRecordPage(offset) {
+  adminView.page += offset;
+  renderAdminList();
+  $("adminData").scrollIntoView({block: "start"});
+  const button = $(offset > 0 ? "nextRecordPage" : "prevRecordPage");
+  if (button.disabled) $(offset > 0 ? "prevRecordPage" : "nextRecordPage").focus();
+}
+$("prevRecordPage").onclick = () => changeRecordPage(-1);
+$("nextRecordPage").onclick = () => changeRecordPage(1);
+$("adminData").addEventListener("click", event => {
+  const edit = event.target.closest("[data-edit]");
+  if (edit) return openEditor(visibleRecords[Number(edit.dataset.edit)]);
+  const remove = event.target.closest("[data-remove]");
+  if (remove) void removeAssignment(visibleRecords[Number(remove.dataset.remove)], remove);
+});
+$("openAssign").onclick = () => {
+  buildAssignForm();
+  clearMsg($("asMsg"));
+  $("assignDialog").showModal();
+};
+$("closeAssign").onclick = () => $("assignDialog").close();
+for (const id of ["asPaper", "asPrompt", "asType"]) $(id).onchange = assignPreset;
+$("assignForm").addEventListener("submit", assignTask);
+
 /* ===== inline annotation engine (tutor side) ===== */
 function escAttr(s){ return esc(s).replace(/"/g,"&quot;"); }
 function caretOffset(surface,node,offset){
@@ -1145,15 +1850,17 @@ function caretOffset(surface,node,offset){
 }
 function renderDraftHighlights(bid){
   const surface=document.getElementById("draft-"+bid); if(!surface) return;
+  const scroll=surface.scrollTop;
   const text=adminDraftText[bid]||"";
   const cs=(adminComments[bid]||[]).slice().sort((a,b)=>a.start-b.start);
-  let html="", pos=0, n=0;
-  cs.forEach(c=>{ if(c.start<pos) return; n++;
+  let html="", pos=0;
+  cs.forEach(c=>{ if(c.start<pos) return;
     html+=esc(text.slice(pos,c.start));
     html+='<mark class="cmark" data-id="'+c.id+'" title="'+escAttr(c.note)+'">'+esc(text.slice(c.start,c.end))+'</mark>';
     pos=c.end; });
   html+=esc(text.slice(pos));
   surface.innerHTML=html;
+  surface.scrollTop=scroll;
 }
 function renderCommentList(bid){
   const el=document.getElementById("cmts-"+bid); if(!el) return;
@@ -1169,9 +1876,10 @@ document.addEventListener("mouseup",e=>{
   if(e.target.closest && e.target.closest("#cmtPop")) return;     // ignore clicks in the popup
   const surface=e.target.closest && e.target.closest(".draftsurface");
   const sel=window.getSelection();
-  if(!surface || !sel || sel.isCollapsed){ if(!(e.target.closest&&e.target.closest("#cmtPop"))) hideCmtPop(); return; }
+  if(!surface || !sel || !sel.rangeCount || sel.isCollapsed){ if(!(e.target.closest&&e.target.closest("#cmtPop"))) hideCmtPop(); return; }
   const range=sel.getRangeAt(0);
   if(!surface.contains(range.startContainer)||!surface.contains(range.endContainer)){ hideCmtPop(); return; }
+  if(!currentSubmission?.row.submission_id) return;
   const bid=surface.id.replace("draft-","");
   const start=caretOffset(surface,range.startContainer,range.startOffset);
   const end=caretOffset(surface,range.endContainer,range.endOffset);
@@ -1204,39 +1912,13 @@ function delComment(bid,id){
   adminComments[bid]=(adminComments[bid]||[]).filter(c=>c.id!==id);
   renderDraftHighlights(bid); renderCommentList(bid);
 }
-function statBox(label,val){ return '<div class="statbox"><div class="statlabel">'+label+'</div><div class="statval">'+val+'</div></div>'; }
+
+
 function isoLike(v){ if(v==null||v==="") return null; const d=new Date(v); return isNaN(d)?String(v):d.toISOString(); }
 function safe(v){ if(v==null||v==="") return null; if(typeof v==="object") return v; try{return JSON.parse(v);}catch(e){return null;} }
-function tog(id){ const el=document.getElementById(id); el.style.display=el.style.display==="block"?"none":"block"; }
-async function pushFeedback(sid,bid,btn){
-  if(!sid){ alert("This submission has no id. Older rows submitted before the upgrade cannot receive pushed feedback."); return; }
-  const feedback=document.getElementById("fb-"+bid).value;
-  const targetWords=document.getElementById("tw-"+bid).value;
-  const score=gatherScore(bid);
-  if(adminScoreSchemas[bid]===PERSUASIVE_CRITERIA&&score&&Object.keys(score.scores).length!==criteriaFlat(PERSUASIVE_CRITERIA).length){alert("Enter a mark for every part of the test before sending the total.");return;}
-  const scoreJson=score?JSON.stringify(score):"";
-  const commentsJson=(adminComments[bid]&&adminComments[bid].length)?JSON.stringify(adminComments[bid]):"";
-  const revEl=document.getElementById("rev-"+bid);
-  const requestRevision=revEl?revEl.checked:false;
-  const dEl=document.getElementById("revd-"+bid);
-  const revisionDueDays=dEl?(parseInt(dEl.value,10)||7):7;
-  busy(btn,true,"Sending");
-  try{
-    await callBackend("saveFeedback",{password:adminCache.password,submissionId:sid,feedback,targetWords,scoreJson,commentsJson,requestRevision,revisionDueDays});
-    btn.textContent="Sent"; setTimeout(()=>{ btn.disabled=false; btn.textContent="Push to student"; },1200);
-  }catch(e){ alert(e.message); btn.disabled=false; btn.textContent="Push to student"; }
-}
-async function delTask(taskId){
-  if(!confirm("Remove this task?")) return;
-  try{
-    await callBackend("deleteTask",{password:adminCache.password,taskId});
-    const data=await callBackend("getResults",{password:adminCache.password});
-    adminCache={...data,password:adminCache.password}; renderAdmin();
-  }catch(e){ alert(e.message); }
-}
+
 
 (async()=>{
-  try{ await callBackend("login",{name:"__ping__"}); }catch(e){ /* reject still proves reachable */ }
   const params=new URLSearchParams(location.search);
   const sk=params.get("student");
   const bootName = sk || lsGet(SESSION_KEY) || "";
@@ -1245,8 +1927,8 @@ async function delTask(taskId){
     const ok=await doLogin(true);
     if(ok){
       const done=params.get("done");
-      if(done==="reading") toast("Reading paper submitted and ticked off");
-      else if(done==="writing") toast("Writing submitted");
+      if(done==="reading") toast("Reading result saved.");
+      else if(done==="writing") toast("Writing submitted.");
       else if(done==="test") toast("Test submitted");
       navHome();
     }else{
@@ -1257,4 +1939,3 @@ async function delTask(taskId){
 </script>
 </body>
 </html>
-
