@@ -146,6 +146,7 @@ a, .linkbtn { color: var(--blue-2); text-underline-offset: 3px; }
 #wText { min-height: 290px; font: 1.1rem/1.65 var(--read); }
 .write-actions { margin-top: 12px; }
 #wReceipt { margin-top: 14px; }
+#writingHistoryStatus { margin-bottom: 6px; }
 .console-layout { display: grid; grid-template-columns: minmax(180px, 222px) minmax(0, 1fr); gap: 14px; align-items: start; }
 .roster { position: sticky; top: 12px; padding: 13px; }
 .roster-list { display: grid; gap: 3px; margin-top: 9px; max-height: min(62vh, 560px); overflow: auto; }
@@ -199,6 +200,9 @@ a, .linkbtn { color: var(--blue-2); text-underline-offset: 3px; }
 .pushrow { margin-top: 9px; }
 dialog { width: min(540px, calc(100% - 22px)); padding: 18px; border: 1px solid var(--border); border-radius: 10px; color: var(--ink); }
 dialog::backdrop { background: #12283999; }
+#taskSubmissionDialog { width: min(720px, calc(100% - 22px)); max-height: 88vh; }
+#taskSubmissionDialog .annotdraft { margin-top: 6px; }
+#taskSubmissionDialog .fb + .fb { margin-top: 12px; }
 .assignbox { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; margin-top: 10px; }
 .assign-details { margin-top: 12px; }
 .assign-details summary { color: var(--navy); font-weight: 670; }
@@ -342,7 +346,7 @@ body {
 .list-controls {
   display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 4px 0 7px;
 }
-.list-controls:has(#recordCount:empty):has(#markNext[hidden]) { display: none; }
+.list-controls:has(#recordCount:empty):has(#markNext[hidden]):has(#createWritingHistoryLink[hidden]) { display: none; }
 .list-pagination, .editor-nav {
   display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;
 }
@@ -419,7 +423,11 @@ body {
       <div class="tasklist" id="taskList"></div>
     </div>
     <div class="card student-panel" data-student-pane="writing" hidden>
-      <h2>Submitted writing</h2>
+      <div class="panel-heading">
+        <h2>Submitted writing</h2>
+        <button type="button" class="btn ghost sm" id="refreshWritingHistory" hidden>Refresh history</button>
+      </div>
+      <p class="page-meta" id="writingHistoryStatus" role="status"></p>
       <div id="studentWritingList"></div>
     </div>
     <div class="card student-panel" id="inboxCard" data-student-pane="feedback" hidden>
@@ -518,7 +526,10 @@ body {
               </div>
               <div class="list-controls">
                 <span id="recordCount" class="aitemmeta"></span>
-                <button type="button" class="btn ghost tiny" id="markNext" hidden>Mark next</button>
+                <div class="row">
+                  <button type="button" class="btn ghost tiny" id="createWritingHistoryLink" hidden>Create private writing link</button>
+                  <button type="button" class="btn ghost tiny" id="markNext" hidden>Mark next</button>
+                </div>
               </div>
               <div id="adminReadingSkills" hidden></div>
               <div id="adminData"></div>
@@ -535,6 +546,25 @@ body {
     </div>
   </section>
 </main>
+
+<dialog id="taskSubmissionDialog" aria-labelledby="taskSubmissionTitle">
+  <div class="panel-heading">
+    <h2 id="taskSubmissionTitle">Submitted writing</h2>
+    <form method="dialog"><button class="linkbtn" type="submit">Close</button></form>
+  </div>
+  <div id="taskSubmissionBody"></div>
+</dialog>
+
+<dialog id="writingLinkDialog" aria-labelledby="writingLinkTitle">
+  <div class="panel-heading">
+    <h2 id="writingLinkTitle">Private writing link</h2>
+    <form method="dialog"><button class="linkbtn" type="submit">Close</button></form>
+  </div>
+  <label for="writingLinkURL" id="writingLinkLabel">Share with this student</label>
+  <input type="text" id="writingLinkURL" readonly>
+  <div class="row write-actions"><button class="btn sm" type="button" id="copyWritingLink">Copy link</button></div>
+  <p class="page-meta" id="copyWritingLinkStatus" role="status"></p>
+</dialog>
 
 <dialog id="assignDialog" aria-labelledby="assignTitle">
   <div class="panel-heading"><h2 id="assignTitle">Assign task</h2><button type="button" class="linkbtn" id="closeAssign">Close</button></div>
@@ -839,10 +869,181 @@ $("studentForm").addEventListener("submit", event => { event.preventDefault(); v
 
 let studentView = "tasks";
 let completedOpen = false;
+let writingHistory = null;
+let openSubmissionTask = null;
+const writingTokenKey = name => "noof_writing_access:" + rowKey(name);
+const isWritingToken = value => /^[a-f0-9]{64}$/.test(value || "");
+
+function writingToken(name) {
+  try { return sessionStorage.getItem(writingTokenKey(name)) || ""; }
+  catch { return ""; }
+}
+
+function studentWritingCopies() {
+  const local = WritingSubmissions.list(student.nameKey);
+  const saved = writingHistory?.name === rowKey(student.nameKey) ? [...(writingHistory.submissions || [])] : [];
+  const knownIds = new Set(saved.map(copy => copy.id));
+  for (const [index, feedback] of (ctx.feedbackInbox || []).entries()) {
+    if (typeof feedback.responseText !== "string") continue;
+    const id = feedback.submissionId ? "sheet:" + feedback.submissionId : "feedback:" + index;
+    if (knownIds.has(id)) continue;
+    knownIds.add(id);
+    saved.push({
+      id,
+      promptId: String(feedback.promptId ?? ""),
+      promptTitle: feedback.promptTitle || "Writing",
+      revisionOf: String(feedback.revisionOf ?? ""),
+      wordCount: feedback.wordCount ?? (feedback.responseText.match(/\S+/g) || []).length,
+      responseText: feedback.responseText,
+      date: feedback.date
+    });
+  }
+  const matches = saved.slice();
+  const localOnly = local.filter(copy => {
+    const index = matches.findIndex(row => row.promptId === String(copy.promptId ?? "") &&
+      row.revisionOf === String(copy.revisionOf ?? "") &&
+      row.responseText.trim() === copy.responseText.trim() &&
+      Math.abs(Date.parse(row.date) - Date.parse(copy.date)) < 120000);
+    if (index < 0) return true;
+    matches.splice(index, 1);
+    return false;
+  });
+  return saved.concat(localOnly).sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0));
+}
+
+function copiesForTask(task, copies) {
+  const source = String(task.sourceId || "");
+  const matches = copies.filter(copy => {
+    if (task.type === "revision") return source && copy.revisionOf === source;
+    if (copy.revisionOf || /\(revision\)\s*$/i.test(copy.promptTitle)) return false;
+    if (source && copy.promptId) return copy.promptId === source;
+    return rowKey(task.title) === rowKey(copy.promptTitle);
+  });
+  const assigned = Date.parse(task.assignedDate);
+  if (!Number.isFinite(assigned)) return matches;
+  // Older task records lack dates and submission IDs. If several pieces share
+  // a prompt, prefer records from this assignment's date window when known.
+  const next = (ctx.assignments || []).reduce((date, candidate) => {
+    if (candidate.type !== task.type || String(candidate.sourceId || "") !== source) return date;
+    const candidateDate = Date.parse(candidate.assignedDate);
+    return candidateDate > assigned ? Math.min(date, candidateDate) : date;
+  }, Infinity);
+  return matches.filter(copy => {
+    const date = Date.parse(copy.date);
+    return !Number.isFinite(date) || (date >= assigned && date < next);
+  });
+}
+
+function writingText(text) {
+  const response = document.createElement("div");
+  response.className = "annotdraft";
+  response.textContent = text || "No response text was submitted.";
+  return response;
+}
+
+function renderTaskSubmission() {
+  if (!openSubmissionTask) return;
+  const task = openSubmissionTask;
+  const body = $("taskSubmissionBody");
+  const copies = copiesForTask(task, studentWritingCopies());
+  body.replaceChildren();
+  if (copies.length === 1) {
+    body.append(writingText(copies[0].responseText));
+    return;
+  }
+  if (copies.length > 1) {
+    for (const [index, copy] of copies.entries()) {
+      const item = document.createElement("details");
+      const label = document.createElement("summary");
+      label.textContent = stampLabel(copy.date, true) || "Submission " + (index + 1);
+      item.className = "fb";
+      item.append(label, writingText(copy.responseText));
+      body.append(item);
+    }
+    return;
+  }
+  const note = document.createElement("p");
+  note.className = "page-meta";
+  note.setAttribute("role", "status");
+  const hasLink = writingHistory?.token || writingToken(student.nameKey);
+  note.textContent = writingHistory?.loading ? "Loading your submission…"
+    : writingHistory?.error || (hasLink
+      ? "No saved writing was found for this task."
+      : "Open the private writing link from your tutor to view older submissions.");
+  body.append(note);
+  if (hasLink && writingHistory?.error) {
+    const retry = document.createElement("button");
+    retry.type = "button";
+    retry.className = "btn ghost sm";
+    retry.textContent = "Try again";
+    retry.onclick = () => loadWritingHistory(true);
+    body.append(retry);
+  }
+}
+
+function viewTaskSubmission(task) {
+  openSubmissionTask = task;
+  $("taskSubmissionTitle").textContent = task.title || "Submitted writing";
+  $("taskSubmissionDialog").showModal();
+  if (!copiesForTask(task, studentWritingCopies()).length && (writingHistory?.token || writingToken(student.nameKey))) {
+    void loadWritingHistory(true);
+  }
+  renderTaskSubmission();
+}
+
+$("taskSubmissionDialog").addEventListener("close", () => {
+  openSubmissionTask = null;
+  $("taskSubmissionBody").replaceChildren();
+});
+
+async function loadWritingHistory(refresh = false) {
+  const owner = student;
+  if (!owner) return;
+  const name = rowKey(owner.nameKey);
+  if (writingHistory?.name !== name) writingHistory = null;
+  const token = writingHistory?.token || writingToken(name);
+  const button = $("refreshWritingHistory");
+  const status = $("writingHistoryStatus");
+  button.hidden = !token;
+  if (!token) {
+    status.textContent = "Open your private writing link from your tutor to see past submissions.";
+    return;
+  }
+  if (writingHistory?.loading || (!refresh && writingHistory?.submissions)) return;
+  const request = {name, token, loading: true, submissions: writingHistory?.submissions};
+  writingHistory = request;
+  button.disabled = true;
+  status.textContent = "Loading writing history…";
+  renderTaskSubmission();
+  try {
+    const result = await callBackend("getWritingHistory", {nameKey:owner.nameKey, token});
+    if (student !== owner || writingHistory !== request) return;
+    if (!Array.isArray(result?.submissions)) throw new Error("Writing history is unavailable. Ask your tutor.");
+    request.submissions = result.submissions;
+    status.textContent = "";
+  } catch (error) {
+    if (student !== owner || writingHistory !== request) return;
+    request.submissions = null;
+    request.error = error.message;
+    status.textContent = error.message;
+  } finally {
+    if (student === owner && writingHistory === request) {
+      request.loading = false;
+      button.disabled = false;
+      if (studentView === "writing") renderSubmittedWriting();
+      renderTaskSubmission();
+    }
+  }
+}
+
+$("refreshWritingHistory").onclick = () => loadWritingHistory(true);
 
 function selectStudentView(section) {
   studentView = section;
-  if (section === "writing") renderSubmittedWriting();
+  if (section === "writing") {
+    renderSubmittedWriting();
+    void loadWritingHistory();
+  }
   $("studentNav").querySelectorAll("[data-student-view]").forEach(button => {
     if (button.dataset.studentView === section) button.setAttribute("aria-current", "true");
     else button.removeAttribute("aria-current");
@@ -884,7 +1085,6 @@ function renderDashboard() {
 function renderTasks() {
   const list = $("taskList");
   const allTasks = studentTasks();
-  const copies = WritingSubmissions.list(student.nameKey);
   const filter = $("taskTypeFilter").value || "all";
   const tasks = filter === "all" ? allTasks : allTasks.filter(task => task.type === filter);
   const pending = tasks.filter(task => !submittedTask(task)).sort((a, b) => {
@@ -907,7 +1107,7 @@ function renderTasks() {
   group.open = completedOpen;
   const label = document.createElement("summary");
   label.textContent = "Completed (" + completed.length + ")";
-  group.append(label, ...completed.map(task => taskEl(task, true, copies)));
+  group.append(label, ...completed.map(task => taskEl(task, true)));
   group.addEventListener("toggle", () => { completedOpen = group.open; });
   list.append(group);
 }
@@ -927,7 +1127,7 @@ function studentTasks() {
   return localTasks.filter(item => !tasks.some(task => String(task.sourceId) === item.sourceId)).concat(tasks);
 }
 
-function taskEl(task, done, copies = []) {
+function taskEl(task, done) {
   const row = document.createElement("div");
   const due = dueState(task.dueDate);
   row.className = "task " + (done ? "done" : due.cls);
@@ -945,9 +1145,7 @@ function taskEl(task, done, copies = []) {
   const feedback = (ctx.feedbackInbox || []).find(f => task.type === "revision"
     ? String(f.submissionId) === source
     : String(f.promptId) === source || (!f.promptId && f.promptTitle === task.title));
-  const copy = copies.find(entry => task.type === "revision"
-    ? String(entry.revisionOf) === source
-    : task.type === "writing" && !entry.revisionOf && String(entry.promptId) === source);
+  const isWriting = task.type === "writing" || task.type === "revision";
   function action(text, execute) {
     const button = document.createElement("button");
     button.type = "button";
@@ -958,7 +1156,10 @@ function taskEl(task, done, copies = []) {
   }
   if (!done) {
     action(taskActionLabel(task, source), () => startTask(task));
-  } else if (feedback) {
+    return row;
+  }
+  if (isWriting) action("View submission", () => viewTaskSubmission(task));
+  if (feedback) {
     action("Feedback", () => {
       selectStudentView("feedback");
       const item = Array.from($("inboxList").querySelectorAll("details"))
@@ -969,9 +1170,7 @@ function taskEl(task, done, copies = []) {
         item.scrollIntoView({block:"nearest"});
       }
     });
-  } else if (copy) {
-    action("View submission", () => openSubmittedWriting(copy.id));
-  } else if (isTest || EHAN_LOOP_IDS.includes(source)) {
+  } else if (!isWriting && EHAN_LOOP_IDS.includes(source)) {
     action("View answers", () => startTask(task));
   }
   return row;
@@ -1034,6 +1233,12 @@ function startTask(task) {
 
 $("switchBtn").onclick = () => {
   clearSession();
+  if ($("taskSubmissionDialog").open) $("taskSubmissionDialog").close();
+  openSubmissionTask = null;
+  try { sessionStorage.removeItem(writingTokenKey(student.nameKey)); } catch (_) {}
+  writingHistory = null;
+  $("writingHistoryStatus").textContent = "";
+  $("refreshWritingHistory").disabled = false;
   ctx = null;
   student = null;
   activePrompt = null;
@@ -1051,12 +1256,13 @@ $("switchBtn").onclick = () => {
 
 function renderSubmittedWriting() {
   const list = $("studentWritingList");
-  const copies = WritingSubmissions.list(student.nameKey);
+  const copies = studentWritingCopies();
+  const openItems = new Set(Array.from(list.querySelectorAll("details[open]"), item => item.dataset.writingId));
   list.replaceChildren();
   if (!copies.length) {
     const empty = document.createElement("p");
     empty.className = "emptyline";
-    empty.textContent = "Writing submitted in this browser will appear here.";
+    empty.textContent = writingHistory?.submissions ? "No writing submissions yet." : "Writing submitted in this browser will appear here.";
     list.append(empty);
     return;
   }
@@ -1064,13 +1270,11 @@ function renderSubmittedWriting() {
     const item = document.createElement("details");
     item.className = "fb";
     item.dataset.writingId = copy.id;
+    item.open = openItems.has(String(copy.id));
     item.innerHTML = '<summary><span class="fbtitle">'+esc(copy.promptTitle)+'</span>'+
-      '<span class="aitemmeta">'+esc(fmtDate(copy.date))+'</span>'+CHEV+'</summary>'+
+      '<span class="aitemmeta">'+esc(stampLabel(copy.date, true))+'</span>'+CHEV+'</summary>'+
       '<div class="fbbody"><p class="record-meta">'+esc(copy.wordCount)+' words</p></div>';
-    const response = document.createElement("div");
-    response.className = "annotdraft";
-    response.textContent = copy.responseText || "No response text was submitted.";
-    item.lastElementChild.append(response);
+    item.lastElementChild.append(writingText(copy.responseText));
     list.append(item);
   }
 }
@@ -1560,6 +1764,7 @@ function renderAdminList() {
   $("prevRecordPage").disabled = adminView.page === 0;
   $("nextRecordPage").disabled = adminView.page === pages - 1;
   $("markNext").hidden = section !== "writing" || !visibleRecords.some(entry => entry.status === "unmarked");
+  $("createWritingHistoryLink").hidden = section !== "writing" || !adminView.student;
   $("adminData").innerHTML = visibleRecords.length
     ? entries.map((entry, index) => renderRecord(section, entry, offset + index)).join("")
     : '<p class="emptyline">No matching ' + ({writing:"submissions",reading:"reading results",tasks:"assignments"}[section]) + '.</p>';
@@ -1570,6 +1775,45 @@ function renderAdminList() {
   skills.innerHTML = totals.length ? '<details><summary>Skills across these results</summary>' + totals.map(skillBarRow).join("") + '</details>' : "";
   if (currentSubmission) updateEditorNav();
 }
+
+$("createWritingHistoryLink").onclick = async () => {
+  const session = adminCache;
+  const key = adminView.student;
+  const person = records?.roster.get(key);
+  if (!session || !person || !confirm("Create a new writing link for " + person.display + "? Any previous link for this student will stop working.")) return;
+  const button = $("createWritingHistoryLink");
+  busy(button, true, "Creating link");
+  clearMsg($("adminNotice"));
+  try {
+    const {token} = await callBackend("createWritingHistoryLink", {password:session.password, nameKey:key});
+    if (session !== adminCache) return;
+    if (!isWritingToken(token)) throw new Error("The server didn’t return a valid writing link.");
+    const url = new URL(location.pathname, location.origin);
+    url.hash = new URLSearchParams({student:key, writing:token}).toString();
+    $("writingLinkLabel").textContent = "Share privately with " + person.display;
+    $("writingLinkURL").value = url.href;
+    $("writingLinkDialog").showModal();
+  } catch (error) {
+    if (session === adminCache) msg($("adminNotice"), "err", error.message);
+  } finally {
+    busy(button, false);
+  }
+};
+
+$("copyWritingLink").onclick = async () => {
+  const input = $("writingLinkURL");
+  try {
+    await navigator.clipboard.writeText(input.value);
+    $("copyWritingLinkStatus").textContent = "Link copied.";
+  } catch {
+    input.select();
+    $("copyWritingLinkStatus").textContent = "Copy the selected link.";
+  }
+};
+$("writingLinkDialog").addEventListener("close", () => {
+  $("writingLinkURL").value = "";
+  $("copyWritingLinkStatus").textContent = "";
+});
 
 function renderRecord(section, entry, index) {
   const row = entry.row;
@@ -2045,16 +2289,29 @@ function delComment(bid,id){
 function isoLike(v){ if(v==null||v==="") return null; const d=new Date(v); return isNaN(d)?String(v):d.toISOString(); }
 function safe(v){ if(v==null||v==="") return null; if(typeof v==="object") return v; try{return JSON.parse(v);}catch(e){return null;} }
 
+window.addEventListener("hashchange", () => {
+  const link = new URLSearchParams(location.hash.slice(1));
+  if (link.get("student") && isWritingToken(link.get("writing"))) location.reload();
+});
 
 (async()=>{
   const params=new URLSearchParams(location.search);
-  const sk=params.get("student");
+  const link = new URLSearchParams(location.hash.slice(1));
+  const token = link.get("writing");
+  const linkedStudent = isWritingToken(token) ? rowKey(link.get("student")) : "";
+  if (token) history.replaceState(history.state, "", location.pathname + location.search);
+  const sk=linkedStudent || params.get("student");
   const bootName = sk || lsGet(SESSION_KEY) || "";
   if(bootName){
     $("nameInput").value=bootName;
     const ok=await doLogin(true);
     if(ok){
       const done=params.get("done");
+      if (linkedStudent && linkedStudent === rowKey(student.nameKey)) {
+        try { sessionStorage.setItem(writingTokenKey(linkedStudent), token); } catch (_) {}
+        writingHistory = {name:linkedStudent, token};
+        selectStudentView("writing");
+      }
       if(done==="reading") toast("Reading result saved.");
       else if(done==="writing" || done==="test") {
         if (WritingSubmissions.list(student.nameKey).length) openSubmittedWriting();
